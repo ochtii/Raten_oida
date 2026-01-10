@@ -5,22 +5,26 @@
 // Cache-Buster für alle Module
 const v = window.CACHE_BUSTER || Date.now();
 
-// Dynamische Imports mit Cache-Buster
-const [{ Router }, { Store }, { UI }] = await Promise.all([
-    import(`./core/router.js?v=${v}`),
-    import(`./core/store.js?v=${v}`),
-    import(`./core/ui.js?v=${v}`)
-]);
-
 class App {
     constructor() {
-        this.store = new Store();
-        this.router = new Router(this.store);
-        this.ui = new UI(this.store);
+        this.store = null;
+        this.router = null;
+        this.ui = null;
         this.isRendering = false;
     }
 
     async init() {
+        // Dynamische Imports mit Cache-Buster
+        const [{ Router }, { Store }, { UI }] = await Promise.all([
+            import(`./core/router.js?v=${v}`),
+            import(`./core/store.js?v=${v}`),
+            import(`./core/ui.js?v=${v}`)
+        ]);
+        
+        this.store = new Store();
+        this.router = new Router(this.store);
+        this.ui = new UI(this.store);
+        
         console.log('🚀 Raten OIDA gestartet');
         console.log('📦 Store:', this.store);
         console.log('📍 Router:', this.router);
