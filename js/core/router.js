@@ -7,6 +7,7 @@ import { gamesView } from '../views/games.js';
 import { statsView } from '../views/stats.js';
 import { settingsView } from '../views/settings.js';
 import { pointsView } from '../views/points.js';
+import { devView } from '../views/dev.js';
 
 export class Router {
     constructor(store) {
@@ -16,7 +17,8 @@ export class Router {
             'games': gamesView,
             'points': pointsView,
             'stats': statsView,
-            'settings': settingsView
+            'settings': settingsView,
+            'dev': devView
         };
         this.currentRoute = 'home';
     }
