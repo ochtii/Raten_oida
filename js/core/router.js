@@ -4,7 +4,6 @@
 
 import { $, render, scrollToTop } from './dom.js';
 import { store } from './store.js';
-import { helpView } from '../views/helpView.js';
 
 class Router {
     constructor() {
@@ -648,3 +647,6 @@ export const helpView = () => {
         </div>
     `;
 };
+
+
+export { router, homeView, gameSelectView, statsView, settingsView, helpView };
