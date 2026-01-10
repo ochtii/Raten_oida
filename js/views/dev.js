@@ -413,13 +413,49 @@ window.devResetBottomNav = () => {
 };
 
 function applyBottomNavSettings() {
-    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{"visible":true,"opacity":95,"size":100}');
+    const defaultSettings = {
+        visible: true,
+        opacity: 95,
+        size: 100,
+        items: {
+            home: true,
+            games: true,
+            points: true,
+            stats: true,
+            settings: true,
+            dev: true
+        }
+    };
+    
+    // Settings laden oder Defaults nutzen
+    let settings;
+    try {
+        const stored = localStorage.getItem('bottomNavSettings');
+        settings = stored ? JSON.parse(stored) : defaultSettings;
+        
+        // Merge mit defaults für fehlende Werte
+        settings = {
+            ...defaultSettings,
+            ...settings,
+            items: {
+                ...defaultSettings.items,
+                ...(settings.items || {})
+            }
+        };
+    } catch (e) {
+        console.error('Error loading bottom nav settings:', e);
+        settings = defaultSettings;
+    }
+    
     const bottomNav = document.getElementById('bottomNav');
     
-    if (!bottomNav) return;
+    if (!bottomNav) {
+        console.warn('Bottom nav element not found, retrying...');
+        return;
+    }
     
     // Visibility
-    bottomNav.style.display = settings.visible ? 'flex' : 'none';
+    bottomNav.style.display = settings.visible !== false ? 'flex' : 'none';
     
     // Opacity
     bottomNav.style.opacity = (settings.opacity || 95) / 100;
@@ -432,17 +468,28 @@ function applyBottomNavSettings() {
     bottomNav.style.transform = 'none'; // Remove scaling
     
     // Items visibility
-    if (settings.items) {
-        Object.keys(settings.items).forEach(item => {
-            const navItem = bottomNav.querySelector(`[data-nav="${item}"]`);
-            if (navItem) {
-                navItem.style.display = settings.items[item] ? 'flex' : 'none';
-            }
-        });
-    }
+    Object.keys(settings.items).forEach(item => {
+        const navItem = bottomNav.querySelector(`[data-nav="${item}"]`);
+        if (navItem) {
+            navItem.style.display = settings.items[item] ? 'flex' : 'none';
+        }
+    });
 }
 
-// Apply settings on load
+// Apply settings on load mit besserem Timing
 if (typeof window !== 'undefined') {
-    setTimeout(() => applyBottomNavSettings(), 100);
+    // Sofort versuchen
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            applyBottomNavSettings();
+        });
+    } else {
+        // DOM bereits geladen
+        applyBottomNavSettings();
+    }
+    
+    // Zusätzlich nach Router-Render
+    document.addEventListener('routeChanged', () => {
+        setTimeout(() => applyBottomNavSettings(), 50);
+    });
 }

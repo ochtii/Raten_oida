@@ -54,6 +54,11 @@ export class Router {
             const html = viewFunction(this.store);
             container.innerHTML = html;
             console.log('✅ View gerendert:', this.currentRoute);
+            
+            // Event auslösen für andere Module
+            document.dispatchEvent(new CustomEvent('routeChanged', { 
+                detail: { route: this.currentRoute } 
+            }));
         } catch (error) {
             console.error('❌ Fehler beim Laden der View:', error);
             container.innerHTML = `
