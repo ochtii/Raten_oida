@@ -33,19 +33,19 @@ export const devView = (store) => {
                     <div class="dev-info">
                         <div class="dev-item">
                             <span>Wallet:</span>
-                            <strong class="value-wallet">${state.wallet.toLocaleString('de-DE')}</strong>
+                            <strong class="value-wallet">${(state.wallet ?? 0).toLocaleString('de-DE')}</strong>
                         </div>
                         <div class="dev-item">
                             <span>Punkte:</span>
-                            <strong class="value-points">${state.points.toLocaleString('de-DE')}</strong>
+                            <strong class="value-points">${(state.points ?? 0).toLocaleString('de-DE')}</strong>
                         </div>
                         <div class="dev-item">
                             <span>Spiele:</span>
-                            <strong>${state.stats.gamesPlayed}</strong>
+                            <strong>${state.stats?.gamesPlayed ?? 0}</strong>
                         </div>
                         <div class="dev-item">
                             <span>Streak:</span>
-                            <strong>${state.stats.currentStreak} / ${state.stats.bestStreak}</strong>
+                            <strong>${state.stats?.currentStreak ?? 0} / ${state.stats?.bestStreak ?? 0}</strong>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@ export const devView = (store) => {
                         </div>
                         <div class="dev-item">
                             <span>Items:</span>
-                            <strong>${state.history.length} Einträge</strong>
+                            <strong>${state.history?.length ?? 0} Einträge</strong>
                         </div>
                     </div>
                 </div>
@@ -119,7 +119,7 @@ export const devView = (store) => {
                     <div class="form-group">
                         <label>🔥 Streak setzen:</label>
                         <div class="input-group">
-                            <input type="number" id="devStreak" value="${state.stats.currentStreak}" class="dev-input">
+                            <input type="number" id="devStreak" value="${state.stats?.currentStreak ?? 0}" class="dev-input">
                             <button class="btn btn-sm" onclick="window.devSetStreak()">Setzen</button>
                         </div>
                     </div>
