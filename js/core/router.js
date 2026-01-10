@@ -16,8 +16,7 @@ export class Router {
 
     async loadView(viewName) {
         if (!this.viewModules[viewName]) {
-            const v = window.CACHE_BUSTER;
-            const cb = (v && v !== 'disabled') ? `?v=${v}` : '';
+            const cb = window.getCacheBuster();
             const module = await import(`../views/${viewName}.js${cb}`);
             this.viewModules[viewName] = module[`${viewName}View`];
         }

@@ -21,7 +21,7 @@ export class DebugConsole {
 
     init() {
         this.createConsole();
-        this.intercept ConsoleLogs();
+        this.interceptConsoleLogs();
         this.setupEventListeners();
         
         // Keyboard shortcut: Ctrl + Shift + D

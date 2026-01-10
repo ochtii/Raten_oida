@@ -2,6 +2,12 @@
    APP.JS - Main Application Entry Point
    ========================================== */
 
+// Global Cache-Buster Helper
+window.getCacheBuster = () => {
+    const v = window.CACHE_BUSTER;
+    return (v && v !== 'disabled') ? `?v=${v}` : '';
+};
+
 class App {
     constructor() {
         this.store = null;
@@ -14,9 +20,7 @@ class App {
         try {
             console.log('🚀 Raten OIDA wird initialisiert...');
             
-            // Cache-Buster aktiviert?
-            const v = window.CACHE_BUSTER;
-            const cb = (v && v !== 'disabled') ? `?v=${v}` : '';
+            const cb = window.getCacheBuster();
             
             // Module laden
             const [

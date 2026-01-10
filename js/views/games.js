@@ -2,20 +2,18 @@
    GAMES VIEW
    ========================================== */
 
-// Dynamische Imports mit Cache-Buster (wenn aktiviert)
-const v = window.CACHE_BUSTER;
-const cacheBusterQuery = (v && v !== 'disabled') ? `?v=${v}` : '';
 let capitalsData = null;
 let populationData = null;
 
 // Daten beim ersten Aufruf laden
 async function loadGameData() {
+    const cb = window.getCacheBuster();
     if (!capitalsData) {
-        const capitals = await import(`../data/capitals.js${cacheBusterQuery}`);
+        const capitals = await import(`../data/capitals.js${cb}`);
         capitalsData = capitals.capitalsData;
     }
     if (!populationData) {
-        const population = await import(`../data/population.js${cacheBusterQuery}`);
+        const population = await import(`../data/population.js${cb}`);
         populationData = population.populationData;
     }
 }
