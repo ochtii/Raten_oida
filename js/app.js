@@ -115,6 +115,20 @@ class App {
             }
         });
 
+        // DevTools Button
+        document.addEventListener('click', (e) => {
+            if (e.target.id === 'open-devtools-btn' || e.target.closest('#open-devtools-btn')) {
+                if (window.devTools) {
+                    window.devTools.open();
+                } else {
+                    modal.alert({
+                        title: 'DevTools nicht verfügbar',
+                        message: 'DevTools sind nur in Development-Umgebungen verfügbar.'
+                    });
+                }
+            }
+        });
+
         // Difficulty Select
         document.addEventListener('change', (e) => {
             if (e.target.id === 'difficulty-select') {

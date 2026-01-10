@@ -23,6 +23,16 @@
     transform: translateY(100%);
 }
 
+/* Mobile: Fullscreen */
+@media (max-width: 767px) {
+    .dev-panel {
+        height: 100vh;
+        height: 100dvh;
+        top: 0;
+        bottom: auto;
+    }
+}
+
 /* Header */
 .dev-panel-header {
     display: flex;
@@ -369,11 +379,27 @@
 /* Responsive */
 @media (max-width: 768px) {
     .dev-panel {
-        height: 60vh;
+        height: 100vh;
+        height: 100dvh;
+    }
+
+    .dev-panel-header h3 {
+        font-size: 0.875rem;
     }
 
     .dev-tabs {
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .dev-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .dev-tab {
+        flex-shrink: 0;
+        min-width: 80px;
     }
 
     .dev-actions-grid {
@@ -384,8 +410,25 @@
         grid-template-columns: repeat(2, 1fr);
     }
 
+    .dev-footer {
+        padding: var(--spacing-xs) var(--spacing-sm);
+    }
+
     .dev-footer-shortcuts {
         display: none;
+    }
+
+    .dev-footer-info {
+        font-size: 0.75rem;
+    }
+
+    /* Touch-freundliche Buttons */
+    .dev-btn-sm,
+    .dev-tab,
+    .dev-btn-icon {
+        min-height: 44px;
+        min-width: 44px;
+        -webkit-tap-highlight-color: transparent;
     }
 }
 

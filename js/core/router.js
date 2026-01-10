@@ -365,6 +365,29 @@ export const settingsView = () => {
                 </div>
             </div>
 
+            <div class="card mb-lg">
+                <div class="card-header">
+                    <h3 class="card-title">🛠️ Developer Tools</h3>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted mb-md" style="font-size: 0.875rem;">
+                        Debug-Panel mit Console, State Inspector, Performance Monitor und mehr.
+                    </p>
+                    <div class="flex justify-between items-center mb-md">
+                        <span>DevTools öffnen:</span>
+                        <button class="btn btn-primary btn-small" id="open-devtools-btn">
+                            🛠️ Öffnen
+                        </button>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span>Tastenkombination:</span>
+                        <span class="badge" style="background: var(--bg-tertiary); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-family: monospace; font-size: 0.75rem;">
+                            Ctrl+Shift+D
+                        </span>
+                    </div>
+                </div>
+            </div>
+
             <div class="text-center">
                 <button class="btn btn-secondary" id="reset-all-btn">
                     ⚠️ Alles zurücksetzen
