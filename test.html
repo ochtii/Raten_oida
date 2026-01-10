@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 20px;
+            background: #0a0e27;
+            color: white;
+            font-family: system-ui;
+        }
+        .test { 
+            padding: 20px; 
+            background: #1a1033;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Seite</h1>
+    <div class="test">
+        <h2>Wenn du das siehst, funktioniert das Rendering</h2>
+        <p>Server läuft korrekt</p>
+    </div>
+    <div id="dynamic"></div>
+    
+    <script type="module">
+        console.log('Script läuft');
+        document.getElementById('dynamic').innerHTML = '<div class="test"><h3>Dynamischer Content funktioniert auch!</h3></div>';
+    </script>
+</body>
+</html>

@@ -3,9 +3,16 @@
    ========================================== */
 
 export const homeView = (store) => {
+    console.log('🏠 Home View wird gerendert');
+    console.log('📦 Store:', store);
+    
     const stats = store.getStats();
     const wallet = store.getWallet();
     const points = store.getPoints();
+    
+    console.log('📊 Stats:', stats);
+    console.log('💰 Wallet:', wallet);
+    console.log('⭐ Points:', points);
 
     return `
         <div class="home-view">
