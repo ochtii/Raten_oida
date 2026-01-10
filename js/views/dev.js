@@ -16,20 +16,13 @@ export const devView = (store) => {
         <div class="dev-view">
             <h1 class="section-title">🛠️ Developer Tools</h1>
             
-            <!-- Quick Actions - Hero Section -->
+            <!-- Quick Actions - Debug & Utility -->
             <div class="dev-card dev-hero-card">
+                <h3>🛠️ Debug & Utility</h3>
                 <div class="dev-hero-actions">
                     <button class="dev-hero-btn dev-hero-btn-accent" onclick="window.toggleDebugConsole()">
                         <span class="dev-hero-icon">🐛</span>
                         <span class="dev-hero-label">Debug</span>
-                    </button>
-                    <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddWallet()">
-                        <span class="dev-hero-icon">💰</span>
-                        <span class="dev-hero-label">+1000</span>
-                    </button>
-                    <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddPoints()">
-                        <span class="dev-hero-icon">⭐</span>
-                        <span class="dev-hero-label">+100</span>
                     </button>
                     <button class="dev-hero-btn dev-hero-btn-secondary" onclick="window.devResetStats()">
                         <span class="dev-hero-icon">📊</span>
@@ -38,6 +31,37 @@ export const devView = (store) => {
                     <button class="dev-hero-btn dev-hero-btn-secondary" onclick="window.devGenerateTestData()">
                         <span class="dev-hero-icon">🧪</span>
                         <span class="dev-hero-label">Test</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Cheat Actions -->
+            <div class="dev-card dev-hero-card dev-cheat-card">
+                <h3>🎮 Cheats</h3>
+                <div class="dev-hero-actions">
+                    <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddWallet()">
+                        <span class="dev-hero-icon">💰</span>
+                        <span class="dev-hero-label">+1000</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddPoints()">
+                        <span class="dev-hero-icon">⭐</span>
+                        <span class="dev-hero-label">+100</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddWalletMax()">
+                        <span class="dev-hero-icon">💎</span>
+                        <span class="dev-hero-label">+10k</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddPointsMax()">
+                        <span class="dev-hero-icon">🌟</span>
+                        <span class="dev-hero-label">+1000</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-success" onclick="window.devMaxStreak()">
+                        <span class="dev-hero-icon">🔥</span>
+                        <span class="dev-hero-label">Streak</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-success" onclick="window.devWinAll()">
+                        <span class="dev-hero-icon">🏆</span>
+                        <span class="dev-hero-label">100% Win</span>
                     </button>
                 </div>
             </div>
@@ -288,5 +312,49 @@ window.devClearStorage = () => {
         localStorage.removeItem('raten_oida_v2');
         window.app.ui.showNotification('🗑️ Storage gelöscht', 'info');
         setTimeout(() => location.reload(), 1000);
+    }
+};
+
+// Zusätzliche Cheat-Funktionen
+window.devAddWalletMax = () => {
+    if (window.app) {
+        window.app.store.state.wallet += 10000;
+        window.app.store.saveState();
+        window.app.ui.showNotification('💎 +10.000 Schülling (MEGA)', 'success');
+        window.app.router.render();
+    }
+};
+
+window.devAddPointsMax = () => {
+    if (window.app) {
+        window.app.store.state.points += 1000;
+        window.app.store.saveState();
+        window.app.ui.showNotification('🌟 +1000 Punkte (MEGA)', 'success');
+        window.app.router.render();
+    }
+};
+
+window.devMaxStreak = () => {
+    if (window.app) {
+        window.app.store.state.stats.currentStreak = 99;
+        window.app.store.state.stats.bestStreak = 99;
+        window.app.store.saveState();
+        window.app.ui.showNotification('🔥 Streak auf 99 gesetzt!', 'success');
+        window.app.router.render();
+    }
+};
+
+window.devWinAll = () => {
+    if (window.app) {
+        const stats = window.app.store.state.stats;
+        stats.gamesPlayed = 100;
+        stats.gamesWon = 100;
+        stats.capitalsCorrect = 100;
+        stats.capitalsTotal = 100;
+        stats.populationCorrect = 100;
+        stats.populationTotal = 100;
+        window.app.store.saveState();
+        window.app.ui.showNotification('🏆 100% Win-Rate aktiviert!', 'success');
+        window.app.router.render();
     }
 };
