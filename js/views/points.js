@@ -4,23 +4,35 @@
 
 export const pointsView = (store) => {
     try {
-        const points = store.getPoints();
-        const stats = store.getStats();
-        const history = store.getHistory();
+        const points = store.getPoints() || 0;
+        const stats = store.getStats() || {};
+        const history = store.getHistory() || [];
+        
+        // Defaults für Stats
+        const safeStats = {
+            gamesPlayed: stats.gamesPlayed || 0,
+            gamesWon: stats.gamesWon || 0,
+            capitalsCorrect: stats.capitalsCorrect || 0,
+            capitalsTotal: stats.capitalsTotal || 0,
+            populationCorrect: stats.populationCorrect || 0,
+            populationTotal: stats.populationTotal || 0,
+            bestStreak: stats.bestStreak || 0,
+            currentStreak: stats.currentStreak || 0
+        };
         
         // Rang basierend auf Punkten berechnen
-    const getRank = (points) => {
-        if (points >= 10000) return { name: 'Grandmaster', icon: '👑', color: '#ffd700', next: null };
-        if (points >= 5000) return { name: 'Master', icon: '🏆', color: '#c0c0c0', next: 10000 };
-        if (points >= 2500) return { name: 'Expert', icon: '⭐', color: '#cd7f32', next: 5000 };
-        if (points >= 1000) return { name: 'Profi', icon: '🎯', color: '#00ff88', next: 2500 };
-        if (points >= 500) return { name: 'Fortgeschritten', icon: '📈', color: '#00f0ff', next: 1000 };
-        if (points >= 100) return { name: 'Anfänger', icon: '🌱', color: '#a0a0ff', next: 500 };
+    const getRank = (pts) => {
+        if (pts >= 10000) return { name: 'Grandmaster', icon: '👑', color: '#ffd700', next: null };
+        if (pts >= 5000) return { name: 'Master', icon: '🏆', color: '#c0c0c0', next: 10000 };
+        if (pts >= 2500) return { name: 'Expert', icon: '⭐', color: '#cd7f32', next: 5000 };
+        if (pts >= 1000) return { name: 'Profi', icon: '🎯', color: '#00ff88', next: 2500 };
+        if (pts >= 500) return { name: 'Fortgeschritten', icon: '📈', color: '#00f0ff', next: 1000 };
+        if (pts >= 100) return { name: 'Anfänger', icon: '🌱', color: '#a0a0ff', next: 500 };
         return { name: 'Neuling', icon: '🐣', color: '#888', next: 100 };
     };
     
     const rank = getRank(points);
-    const progress = rank.next ? ((points % (rank.next - (rank.next === 100 ? 0 : rank.next / 2))) / (rank.next - (rank.next === 100 ? 0 : rank.next / 2)) * 100) : 100;
+    const progress = rank.next ? Math.min(100, ((points / rank.next) * 100)) : 100;
     
     // Achievements Definition
     const achievements = [
@@ -29,7 +41,7 @@ export const pointsView = (store) => {
             name: 'Erste Schritte',
             description: 'Spiele dein erstes Spiel',
             icon: '🎮',
-            unlocked: stats.gamesPlayed >= 1,
+            unlocked: safeStats.gamesPlayed >= 1,
             points: 10
         },
         {
@@ -37,9 +49,9 @@ export const pointsView = (store) => {
             name: 'Fleißig',
             description: 'Spiele 10 Spiele',
             icon: '🔥',
-            unlocked: stats.gamesPlayed >= 10,
+            unlocked: safeStats.gamesPlayed >= 10,
             points: 50,
-            progress: stats.gamesPlayed,
+            progress: safeStats.gamesPlayed,
             total: 10
         },
         {
@@ -47,9 +59,9 @@ export const pointsView = (store) => {
             name: 'Enthusiast',
             description: 'Spiele 50 Spiele',
             icon: '💪',
-            unlocked: stats.gamesPlayed >= 50,
+            unlocked: safeStats.gamesPlayed >= 50,
             points: 100,
-            progress: stats.gamesPlayed,
+            progress: safeStats.gamesPlayed,
             total: 50
         },
         {
@@ -57,9 +69,9 @@ export const pointsView = (store) => {
             name: 'Glückssträhne',
             description: 'Erreiche eine Streak von 5',
             icon: '🌟',
-            unlocked: stats.bestStreak >= 5,
+            unlocked: safeStats.bestStreak >= 5,
             points: 25,
-            progress: stats.bestStreak,
+            progress: safeStats.bestStreak,
             total: 5
         },
         {
@@ -67,9 +79,9 @@ export const pointsView = (store) => {
             name: 'Unaufhaltsam',
             description: 'Erreiche eine Streak von 10',
             icon: '⚡',
-            unlocked: stats.bestStreak >= 10,
+            unlocked: safeStats.bestStreak >= 10,
             points: 75,
-            progress: stats.bestStreak,
+            progress: safeStats.bestStreak,
             total: 10
         },
         {
@@ -77,9 +89,9 @@ export const pointsView = (store) => {
             name: 'Hauptstadt-Meister',
             description: '20 Hauptstädte richtig',
             icon: '🏛️',
-            unlocked: stats.capitalsCorrect >= 20,
+            unlocked: safeStats.capitalsCorrect >= 20,
             points: 50,
-            progress: stats.capitalsCorrect,
+            progress: safeStats.capitalsCorrect,
             total: 20
         },
         {
@@ -87,9 +99,9 @@ export const pointsView = (store) => {
             name: 'Bevölkerungs-Experte',
             description: '20 Bevölkerungen richtig',
             icon: '👥',
-            unlocked: stats.populationCorrect >= 20,
+            unlocked: safeStats.populationCorrect >= 20,
             points: 50,
-            progress: stats.populationCorrect,
+            progress: safeStats.populationCorrect,
             total: 20
         },
         {
@@ -97,9 +109,9 @@ export const pointsView = (store) => {
             name: 'Perfektionist',
             description: '10 Spiele perfekt',
             icon: '💯',
-            unlocked: stats.gamesWon >= 10,
+            unlocked: safeStats.gamesWon >= 10,
             points: 100,
-            progress: stats.gamesWon,
+            progress: safeStats.gamesWon,
             total: 10
         },
         {
