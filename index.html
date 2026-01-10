@@ -24,6 +24,80 @@
         } else {
             console.log('⏸️ Cache-Buster deaktiviert');
         }
+        
+        // Bottom Navigation Settings - MUSS VOR APP-START GELADEN WERDEN
+        window.applyBottomNavSettings = function() {
+            const defaultSettings = {
+                visible: true,
+                opacity: 95,
+                size: 100,
+                items: {
+                    home: true,
+                    games: true,
+                    points: true,
+                    stats: true,
+                    settings: true,
+                    dev: true
+                }
+            };
+            
+            // Settings laden oder Defaults nutzen
+            let settings;
+            try {
+                const stored = localStorage.getItem('bottomNavSettings');
+                settings = stored ? JSON.parse(stored) : defaultSettings;
+                
+                // Merge mit defaults für fehlende Werte
+                settings = {
+                    ...defaultSettings,
+                    ...settings,
+                    items: {
+                        ...defaultSettings.items,
+                        ...(settings.items || {})
+                    }
+                };
+            } catch (e) {
+                console.error('Error loading bottom nav settings:', e);
+                settings = defaultSettings;
+            }
+            
+            const bottomNav = document.getElementById('bottomNav');
+            
+            if (!bottomNav) {
+                return;
+            }
+            
+            // Visibility
+            bottomNav.style.display = settings.visible !== false ? 'flex' : 'none';
+            
+            // Opacity
+            bottomNav.style.opacity = (settings.opacity || 95) / 100;
+            
+            // Height (Size only affects height, not scaling)
+            const heightPercent = settings.size || 100;
+            const baseHeight = 64;
+            const newHeight = (baseHeight * heightPercent) / 100;
+            bottomNav.style.height = `${newHeight}px`;
+            bottomNav.style.transform = 'none';
+            
+            // Items visibility
+            Object.keys(settings.items).forEach(item => {
+                const navItem = bottomNav.querySelector(`[data-nav="${item}"]`);
+                if (navItem) {
+                    navItem.style.display = settings.items[item] ? 'flex' : 'none';
+                }
+            });
+        };
+        
+        // Beim DOM-Load sofort ausführen
+        document.addEventListener('DOMContentLoaded', () => {
+            window.applyBottomNavSettings();
+        });
+        
+        // Bei Route-Change erneut ausführen
+        document.addEventListener('routeChanged', () => {
+            setTimeout(() => window.applyBottomNavSettings(), 50);
+        });
     </script>
 </head>
 <body>

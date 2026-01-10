@@ -360,7 +360,7 @@ window.devToggleBottomNav = () => {
     const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
     settings.visible = document.getElementById('bottomNavVisible').checked;
     localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    applyBottomNavSettings();
+    window.applyBottomNavSettings();
     window.app.ui.showNotification(settings.visible ? '📱 Bottom-Nav aktiviert' : '📱 Bottom-Nav deaktiviert', 'info');
 };
 
@@ -369,7 +369,7 @@ window.devUpdateBottomNavOpacity = (value) => {
     settings.opacity = parseInt(value);
     localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
     document.getElementById('opacityValue').textContent = value + '%';
-    applyBottomNavSettings();
+    window.applyBottomNavSettings();
 };
 
 window.devUpdateBottomNavSize = (value) => {
@@ -377,7 +377,7 @@ window.devUpdateBottomNavSize = (value) => {
     settings.size = parseInt(value);
     localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
     document.getElementById('sizeValue').textContent = value + '%';
-    applyBottomNavSettings();
+    window.applyBottomNavSettings();
 };
 
 window.devToggleNavItem = (item) => {
@@ -389,7 +389,7 @@ window.devToggleNavItem = (item) => {
     settings.items[item] = checkbox.checked;
     
     localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    applyBottomNavSettings();
+    window.applyBottomNavSettings();
     window.app.ui.showNotification(`${checkbox.checked ? '✅' : '❌'} ${item.toUpperCase()}`, 'info');
 };
 
@@ -411,85 +411,3 @@ window.devResetBottomNav = () => {
     window.app.ui.showNotification('🔄 Bottom-Nav zurückgesetzt', 'success');
     window.app.router.render();
 };
-
-function applyBottomNavSettings() {
-    const defaultSettings = {
-        visible: true,
-        opacity: 95,
-        size: 100,
-        items: {
-            home: true,
-            games: true,
-            points: true,
-            stats: true,
-            settings: true,
-            dev: true
-        }
-    };
-    
-    // Settings laden oder Defaults nutzen
-    let settings;
-    try {
-        const stored = localStorage.getItem('bottomNavSettings');
-        settings = stored ? JSON.parse(stored) : defaultSettings;
-        
-        // Merge mit defaults für fehlende Werte
-        settings = {
-            ...defaultSettings,
-            ...settings,
-            items: {
-                ...defaultSettings.items,
-                ...(settings.items || {})
-            }
-        };
-    } catch (e) {
-        console.error('Error loading bottom nav settings:', e);
-        settings = defaultSettings;
-    }
-    
-    const bottomNav = document.getElementById('bottomNav');
-    
-    if (!bottomNav) {
-        console.warn('Bottom nav element not found, retrying...');
-        return;
-    }
-    
-    // Visibility
-    bottomNav.style.display = settings.visible !== false ? 'flex' : 'none';
-    
-    // Opacity
-    bottomNav.style.opacity = (settings.opacity || 95) / 100;
-    
-    // Height (Size only affects height, not scaling)
-    const heightPercent = settings.size || 100;
-    const baseHeight = 64; // var(--bottom-nav-height) default
-    const newHeight = (baseHeight * heightPercent) / 100;
-    bottomNav.style.height = `${newHeight}px`;
-    bottomNav.style.transform = 'none'; // Remove scaling
-    
-    // Items visibility
-    Object.keys(settings.items).forEach(item => {
-        const navItem = bottomNav.querySelector(`[data-nav="${item}"]`);
-        if (navItem) {
-            navItem.style.display = settings.items[item] ? 'flex' : 'none';
-        }
-    });
-}
-
-// Apply settings on load mit besserem Timing
-if (typeof window !== 'undefined') {
-    // Sofort versuchen
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', () => {
-            applyBottomNavSettings();
-        });
-    } else {
-        // DOM bereits geladen
-        applyBottomNavSettings();
-    }
-    
-    // Zusätzlich nach Router-Render
-    document.addEventListener('routeChanged', () => {
-        setTimeout(() => applyBottomNavSettings(), 50);
-    });
-}
