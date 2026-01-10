@@ -76,6 +76,9 @@ export const devView = (store) => {
             <div class="dev-card">
                 <h3>⚡ Quick Actions</h3>
                 <div class="dev-actions">
+                    <button class="btn btn-accent" onclick="window.toggleDebugConsole()">
+                        🐛 Debug Console
+                    </button>
                     <button class="btn btn-primary" onclick="window.devAddWallet()">
                         💰 +1000 Wallet
                     </button>
@@ -428,6 +431,12 @@ export const devView = (store) => {
 };
 
 // Developer Functions
+window.toggleDebugConsole = () => {
+    if (window.app && window.app.debugConsole) {
+        window.app.debugConsole.toggle();
+    }
+};
+
 window.devAddWallet = () => {
     if (window.app) {
         window.app.store.state.wallet += 1000;

@@ -15,15 +15,17 @@ class App {
 
     async init() {
         // Dynamische Imports mit Cache-Buster
-        const [{ Router }, { Store }, { UI }] = await Promise.all([
+        const [{ Router }, { Store }, { UI }, { DebugConsole }] = await Promise.all([
             import(`./core/router.js?v=${v}`),
             import(`./core/store.js?v=${v}`),
-            import(`./core/ui.js?v=${v}`)
+            import(`./core/ui.js?v=${v}`),
+            import(`./core/debug-console.js?v=${v}`)
         ]);
         
         this.store = new Store();
         this.router = new Router(this.store);
         this.ui = new UI(this.store);
+        this.debugConsole = new DebugConsole();
         
         console.log('🚀 Raten OIDA gestartet');
         console.log('📦 Store:', this.store);
@@ -32,6 +34,10 @@ class App {
         
         // App global verfügbar machen für Settings
         window.app = this;
+        
+        // Debug Console initialisieren
+        this.debugConsole.init();
+        console.log('✅ Debug Console initialisiert');
         
         // UI initialisieren
         this.ui.init();
