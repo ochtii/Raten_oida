@@ -122,12 +122,15 @@
     flex: 1;
     overflow: hidden;
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 .dev-tab-content {
     display: none;
-    height: 100%;
+    flex: 1;
     flex-direction: column;
+    overflow: hidden;
 }
 
 .dev-tab-content.active {
@@ -381,6 +384,12 @@
     .dev-panel {
         height: 100vh;
         height: 100dvh;
+        overflow: hidden;
+    }
+
+    .dev-content {
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
     }
 
     .dev-panel-header h3 {
