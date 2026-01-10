@@ -1782,6 +1782,7 @@ body::before {
     :root {
         --header-height: 72px;
         --bottom-nav-height: 0px;
+    }
     
     .stats-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -1812,7 +1813,8 @@ body::before {
         padding-left: 0;
         padding-right: 0;
         margin-left: 0;
-        margin-right: 0
+        margin-right: 0;
+    }
     
     .main {
         margin-bottom: 0;
