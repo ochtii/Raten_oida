@@ -37,10 +37,22 @@ export class Router {
 
     render() {
         const container = document.getElementById('mainContent');
-        if (!container) return;
+        console.log('🎨 Rendering view:', this.currentRoute);
+        console.log('📦 Container:', container);
+        
+        if (!container) {
+            console.error('❌ Container #mainContent nicht gefunden!');
+            return;
+        }
 
         const viewFunction = this.routes[this.currentRoute];
-        container.innerHTML = viewFunction(this.store);
+        console.log('📄 View function:', viewFunction);
+        
+        const html = viewFunction(this.store);
+        console.log('📝 Generated HTML length:', html.length);
+        
+        container.innerHTML = html;
+        console.log('✅ View gerendert');
         
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });

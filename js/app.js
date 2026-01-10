@@ -15,21 +15,30 @@ class App {
 
     init() {
         console.log('🚀 Raten OIDA gestartet');
+        console.log('📦 Store:', this.store);
+        console.log('📍 Router:', this.router);
+        console.log('🎨 UI:', this.ui);
         
         // UI initialisieren
         this.ui.init();
+        console.log('✅ UI initialisiert');
         
         // Router initialisieren
         this.router.init();
+        console.log('✅ Router initialisiert');
         
         // Event Listeners
         this.setupEventListeners();
+        console.log('✅ Event Listeners registriert');
         
         // Initial route laden
-        this.router.navigateTo(window.location.hash.slice(1) || 'home');
+        const initialRoute = window.location.hash.slice(1) || 'home';
+        console.log('📍 Navigiere zu:', initialRoute);
+        this.router.navigateTo(initialRoute);
         
         // Store-Updates überwachen
         this.store.subscribe(() => this.onStoreUpdate());
+        console.log('✅ App vollständig geladen');
     }
 
     setupEventListeners() {
