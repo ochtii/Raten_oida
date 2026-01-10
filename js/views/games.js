@@ -2,8 +2,25 @@
    GAMES VIEW
    ========================================== */
 
-import { capitalsData } from '../data/capitals.js';
-import { populationData } from '../data/population.js';
+// Dynamische Imports mit Cache-Buster
+const v = window.CACHE_BUSTER || Date.now();
+let capitalsData = null;
+let populationData = null;
+
+// Daten beim ersten Aufruf laden
+async function loadGameData() {
+    if (!capitalsData) {
+        const capitals = await import(`../data/capitals.js?v=${v}`);
+        capitalsData = capitals.capitalsData;
+    }
+    if (!populationData) {
+        const population = await import(`../data/population.js?v=${v}`);
+        populationData = population.populationData;
+    }
+}
+
+// Sofort Daten laden
+loadGameData();
 
 let currentGame = null;
 let currentQuestion = null;
@@ -329,7 +346,15 @@ function renderQuestion() {
 }
 
 // Game logic functions
-window.startGame = (gameType) => {
+window.startGame = async (gameType) => {
+    // Sicherstellen dass Daten geladen sind
+    await loadGameData();
+    
+    if (!capitalsData || !populationData) {
+        console.error('Spieldaten konnten nicht geladen werden');
+        return;
+    }
+    
     currentGame = gameType;
     gameState = {
         score: 0,

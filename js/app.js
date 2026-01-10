@@ -2,9 +2,15 @@
    APP.JS - Main Application Entry Point
    ========================================== */
 
-import { Router } from './core/router.js';
-import { Store } from './core/store.js';
-import { UI } from './core/ui.js';
+// Cache-Buster für alle Module
+const v = window.CACHE_BUSTER || Date.now();
+
+// Dynamische Imports mit Cache-Buster
+const [{ Router }, { Store }, { UI }] = await Promise.all([
+    import(`./core/router.js?v=${v}`),
+    import(`./core/store.js?v=${v}`),
+    import(`./core/ui.js?v=${v}`)
+]);
 
 class App {
     constructor() {
@@ -14,7 +20,7 @@ class App {
         this.isRendering = false;
     }
 
-    init() {
+    async init() {
         console.log('🚀 Raten OIDA gestartet');
         console.log('📦 Store:', this.store);
         console.log('📍 Router:', this.router);
@@ -38,7 +44,7 @@ class App {
         // Initial route laden
         const initialRoute = window.location.hash.slice(1) || 'home';
         console.log('📍 Navigiere zu:', initialRoute);
-        this.router.navigateTo(initialRoute);
+        await this.router.navigateTo(initialRoute);
         
         // Store-Updates überwachen
         this.store.subscribe(() => this.onStoreUpdate());
@@ -97,7 +103,7 @@ class App {
 }
 
 // App starten
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const app = new App();
-    app.init();
+    await app.init();
 });
