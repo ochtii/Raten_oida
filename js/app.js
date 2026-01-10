@@ -9,6 +9,7 @@ import { Navigation } from './components/navigation.js';
 import { modal } from './components/modal.js';
 import { startCapitalsGame } from './games/capitalsGame.js';
 import { startPopulationGame } from './games/populationGame.js';
+import { initDevTools } from './components/devTools.js';
 import { $ } from './core/dom.js';
 
 class App {
@@ -39,6 +40,9 @@ class App {
 
         // Initial Route
         router.init();
+
+        // DevTools initialisieren (nur in Development)
+        initDevTools();
 
         console.log('✅ Raten OIDA bereit! Hau di über d\'Häuser! 🎯');
     }
