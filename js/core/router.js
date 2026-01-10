@@ -60,6 +60,9 @@ export class Router {
         
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Update active navigation
+        this.updateActiveNav();
     }
 
     updateActiveNav() {
