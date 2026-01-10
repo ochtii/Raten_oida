@@ -5,6 +5,7 @@
 import { $, render, scrollToTop } from './dom.js';
 import { store } from './store.js';
 import { helpView } from '../views/helpView.js';
+import { createStatsView } from '../views/statsView.js';
 
 class Router {
     constructor() {
@@ -217,102 +218,7 @@ const gameSelectView = () => {
 
 // Stats View
 const statsView = () => {
-    const stats = store.getStats();
-    const wallet = store.getWallet();
-    
-    const winRate = stats.gamesPlayed > 0 
-        ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) 
-        : 0;
-    
-    const capitalsAccuracy = stats.capitalsGame.played > 0
-        ? Math.round((stats.capitalsGame.correct / stats.capitalsGame.played) * 100)
-        : 0;
-    
-    const populationAccuracy = stats.populationGame.played > 0
-        ? Math.round((stats.populationGame.correct / stats.populationGame.played) * 100)
-        : 0;
-
-    return `
-        <div class="view">
-            <h1 class="view-title">Deine Stats OIDA</h1>
-
-            <div class="card mb-lg">
-                <div class="card-header">
-                    <h3 class="card-title">💰 Wirtschaft</h3>
-                </div>
-                <div class="card-body">
-                    <div class="flex justify-between mb-md">
-                        <span class="text-secondary">Aktuelles Guthaben:</span>
-                        <span class="currency">${wallet} Schülling</span>
-                    </div>
-                    <div class="flex justify-between mb-md">
-                        <span class="text-secondary">Gesamt verdient:</span>
-                        <span class="text-accent">${stats.totalEarned} Schülling</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-secondary">Gesamt ausgegeben:</span>
-                        <span class="text-accent-2">${stats.totalSpent} Schülling</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-lg">
-                <div class="card-header">
-                    <h3 class="card-title">🎮 Allgemein</h3>
-                </div>
-                <div class="card-body">
-                    <div class="flex justify-between mb-md">
-                        <span class="text-secondary">Spiele gespielt:</span>
-                        <span class="font-bold">${stats.gamesPlayed}</span>
-                    </div>
-                    <div class="flex justify-between mb-md">
-                        <span class="text-secondary">Spiele gewonnen:</span>
-                        <span class="font-bold">${stats.gamesWon}</span>
-                    </div>
-                    <div class="flex justify-between mb-md">
-                        <span class="text-secondary">Gewinnrate:</span>
-                        <span class="font-bold text-accent">${winRate}%</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-secondary">Highscore:</span>
-                        <span class="font-bold text-accent-2">${stats.highScore}</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-2 gap-md mb-lg">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title text-lg">🌍 Hauptstädte</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-sm text-secondary mb-sm">Gespielt: ${stats.capitalsGame.played}</div>
-                        <div class="text-sm text-secondary mb-sm">Richtig: ${stats.capitalsGame.correct}</div>
-                        <div class="text-sm text-secondary mb-sm">Genauigkeit: ${capitalsAccuracy}%</div>
-                        <div class="text-sm text-accent">Max Streak: ${stats.capitalsGame.maxStreak}</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="card-title text-lg">👥 Einwohner</h4>
-                    </div>
-                    <div class="card-body">
-                        <div class="text-sm text-secondary mb-sm">Gespielt: ${stats.populationGame.played}</div>
-                        <div class="text-sm text-secondary mb-sm">Richtig: ${stats.populationGame.correct}</div>
-                        <div class="text-sm text-secondary mb-sm">Genauigkeit: ${populationAccuracy}%</div>
-                        <div class="text-sm text-accent">Max Streak: ${stats.populationGame.maxStreak}</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="text-center">
-                <button class="btn btn-outline" id="reset-stats-btn">
-                    🔄 Stats zurücksetzen
-                </button>
-            </div>
-        </div>
-    `;
+    return createStatsView(store);
 };
 
 // Settings View

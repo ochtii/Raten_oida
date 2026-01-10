@@ -44,17 +44,21 @@ class Store {
                 totalEarned: 0,
                 totalSpent: 0,
                 highScore: 0,
+                totalPoints: 0,
+                pointsHistory: [], // [{date, game, points, multiplier}]
                 capitalsGame: {
                     played: 0,
                     correct: 0,
                     streak: 0,
-                    maxStreak: 0
+                    maxStreak: 0,
+                    points: 0
                 },
                 populationGame: {
                     played: 0,
                     correct: 0,
                     streak: 0,
-                    maxStreak: 0
+                    maxStreak: 0,
+                    points: 0
                 }
             },
             currentGame: null
@@ -163,7 +167,64 @@ class Store {
             this.state.stats.highScore = result.score;
         }
 
+        // Points hinzufügen
+        if (result.points) {
+            this.addPoints(gameType, result.points, result.multiplier || 1);
+        }
+
         this.saveState();
+    }
+
+    // === POINTS SYSTEM ===
+
+    addPoints(gameType, basePoints, multiplier = 1) {
+        const points = Math.floor(basePoints * multiplier);
+        const timestamp = new Date().toISOString();
+
+        // Zu Gesamt-Punkte hinzufügen
+        this.state.stats.totalPoints += points;
+
+        // Zu Spiel-Statistik hinzufügen
+        if (gameType === 'capitals' || gameType === 'population') {
+            this.state.stats[`${gameType}Game`].points += points;
+        }
+
+        // In Historie speichern (max 100 Einträge)
+        this.state.stats.pointsHistory.push({
+            timestamp,
+            game: gameType,
+            points,
+            multiplier,
+            total: this.state.stats.totalPoints
+        });
+
+        if (this.state.stats.pointsHistory.length > 100) {
+            this.state.stats.pointsHistory = this.state.stats.pointsHistory.slice(-100);
+        }
+
+        this.saveState();
+    }
+
+    getPointsHistory() {
+        return this.state.stats.pointsHistory.reverse(); // Neueste zuerst
+    }
+
+    getTotalPoints() {
+        return this.state.stats.totalPoints;
+    }
+
+    getGamePoints(gameType) {
+        const game = this.state.stats[`${gameType}Game`];
+        return game ? game.points : 0;
+    }
+
+    getPointsStats() {
+        return {
+            total: this.state.stats.totalPoints,
+            capitalsPoints: this.state.stats.capitalsGame.points,
+            populationPoints: this.state.stats.populationGame.points,
+            history: this.getPointsHistory()
+        };
     }
 
     // === GAME STATE ===
