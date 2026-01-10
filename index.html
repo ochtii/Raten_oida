@@ -6,8 +6,31 @@
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
-  <meta name="app-version" content="1.0.1" />
-  <title>Raten OIDA</title>
+  <meta name="app-version" content="1.0.2" />
+  <title>Raten OIDA - Cyberpunk Quiz Game</title>
+  <meta name="description" content="Ein cyberpunkiges Quiz-Game mit österreichischem Charme. Rate Hauptstädte und Einwohnerzahlen, verdiene Schülling und knacke den Highscore!" />
+  <meta name="theme-color" content="#0f172a" />
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ochtii.github.io/Raten_oida/" />
+  <meta property="og:title" content="Raten OIDA - Cyberpunk Quiz Game" />
+  <meta property="og:description" content="Ein cyberpunkiges Quiz-Game mit österreichischem Charme. Rate Hauptstädte und Einwohnerzahlen!" />
+  <meta property="og:image" content="https://ochtii.github.io/Raten_oida/og-image.png" />
+  
+  <!-- Twitter -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:url" content="https://ochtii.github.io/Raten_oida/" />
+  <meta property="twitter:title" content="Raten OIDA - Cyberpunk Quiz Game" />
+  <meta property="twitter:description" content="Ein cyberpunkiges Quiz-Game mit österreichischem Charme. Rate Hauptstädte und Einwohnerzahlen!" />
+  <meta property="twitter:image" content="https://ochtii.github.io/Raten_oida/og-image.png" />
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>🎮</text></svg>" />
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIlJhdGVuIE9JREEiLAogICJzaG9ydF9uYW1lIjogIk9JREEiLAogICJkZXNjcmlwdGlvbiI6ICJDeWJlcnB1bmsgUXVpeiBHYW1lIG1pdCDDlnN0ZXJyZWljaGlzY2hlbSBDaGFybWUiLAogICJzdGFydF91cmwiOiAiLi8iLAogICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLAogICJiYWNrZ3JvdW5kX2NvbG9yIjogIiMwZjE3MmEiLAogICJ0aGVtZV9jb2xvciI6ICIjMGYxNzJhIiwKICAiaWNvbnMiOiBbCiAgICB7CiAgICAgICJzcmMiOiAiZGF0YTppbWFnZS9zdmcreG1sLDxzdmcgeG1sbnM9J2h0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnJyB2aWV3Qm94PScwIDAgMTAwIDEwMCc+PHRleHQgeT0nMC45ZW0nIGZvbnQtc2l6ZT0nOTAnPvCfjq48L3RleHQ+PC9zdmc+IiwKICAgICAgInNpemVzIjogIjUxMng1MTIiLAogICAgICAidHlwZSI6ICJpbWFnZS9zdmcreG1sIgogICAgfQogIF0KfQ==" />
+  
   <link rel="preconnect" href="https://fonts.gstatic.com" />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
@@ -58,7 +81,7 @@
   <script>
     // Service Worker Registration for Cache Busting
     if ('serviceWorker' in navigator) {
-      const APP_VERSION = '1.0.1';
+      const APP_VERSION = '1.0.2';
       const SW_CODE = `
         const CACHE_VERSION = '${APP_VERSION}';
         const CACHE_NAME = 'raten-oida-v' + CACHE_VERSION;
@@ -374,6 +397,8 @@
           <button
             onClick={() => setOpen((v) => !v)}
             className="p-3 rounded-xl bg-slate-900/80 border border-white/10 text-white shadow-glow"
+            aria-label="Navigation öffnen"
+            aria-expanded={open}
           >
             <span className="block w-6 h-0.5 bg-white mb-1"></span>
             <span className="block w-6 h-0.5 bg-white mb-1"></span>
@@ -474,8 +499,39 @@
         </AnimatePresence>
       );
 
+      const ErrorBoundary = ({ children }) => {
+        const [hasError, setHasError] = React.useState(false);
+        
+        React.useEffect(() => {
+          const handler = (event) => {
+            console.error('Error caught:', event.error);
+            setHasError(true);
+          };
+          window.addEventListener('error', handler);
+          return () => window.removeEventListener('error', handler);
+        }, []);
+        
+        if (hasError) {
+          return (
+            <div className="min-h-screen bg-cyber2 flex items-center justify-center p-4">
+              <div className="bg-slate-900 border border-red-500 rounded-2xl p-6 max-w-md text-center">
+                <div className="text-6xl mb-4">⚠️</div>
+                <h1 className="text-2xl font-display text-white mb-2">Na oida!</h1>
+                <p className="text-slate-300 mb-4">Es ist ein Fehler aufgetreten.</p>
+                <button onClick={() => window.location.reload()} className="px-4 py-2 rounded-xl bg-gradient-to-r from-neon to-magenta text-slate-900 font-semibold">
+                  Neu laden
+                </button>
+              </div>
+            </div>
+          );
+        }
+        
+        return children;
+      };
+
       function App() {
         const { theme, setTheme, resolved } = useTheme();
+        const [isLoading, setIsLoading] = React.useState(true);
         const [economy, setEconomy] = useState(() => readLS(STORAGE_KEYS.ECONOMY, defaultEconomy));
         const [settings, setSettings] = useState(() => readLS(STORAGE_KEYS.SETTINGS, defaultSettings));
         const [stats, setStats] = useState(() => readLS(STORAGE_KEYS.STATS, defaultStats));
@@ -492,6 +548,12 @@
         const [tipsUsed, setTipsUsed] = useState([]);
         const [tipHints, setTipHints] = useState({});
         const [reversePrompt, setReversePrompt] = useState(null);
+
+        // Loading state
+        useEffect(() => {
+          const timer = setTimeout(() => setIsLoading(false), 300);
+          return () => clearTimeout(timer);
+        }, []);
 
         // persist settings/economy/stats
         useEffect(() => writeLS(STORAGE_KEYS.SETTINGS, { ...settings, themeMode: theme }), [settings, theme]);
@@ -627,11 +689,13 @@
             const payout = activeGame.rewardBase + bonusValue;
             gain(payout);
             setStats((s) => ({ ...s, wins: s.wins + 1, timeBonus: s.timeBonus + bonusValue, lastWin: new Date().toISOString() }));
-            setFeedback({ type: 'success', msg: `Jo eh, passt! +${currency(payout)}` });
+            setFeedback({ type: 'success', msg: `Jo eh, passt! +${currency(payout)}`, bonusValue });
           } else {
-            setFeedback({ type: 'error', msg: 'Na oida, des war nix.' });
+            const correctAnswer = activeGame.kind === 'capitals' ? activeGame.question.answer : activeGame.question.correct.name;
+            setFeedback({ type: 'error', msg: `Na oida, des war nix. Richtig wäre: ${correctAnswer}` });
           }
           setActiveGame(null);
+          setTimeout(() => setFeedback(null), 5000);
         };
 
         const buyChoicesHomomode = () => {
@@ -697,8 +761,16 @@
                   </div>
                 ) : (
                   <div className="flex gap-2">
-                    <input value={answer} onChange={(e) => setAnswer(e.target.value)} placeholder="schreib was gscheits..." className="flex-1 px-3 py-3 rounded-xl bg-slate-800/80 border border-white/10" />
-                    <button onClick={() => submitAnswer(answer)} className="px-4 py-3 rounded-xl bg-gradient-to-r from-neon to-magenta text-slate-900 font-semibold">Passt</button>
+                    <input 
+                      value={answer} 
+                      onChange={(e) => setAnswer(e.target.value)} 
+                      onKeyDown={(e) => e.key === 'Enter' && submitAnswer(answer)}
+                      placeholder="schreib was gscheits..." 
+                      className="flex-1 px-3 py-3 rounded-xl bg-slate-800/80 border border-white/10 text-white" 
+                      autoFocus
+                      aria-label="Antwort eingeben"
+                    />
+                    <button onClick={() => submitAnswer(answer)} className="px-4 py-3 rounded-xl bg-gradient-to-r from-neon to-magenta text-slate-900 font-semibold" aria-label="Antwort absenden">Passt</button>
                   </div>
                 )}
               </div>
@@ -725,6 +797,31 @@
             </div>
           );
         };
+
+        if (isLoading) {
+          return (
+            <div className="min-h-screen bg-cyber2 flex items-center justify-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                className="text-center"
+              >
+                <Logo />
+                <motion.div
+                  className="mt-4 flex gap-2 justify-center"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                >
+                  <span className="w-2 h-2 bg-neon rounded-full animate-pulse" style={{ animationDelay: '0ms' }}></span>
+                  <span className="w-2 h-2 bg-magenta rounded-full animate-pulse" style={{ animationDelay: '150ms' }}></span>
+                  <span className="w-2 h-2 bg-lime rounded-full animate-pulse" style={{ animationDelay: '300ms' }}></span>
+                </motion.div>
+              </motion.div>
+            </div>
+          );
+        }
 
         return (
           <div className="relative min-h-screen text-slate-100">
@@ -804,11 +901,26 @@
                 </Section>
               )}
 
-              {feedback && (
-                <Section title="Ergebnis">
-                  <div className={`p-4 rounded-xl border ${feedback.type === 'success' ? 'border-neon text-neon' : 'border-magenta text-magenta'}`}>{feedback.msg}</div>
-                </Section>
-              )}
+              <AnimatePresence>
+                {feedback && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                  >
+                    <Section title="Ergebnis">
+                      <div className={`p-4 rounded-xl border ${feedback.type === 'success' ? 'border-neon bg-neon/10' : 'border-magenta bg-magenta/10'}`}>
+                        <div className={`text-lg font-semibold ${feedback.type === 'success' ? 'text-neon' : 'text-magenta'}`}>
+                          {feedback.type === 'success' ? '✓ ' : '✗ '}{feedback.msg}
+                        </div>
+                        {feedback.bonusValue > 0 && (
+                          <div className="text-sm text-cyan-200 mt-2">Zeitbonus: +{feedback.bonusValue} Schülling 🚀</div>
+                        )}
+                      </div>
+                    </Section>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <Section title="Statistik" id="stats">
                 <div className="grid md:grid-cols-3 gap-3 text-sm">
@@ -901,7 +1013,7 @@
       }
 
       const root = ReactDOM.createRoot(document.getElementById('root'));
-      root.render(<App />);
+      root.render(<ErrorBoundary><App /></ErrorBoundary>);
     })();
   </script>
 </body>
