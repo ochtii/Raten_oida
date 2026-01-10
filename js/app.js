@@ -44,6 +44,15 @@ class App {
         // DevTools initialisieren (nur in Development)
         initDevTools();
 
+        // Auto-Open DevTools wenn aktiviert
+        setTimeout(() => {
+            const autoOpen = store.getSetting('developer')?.autoOpenDevTools;
+            if (autoOpen && window.devTools) {
+                window.devTools.open();
+                console.log('🛠️ DevTools auto-opened');
+            }
+        }, 500);
+
         console.log('✅ Raten OIDA bereit! Hau di über d\'Häuser! 🎯');
     }
 
@@ -126,6 +135,90 @@ class App {
                         message: 'DevTools sind nur in Development-Umgebungen verfügbar.'
                     });
                 }
+            }
+
+            // Debug Mode Toggle
+            if (e.target.id === 'toggle-debug-btn' || e.target.closest('#toggle-debug-btn')) {
+                const current = store.getSetting('developer')?.debugMode || false;
+                const developer = store.getSetting('developer') || {};
+                developer.debugMode = !current;
+                store.setSetting('developer', developer);
+                
+                const btn = $('#toggle-debug-btn');
+                if (btn) btn.textContent = developer.debugMode ? '✅ An' : '❌ Aus';
+                
+                console.log(`Debug Mode: ${developer.debugMode ? 'aktiviert' : 'deaktiviert'}`);
+            }
+
+            // Auto-Open DevTools Toggle
+            if (e.target.id === 'toggle-auto-devtools-btn' || e.target.closest('#toggle-auto-devtools-btn')) {
+                const current = store.getSetting('developer')?.autoOpenDevTools || false;
+                const developer = store.getSetting('developer') || {};
+                developer.autoOpenDevTools = !current;
+                store.setSetting('developer', developer);
+                
+                const btn = $('#toggle-auto-devtools-btn');
+                if (btn) btn.textContent = developer.autoOpenDevTools ? '✅ An' : '❌ Aus';
+            }
+
+            // Performance Monitor Toggle
+            if (e.target.id === 'toggle-perf-monitor-btn' || e.target.closest('#toggle-perf-monitor-btn')) {
+                const current = store.getSetting('developer')?.performanceMonitor || false;
+                const developer = store.getSetting('developer') || {};
+                developer.performanceMonitor = !current;
+                store.setSetting('developer', developer);
+                
+                const btn = $('#toggle-perf-monitor-btn');
+                if (btn) btn.textContent = developer.performanceMonitor ? '✅ An' : '❌ Aus';
+                
+                if (developer.performanceMonitor && window.devTools) {
+                    window.devTools.startPerformanceMonitoring?.();
+                }
+            }
+
+            // Clear Cache
+            if (e.target.id === 'clear-cache-btn' || e.target.closest('#clear-cache-btn')) {
+                if ('caches' in window) {
+                    caches.keys().then(names => {
+                        names.forEach(name => caches.delete(name));
+                    });
+                }
+                localStorage.removeItem('raten_oida_cache');
+                
+                modal.alert({
+                    title: 'Cache geleert',
+                    message: 'Browser-Cache wurde erfolgreich gelöscht!'
+                });
+            }
+
+            // Export Settings
+            if (e.target.id === 'export-settings-btn' || e.target.closest('#export-settings-btn')) {
+                const settings = store.getSetting();
+                const dataStr = JSON.stringify(settings, null, 2);
+                const dataBlob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(dataBlob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = 'raten-oida-settings.json';
+                link.click();
+                URL.revokeObjectURL(url);
+                
+                modal.alert({
+                    title: 'Einstellungen exportiert',
+                    message: 'Einstellungen wurden als JSON-Datei heruntergeladen!'
+                });
+            }
+        });
+
+        // Logging Level Select
+        document.addEventListener('change', (e) => {
+            if (e.target.id === 'logging-level-select') {
+                const level = e.target.value;
+                const developer = store.getSetting('developer') || {};
+                developer.loggingLevel = level;
+                store.setSetting('developer', developer);
+                
+                console.log(`Logging Level auf "${level}" gesetzt`);
             }
         });
 

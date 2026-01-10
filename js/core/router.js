@@ -391,6 +391,63 @@ export const settingsView = () => {
                 </div>
             </div>
 
+            <div class="card mb-lg">
+                <div class="card-header">
+                    <h3 class="card-title">⚙️ Entwickler-Einstellungen</h3>
+                </div>
+                <div class="card-body">
+                    <div class="flex justify-between items-center mb-md">
+                        <div>
+                            <div style="font-weight: 600;">Debug Mode</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">Erweiterte Logs in der Console</div>
+                        </div>
+                        <button class="btn btn-outline btn-small" id="toggle-debug-btn">
+                            ${store.getSetting('developer')?.debugMode ? '✅ An' : '❌ Aus'}
+                        </button>
+                    </div>
+                    
+                    <div class="flex justify-between items-center mb-md">
+                        <div>
+                            <div style="font-weight: 600;">Auto-Open DevTools</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">DevTools beim Start öffnen</div>
+                        </div>
+                        <button class="btn btn-outline btn-small" id="toggle-auto-devtools-btn">
+                            ${store.getSetting('developer')?.autoOpenDevTools ? '✅ An' : '❌ Aus'}
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-md">
+                        <div>
+                            <div style="font-weight: 600;">Performance Monitor</div>
+                            <div class="text-muted" style="font-size: 0.75rem;">FPS & Performance-Metriken</div>
+                        </div>
+                        <button class="btn btn-outline btn-small" id="toggle-perf-monitor-btn">
+                            ${store.getSetting('developer')?.performanceMonitor ? '✅ An' : '❌ Aus'}
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between items-center mb-md">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; margin-bottom: 0.5rem;">Logging Level</div>
+                            <select id="logging-level-select" class="btn btn-outline btn-small" style="padding: 0.5rem; width: 100%;">
+                                <option value="normal" ${store.getSetting('developer')?.loggingLevel === 'normal' ? 'selected' : ''}>Normal</option>
+                                <option value="verbose" ${store.getSetting('developer')?.loggingLevel === 'verbose' ? 'selected' : ''}>Verbose</option>
+                                <option value="debug" ${store.getSetting('developer')?.loggingLevel === 'debug' ? 'selected' : ''}>Debug</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div style="padding-top: var(--spacing-sm); border-top: 1px solid var(--bg-tertiary);">
+                        <button class="btn btn-outline btn-small" id="clear-cache-btn" style="width: 100%; margin-bottom: var(--spacing-sm);">
+                            🗑️ Cache leeren
+                        </button>
+                        <button class="btn btn-outline btn-small" id="export-settings-btn" style="width: 100%;">
+                            📥 Einstellungen exportieren
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div class="text-center">
                 <button class="btn btn-secondary" id="reset-all-btn">
                     ⚠️ Alles zurücksetzen

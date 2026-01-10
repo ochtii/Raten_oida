@@ -28,7 +28,14 @@ class Store {
             settings: {
                 theme: 'dark',
                 sound: true,
-                difficulty: 'medium'
+                difficulty: 'medium',
+                developer: {
+                    debugMode: false,
+                    autoOpenDevTools: false,
+                    loggingLevel: 'normal', // 'normal', 'verbose', 'debug'
+                    performanceMonitor: false,
+                    showFPS: false
+                }
             },
             stats: {
                 gamesPlayed: 0,
