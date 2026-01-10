@@ -26,11 +26,17 @@ export class Navigation {
             this.closeMenu();
         });
 
-        // Click außerhalb des Menüs
-        this.sandwichMenu?.addEventListener('click', (e) => {
-            if (e.target === this.sandwichMenu) {
+        // Overlay Click (schließt Menü)
+        const overlay = $('#nav-overlay');
+        overlay?.addEventListener('click', () => {
+            this.closeMenu();
+        });
+
+        // Menu Links Click (schließt Menü nach Navigation)
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', () => {
                 this.closeMenu();
-            }
+            });
         });
 
         // ESC Taste
