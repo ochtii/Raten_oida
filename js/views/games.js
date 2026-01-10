@@ -359,15 +359,17 @@ window.endGame = () => {
 };
 
 function generateCapitalsQuestion() {
-    const allCountries = Object.entries(capitalsData);
-    const randomIndex = Math.floor(Math.random() * allCountries.length);
-    const [country, capital] = allCountries[randomIndex];
+    // capitalsData ist ein Array von Objekten mit { country, capital, ... }
+    const randomIndex = Math.floor(Math.random() * capitalsData.length);
+    const correctEntry = capitalsData[randomIndex];
+    const country = correctEntry.country;
+    const capital = correctEntry.capital;
 
     // Generate 3 wrong options
     const wrongOptions = [];
     while (wrongOptions.length < 3) {
-        const wrongIndex = Math.floor(Math.random() * allCountries.length);
-        const wrongCapital = allCountries[wrongIndex][1];
+        const wrongIndex = Math.floor(Math.random() * capitalsData.length);
+        const wrongCapital = capitalsData[wrongIndex].capital;
         if (wrongCapital !== capital && !wrongOptions.includes(wrongCapital)) {
             wrongOptions.push(wrongCapital);
         }
@@ -375,10 +377,11 @@ function generateCapitalsQuestion() {
 
     // Mix correct answer with wrong options
     const options = [capital, ...wrongOptions];
-    const correctIndex = Math.floor(Math.random() * 4);
-    const temp = options[0];
-    options[0] = options[correctIndex];
-    options[correctIndex] = temp;
+    // Shuffle options
+    for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+    }
 
     currentQuestion = {
         country,
@@ -389,16 +392,18 @@ function generateCapitalsQuestion() {
 }
 
 function generatePopulationQuestion() {
-    const allLocations = Object.entries(populationData);
-    const randomIndex = Math.floor(Math.random() * allLocations.length);
-    const [location, population] = allLocations[randomIndex];
+    // populationData ist ein Array von Objekten mit { city, population, ... }
+    const randomIndex = Math.floor(Math.random() * populationData.length);
+    const correctEntry = populationData[randomIndex];
+    const location = correctEntry.city;
+    const population = correctEntry.population;
 
     // Generate 3 plausible wrong options
     const wrongOptions = [];
     const variance = population * 0.5; // 50% variance
     
     while (wrongOptions.length < 3) {
-        const wrongPop = Math.floor(population + (Math.random() - 0.5) * variance);
+        const wrongPop = Math.floor(population + (Math.random() - 0.5) * 2 * variance);
         if (wrongPop !== population && !wrongOptions.includes(wrongPop) && wrongPop > 0) {
             wrongOptions.push(wrongPop);
         }
@@ -406,10 +411,11 @@ function generatePopulationQuestion() {
 
     // Mix correct answer with wrong options
     const options = [population, ...wrongOptions];
-    const correctIndex = Math.floor(Math.random() * 4);
-    const temp = options[0];
-    options[0] = options[correctIndex];
-    options[correctIndex] = temp;
+    // Shuffle options
+    for (let i = options.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [options[i], options[j]] = [options[j], options[i]];
+    }
 
     currentQuestion = {
         location,
