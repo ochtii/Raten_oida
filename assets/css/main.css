@@ -21,9 +21,12 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     overflow-x: hidden;
+    overflow-y: auto;
     min-height: 100vh;
     transition: background-color var(--transition-normal),
                 color var(--transition-normal);
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
 }
 
 /* Typography */

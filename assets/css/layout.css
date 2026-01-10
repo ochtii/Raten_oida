@@ -160,11 +160,14 @@
 
 /* Main Content */
 #app-content {
-    min-height: calc(100vh - 120px - 70px); /* Header + Bottom Nav */
+    min-height: 100vh;
     padding: var(--spacing-xl) var(--spacing-md);
-    padding-bottom: calc(70px + var(--spacing-xl)); /* Space for bottom nav */
+    padding-top: var(--spacing-md);
+    padding-bottom: calc(80px + var(--spacing-xl)); /* Space for bottom nav */
     max-width: 1200px;
     margin: 0 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Bottom Navigation */
