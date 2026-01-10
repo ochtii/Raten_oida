@@ -3,32 +3,12 @@
    ========================================== */
 
 export const homeView = (store) => {
-    console.log('🏠 Home View wird gerendert');
-    console.log('📦 Store State:', store.state);
-    
     const stats = store.getStats();
     const wallet = store.getWallet();
     const points = store.getPoints();
-    
-    console.log('📊 Stats:', stats);
-    console.log('💰 Wallet:', wallet);
-    console.log('⭐ Points:', points);
-    
-    // Debug: Zeige localStorage Inhalt
-    const savedData = localStorage.getItem('raten_oida_v2');
-    console.log('💾 LocalStorage:', savedData ? JSON.parse(savedData) : 'Leer');
 
     return `
         <div class="home-view">
-            <!-- Debug Info -->
-            <div style="background: rgba(255,0,0,0.1); border: 2px solid red; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; font-size: 0.875rem;">
-                <strong>DEBUG INFO:</strong><br>
-                Wallet: ${wallet} (Typ: ${typeof wallet})<br>
-                Punkte: ${points} (Typ: ${typeof points})<br>
-                Spiele: ${stats.gamesPlayed}<br>
-                localStorage: ${savedData ? 'Vorhanden' : 'Leer'}
-            </div>
-            
             <div class="hero">
                 <h1 class="hero-title">
                     <span class="hero-icon">🎮</span>
