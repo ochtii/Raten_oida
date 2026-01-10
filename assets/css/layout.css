@@ -247,13 +247,16 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: var(--spacing-lg) var(--spacing-md);
+    padding-bottom: calc(var(--spacing-xl) + 80px); /* Extra space for bottom nav */
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+    min-height: 0; /* Fix flexbox overflow issue */
 }
 
 /* Views */
 .view {
     width: 100%;
+    min-height: 200px; /* Ensure view has minimum height */
     animation: fadeInUp var(--transition-normal);
 }
 

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="de" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Mobile</title>
+    <style>
+        body { margin: 0; padding: 20px; font-family: system-ui; background: #1a1a1a; color: #fff; }
+        .test { margin: 10px 0; padding: 10px; background: #2a2a2a; border-left: 3px solid #00ff88; }
+        .error { border-color: #ff0066; }
+        .success { border-color: #00ff88; }
+        pre { overflow-x: auto; background: #0a0a0a; padding: 10px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <h1>🔍 Mobile Debug Test</h1>
+    
+    <div class="test">
+        <strong>Viewport:</strong> <span id="viewport"></span>
+    </div>
+    
+    <div class="test">
+        <strong>User Agent:</strong> <span id="ua"></span>
+    </div>
+    
+    <div class="test" id="app-test">
+        <strong>#app Element:</strong> <span id="app-check"></span>
+    </div>
+    
+    <div class="test" id="content-test">
+        <strong>#app-content Element:</strong> <span id="content-check"></span>
+    </div>
+    
+    <div class="test" id="router-test">
+        <strong>Router Module:</strong> <span id="router-check"></span>
+    </div>
+    
+    <div class="test" id="view-test">
+        <strong>View Content:</strong> <span id="view-check"></span>
+    </div>
+    
+    <h2>Console Logs:</h2>
+    <pre id="console-output"></pre>
+    
+    <script type="module">
+        const output = document.getElementById('console-output');
+        const log = (msg) => {
+            console.log(msg);
+            output.textContent += msg + '\n';
+        };
+        
+        // Viewport
+        document.getElementById('viewport').textContent = `${window.innerWidth}x${window.innerHeight}`;
+        document.getElementById('ua').textContent = navigator.userAgent.substr(0, 80) + '...';
+        
+        log('🚀 Starting tests...');
+        
+        try {
+            // Test 1: #app Element
+            const app = document.querySelector('#app');
+            const appTest = document.getElementById('app-test');
+            if (app) {
+                document.getElementById('app-check').textContent = '✅ Found';
+                appTest.className = 'test success';
+                log('✅ #app element exists');
+                log(`   Display: ${getComputedStyle(app).display}`);
+                log(`   Visibility: ${getComputedStyle(app).visibility}`);
+            } else {
+                document.getElementById('app-check').textContent = '❌ NOT FOUND';
+                appTest.className = 'test error';
+                log('❌ #app element missing!');
+            }
+            
+            // Test 2: #app-content Element  
+            const content = document.querySelector('#app-content');
+            const contentTest = document.getElementById('content-test');
+            if (content) {
+                document.getElementById('content-check').textContent = '✅ Found';
+                contentTest.className = 'test success';
+                log('✅ #app-content element exists');
+                log(`   Display: ${getComputedStyle(content).display}`);
+                log(`   Visibility: ${getComputedStyle(content).visibility}`);
+                log(`   InnerHTML length: ${content.innerHTML.length} chars`);
+                log(`   Content preview: ${content.innerHTML.substr(0, 100)}...`);
+            } else {
+                document.getElementById('content-check').textContent = '❌ NOT FOUND';
+                contentTest.className = 'test error';
+                log('❌ #app-content element missing!');
+            }
+            
+            // Test 3: Import Router
+            import('./js/core/router.js')
+                .then(({ router }) => {
+                    document.getElementById('router-check').textContent = '✅ Loaded';
+                    document.getElementById('router-test').className = 'test success';
+                    log('✅ Router module loaded');
+                    log(`   Current route: ${router.currentRoute}`);
+                    log(`   Container: ${router.contentContainer ? 'Set' : 'Not set'}`);
+                    
+                    // Check if view was rendered
+                    setTimeout(() => {
+                        const viewContent = document.querySelector('#app-content .view');
+                        if (viewContent) {
+                            document.getElementById('view-check').textContent = '✅ Rendered';
+                            document.getElementById('view-test').className = 'test success';
+                            log('✅ View content rendered');
+                        } else {
+                            document.getElementById('view-check').textContent = '❌ NOT RENDERED';
+                            document.getElementById('view-test').className = 'test error';
+                            log('❌ No .view element found in #app-content');
+                        }
+                    }, 1000);
+                })
+                .catch(e => {
+                    document.getElementById('router-check').textContent = '❌ ERROR';
+                    document.getElementById('router-test').className = 'test error';
+                    log('❌ Router loading failed: ' + e.message);
+                });
+                
+        } catch (e) {
+            log('❌ Critical error: ' + e.message);
+            log(e.stack);
+        }
+    </script>
+    
+    <!-- Load actual app to iframe for visual comparison -->
+    <h2>Visual Check:</h2>
+    <iframe src="/" style="width: 100%; height: 400px; border: 2px solid #00ff88; border-radius: 8px;"></iframe>
+</body>
+</html>
