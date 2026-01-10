@@ -2,64 +2,63 @@
    APP.JS - Main Application Entry Point
    ========================================== */
 
-// Cache-Buster für alle Module - nur wenn aktiviert
-const v = window.CACHE_BUSTER;
-const cacheBusterQuery = (v && v !== 'disabled') ? `?v=${v}` : '';
-
 class App {
     constructor() {
         this.store = null;
         this.router = null;
         this.ui = null;
-        this.isRendering = false;
+        this.debugConsole = null;
     }
 
     async init() {
-        // Dynamische Imports mit Cache-Buster (wenn aktiviert)
-        const [{ Router }, { Store }, { UI }, { DebugConsole }] = await Promise.all([
-            import(`./core/router.js${cacheBusterQuery}`),
-            import(`./core/store.js${cacheBusterQuery}`),
-            import(`./core/ui.js${cacheBusterQuery}`),
-            import(`./core/debug-console.js${cacheBusterQuery}`)
-        ]);
-        
-        this.store = new Store();
-        this.router = new Router(this.store);
-        this.ui = new UI(this.store);
-        this.debugConsole = new DebugConsole();
-        
-        console.log('🚀 Raten OIDA gestartet');
-        console.log('📦 Store:', this.store);
-        console.log('📍 Router:', this.router);
-        console.log('🎨 UI:', this.ui);
-        
-        // App global verfügbar machen für Settings
-        window.app = this;
-        
-        // Debug Console initialisieren
-        this.debugConsole.init();
-        console.log('✅ Debug Console initialisiert');
-        
-        // UI initialisieren
-        this.ui.init();
-        console.log('✅ UI initialisiert');
-        
-        // Router initialisieren
-        this.router.init();
-        console.log('✅ Router initialisiert');
-        
-        // Event Listeners
-        this.setupEventListeners();
-        console.log('✅ Event Listeners registriert');
-        
-        // Initial route laden
-        const initialRoute = window.location.hash.slice(1) || 'home';
-        console.log('📍 Navigiere zu:', initialRoute);
-        await this.router.navigateTo(initialRoute);
-        
-        // Store-Updates überwachen
-        this.store.subscribe(() => this.onStoreUpdate());
-        console.log('✅ App vollständig geladen');
+        try {
+            console.log('🚀 Raten OIDA wird initialisiert...');
+            
+            // Cache-Buster aktiviert?
+            const v = window.CACHE_BUSTER;
+            const cb = (v && v !== 'disabled') ? `?v=${v}` : '';
+            
+            // Module laden
+            const [
+                { Router },
+                { Store },
+                { UI },
+                { DebugConsole }
+            ] = await Promise.all([
+                import(`./core/router.js${cb}`),
+                import(`./core/store.js${cb}`),
+                import(`./core/ui.js${cb}`),
+                import(`./core/debug-console.js${cb}`)
+            ]);
+            
+            // Instanzen erstellen
+            this.store = new Store();
+            this.router = new Router(this.store);
+            this.ui = new UI(this.store);
+            this.debugConsole = new DebugConsole();
+            
+            // Global verfügbar machen
+            window.app = this;
+            
+            // Komponenten initialisieren
+            this.debugConsole.init();
+            this.ui.init();
+            this.router.init();
+            
+            // Event Listeners
+            this.setupEventListeners();
+            
+            // Initial Route laden
+            const initialRoute = window.location.hash.slice(1) || 'home';
+            await this.router.navigateTo(initialRoute);
+            
+            // Store Updates überwachen
+            this.store.subscribe(() => this.onStoreUpdate());
+            
+            console.log('✅ App erfolgreich geladen');
+        } catch (error) {
+            console.error('❌ Fehler beim Laden der App:', error);
+        }
     }
 
     setupEventListeners() {
@@ -79,14 +78,14 @@ class App {
         menuCloseBtn?.addEventListener('click', toggleMenu);
         overlay?.addEventListener('click', toggleMenu);
 
-        // Event Delegation für Navigation - funktioniert auch für dynamisch erstellte Elemente
+        // Navigation - Event Delegation
         document.addEventListener('click', (e) => {
             const link = e.target.closest('[data-route]');
             if (link) {
                 e.preventDefault();
                 const route = link.getAttribute('data-route');
                 
-                // Menu schließen wenn offen
+                // Menu schließen
                 if (sideMenu?.classList.contains('active')) {
                     toggleMenu();
                 }
@@ -97,7 +96,8 @@ class App {
 
         // Hash Change
         window.addEventListener('hashchange', () => {
-            this.router.navigateTo(window.location.hash.slice(1) || 'home');
+            const route = window.location.hash.slice(1) || 'home';
+            this.router.navigateTo(route);
         });
     }
 
@@ -107,14 +107,19 @@ class App {
         if (walletDisplay) {
             walletDisplay.textContent = this.store.getWallet().toLocaleString('de-DE');
         }
-        
-        // View nur neu rendern wenn nicht bereits am rendern und auf Home-Seite
-        // NICHT automatisch neu rendern - das verursacht das Blinken
     }
 }
 
-// App starten
-document.addEventListener('DOMContentLoaded', async () => {
-    const app = new App();
-    await app.init();
-});
+// App starten nach DOM Ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', async () => {
+        const app = new App();
+        await app.init();
+    });
+} else {
+    // DOM bereits geladen
+    (async () => {
+        const app = new App();
+        await app.init();
+    })();
+}

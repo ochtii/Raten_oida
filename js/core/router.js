@@ -1,10 +1,6 @@
 /* ==========================================
-   ROUTER.JS - SPA Routing mit Cache-Busting
+   ROUTER.JS - SPA Routing System
    ========================================== */
-
-// View Module werden dynamisch geladen mit Cache-Buster (wenn aktiviert)
-const v = window.CACHE_BUSTER;
-const cacheBusterQuery = (v && v !== 'disabled') ? `?v=${v}` : '';
 
 export class Router {
     constructor(store) {
@@ -14,23 +10,25 @@ export class Router {
         this.isLoading = false;
     }
 
+    init() {
+        console.log('📍 Router initialisiert');
+    }
+
     async loadView(viewName) {
         if (!this.viewModules[viewName]) {
-            const module = await import(`../views/${viewName}.js${cacheBusterQuery}`);
+            const v = window.CACHE_BUSTER;
+            const cb = (v && v !== 'disabled') ? `?v=${v}` : '';
+            const module = await import(`../views/${viewName}.js${cb}`);
             this.viewModules[viewName] = module[`${viewName}View`];
         }
         return this.viewModules[viewName];
-    }
-
-    init() {
-        console.log('📍 Router initialisiert');
     }
 
     async navigateTo(route) {
         const validRoutes = ['home', 'games', 'points', 'stats', 'settings', 'dev'];
         
         if (!validRoutes.includes(route)) {
-            console.warn(`Route "${route}" not found`);
+            console.warn(`Route "${route}" nicht gefunden`);
             route = 'home';
         }
 
@@ -45,7 +43,6 @@ export class Router {
         this.isLoading = true;
         
         const container = document.getElementById('mainContent');
-        console.log('🎨 Rendering view:', this.currentRoute);
         
         if (!container) {
             console.error('❌ Container #mainContent nicht gefunden!');
@@ -55,29 +52,24 @@ export class Router {
 
         try {
             const viewFunction = await this.loadView(this.currentRoute);
-            console.log('📄 View function:', viewFunction);
-            
             const html = viewFunction(this.store);
-            console.log('📝 Generated HTML length:', html.length);
-            
             container.innerHTML = html;
-            console.log('✅ View gerendert');
+            console.log('✅ View gerendert:', this.currentRoute);
         } catch (error) {
             console.error('❌ Fehler beim Laden der View:', error);
-            container.innerHTML = `<div class="error">Fehler beim Laden: ${error.message}</div>`;
+            container.innerHTML = `
+                <div class="error-view">
+                    <h2>⚠️ Fehler</h2>
+                    <p>View konnte nicht geladen werden: ${error.message}</p>
+                </div>
+            `;
         }
         
         this.isLoading = false;
-        
-        // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-        // Update active navigation
-        this.updateActiveNav();
     }
 
     updateActiveNav() {
-        // Update all nav items
         document.querySelectorAll('[data-route]').forEach(item => {
             const route = item.getAttribute('data-route');
             if (route === this.currentRoute) {

@@ -2,67 +2,59 @@
    STORE.JS - State Management
    ========================================== */
 
-const STORAGE_KEY = 'raten_oida_v2';
-
 export class Store {
     constructor() {
         this.state = this.loadState();
-        this.listeners = [];
+        this.subscribers = [];
     }
 
     loadState() {
-        try {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) return JSON.parse(saved);
-        } catch (e) {
-            console.error('Load error:', e);
+        const saved = localStorage.getItem('raten_oida_v2');
+        if (saved) {
+            try {
+                return JSON.parse(saved);
+            } catch (e) {
+                console.error('Fehler beim Laden des Spielstands:', e);
+            }
         }
-
+        
         return {
-            wallet: 1000,
+            wallet: 0,
             points: 0,
             stats: {
                 gamesPlayed: 0,
                 gamesWon: 0,
-                capitalsCorrect: 0,
-                capitalsTotal: 0,
-                populationCorrect: 0,
-                populationTotal: 0,
-                bestStreak: 0,
-                currentStreak: 0
+                currentStreak: 0,
+                bestStreak: 0
             },
+            history: [],
             settings: {
-                theme: 'dark',
                 sound: true,
-                difficulty: 'medium'
-            },
-            history: []
+                notifications: true,
+                theme: 'dark'
+            }
         };
     }
 
     saveState() {
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(this.state));
+            localStorage.setItem('raten_oida_v2', JSON.stringify(this.state));
             this.notify();
         } catch (e) {
-            console.error('Save error:', e);
+            console.error('Fehler beim Speichern:', e);
         }
     }
 
-    subscribe(listener) {
-        this.listeners.push(listener);
-        return () => {
-            this.listeners = this.listeners.filter(l => l !== listener);
-        };
+    subscribe(callback) {
+        this.subscribers.push(callback);
     }
 
     notify() {
-        this.listeners.forEach(listener => listener(this.state));
+        this.subscribers.forEach(callback => callback(this.state));
     }
 
-    // Wallet
     getWallet() {
-        return this.state.wallet;
+        return this.state.wallet || 0;
     }
 
     addMoney(amount) {
@@ -70,96 +62,94 @@ export class Store {
         this.saveState();
     }
 
-    spendMoney(amount) {
-        if (this.state.wallet >= amount) {
-            this.state.wallet -= amount;
-            this.saveState();
-            return true;
-        }
-        return false;
-    }
-
-    // Points
     getPoints() {
-        return this.state.points;
+        return this.state.points || 0;
     }
 
-    addPoints(points) {
-        this.state.points += points;
+    addPoints(amount) {
+        this.state.points += amount;
         this.saveState();
     }
 
-    // Stats
     getStats() {
-        return this.state.stats;
-    }
-
-    recordGame(type, correct, points, details = {}) {
-        this.state.stats.gamesPlayed++;
-        if (correct) {
-            this.state.stats.gamesWon++;
-            this.state.stats.currentStreak++;
-            if (this.state.stats.currentStreak > this.state.stats.bestStreak) {
-                this.state.stats.bestStreak = this.state.stats.currentStreak;
-            }
-        } else {
-            this.state.stats.currentStreak = 0;
-        }
-
-        if (type === 'capitals') {
-            this.state.stats.capitalsTotal++;
-            if (correct) this.state.stats.capitalsCorrect++;
-        } else if (type === 'population') {
-            this.state.stats.populationTotal++;
-            if (correct) this.state.stats.populationCorrect++;
-        }
-
-        if (points > 0) this.addPoints(points);
-        this.addHistory(type, correct, points, details);
-        this.saveState();
-    }
-
-    // History
-    addHistory(type, correct, points, details = {}) {
-        this.state.history.unshift({
-            timestamp: new Date().toISOString(),
-            type,
-            correct,
-            points,
-            question: details.question || '',
-            userAnswer: details.userAnswer || '',
-            correctAnswer: details.correctAnswer || '',
-            streak: details.streak || 0
-        });
-        
-        // Nur letzte 100 behalten
-        if (this.state.history.length > 100) {
-            this.state.history = this.state.history.slice(0, 100);
-        }
+        return this.state.stats || {
+            gamesPlayed: 0,
+            gamesWon: 0,
+            currentStreak: 0,
+            bestStreak: 0
+        };
     }
 
     getHistory() {
-        return this.state.history;
+        return this.state.history || [];
     }
 
-    // Settings
-    getSettings() {
-        return this.state.settings;
-    }
-
-    getSetting(key) {
-        return this.state.settings[key];
-    }
-
-    setSetting(key, value) {
-        this.state.settings[key] = value;
+    addHistory(entry) {
+        if (!this.state.history) {
+            this.state.history = [];
+        }
+        this.state.history.unshift({
+            ...entry,
+            timestamp: new Date().toISOString()
+        });
+        
+        if (this.state.history.length > 50) {
+            this.state.history = this.state.history.slice(0, 50);
+        }
+        
         this.saveState();
     }
 
-    // Reset
+    recordGame(gameType, won, pointsEarned, details = {}) {
+        const stats = this.getStats();
+        stats.gamesPlayed = (stats.gamesPlayed || 0) + 1;
+        
+        if (won) {
+            stats.gamesWon = (stats.gamesWon || 0) + 1;
+            stats.currentStreak = (stats.currentStreak || 0) + 1;
+            stats.bestStreak = Math.max(stats.bestStreak || 0, stats.currentStreak);
+        } else {
+            stats.currentStreak = 0;
+        }
+        
+        this.state.points += pointsEarned;
+        
+        this.addHistory({
+            game: gameType,
+            won,
+            points: pointsEarned,
+            ...details
+        });
+        
+        this.saveState();
+    }
+
+    getSettings() {
+        return this.state.settings || {
+            sound: true,
+            notifications: true,
+            theme: 'dark'
+        };
+    }
+
+    updateSettings(settings) {
+        this.state.settings = { ...this.state.settings, ...settings };
+        this.saveState();
+    }
+
     reset() {
-        localStorage.removeItem(STORAGE_KEY);
-        this.state = this.loadState();
+        this.state = {
+            wallet: 0,
+            points: 0,
+            stats: {
+                gamesPlayed: 0,
+                gamesWon: 0,
+                currentStreak: 0,
+                bestStreak: 0
+            },
+            history: [],
+            settings: this.state.settings
+        };
         this.saveState();
     }
 }
