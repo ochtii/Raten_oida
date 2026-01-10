@@ -12,10 +12,10 @@ export const helpView = () => {
                     <h3 class="card-title">🚀 Schnellstart</h3>
                 </div>
                 <div class="card-body">
-                    <ol style="margin: 0; padding-left: 1.5rem;">
-                        <li style="margin-bottom: var(--spacing-sm);">Wähle ein <strong>Spiel</strong> aus der Spieleauswahl</li>
-                        <li style="margin-bottom: var(--spacing-sm);">Setze deinen <strong>Einsatz</strong> (Schülling)</li>
-                        <li style="margin-bottom: var(--spacing-sm);">Beantworte die <strong>Frage richtig</strong></li>
+                    <ol class="help-list">
+                        <li>Wähle ein <strong>Spiel</strong> aus der Spieleauswahl</li>
+                        <li>Setze deinen <strong>Einsatz</strong> (Schülling)</li>
+                        <li>Beantworte die <strong>Frage richtig</strong></li>
                         <li>Gewinne <strong>doppelt</strong> deinen Einsatz zurück</li>
                     </ol>
                 </div>
@@ -26,17 +26,17 @@ export const helpView = () => {
                     <h3 class="card-title">🎮 Verfügbare Spiele</h3>
                 </div>
                 <div class="card-body">
-                    <div style="margin-bottom: var(--spacing-lg);">
-                        <h4 style="color: var(--accent-primary); margin-bottom: var(--spacing-sm);">🌍 Hauptstädte Quiz</h4>
-                        <p style="margin: 0; color: var(--text-muted);">
+                    <div class="help-section">
+                        <h4 class="help-section-title">🌍 Hauptstädte Quiz</h4>
+                        <p class="help-section-text">
                             Rate die Hauptstadt eines zufälligen Landes. Du bekommst 4 Antwortmöglichkeiten. 
                             Je schneller du antwortest, desto höher der Bonus.
                         </p>
                     </div>
                     
                     <div>
-                        <h4 style="color: var(--accent-primary); margin-bottom: var(--spacing-sm);">👥 Einwohner Quiz</h4>
-                        <p style="margin: 0; color: var(--text-muted);">
+                        <h4 class="help-section-title">👥 Einwohner Quiz</h4>
+                        <p class="help-section-text">
                             Schätze, welche Stadt mehr Einwohner hat. Vergleiche zwei Städte und wähle die größere aus.
                             Perfekt für Geographie-Fans.
                         </p>
@@ -50,26 +50,26 @@ export const helpView = () => {
                 </div>
                 <div class="card-body">
                     <div class="flex items-start gap-md mb-md">
-                        <span style="font-size: 2rem;">💵</span>
+                        <span class="help-icon-large">💵</span>
                         <div>
-                            <h4 style="margin: 0 0 var(--spacing-xs) 0; color: var(--accent-primary);">Startguthaben</h4>
-                            <p style="margin: 0; color: var(--text-muted);">Du startest mit <strong>1.000 Schülling</strong></p>
+                            <h4 class="help-feature-title">Startguthaben</h4>
+                            <p class="help-feature-desc">Du startest mit <strong>1.000 Schülling</strong></p>
                         </div>
                     </div>
                     
                     <div class="flex items-start gap-md mb-md">
-                        <span style="font-size: 2rem;">🎲</span>
+                        <span class="help-icon-large">🎲</span>
                         <div>
-                            <h4 style="margin: 0 0 var(--spacing-xs) 0; color: var(--accent-primary);">Einsatz wählen</h4>
-                            <p style="margin: 0; color: var(--text-muted);">Setze zwischen <strong>10 - 500 Schülling</strong> pro Runde</p>
+                            <h4 class="help-feature-title">Einsatz wählen</h4>
+                            <p class="help-feature-desc">Setze zwischen <strong>10 - 500 Schülling</strong> pro Runde</p>
                         </div>
                     </div>
                     
                     <div class="flex items-start gap-md">
-                        <span style="font-size: 2rem;">✅</span>
+                        <span class="help-icon-large">✅</span>
                         <div>
-                            <h4 style="margin: 0 0 var(--spacing-xs) 0; color: var(--accent-primary);">Gewinn</h4>
-                            <p style="margin: 0; color: var(--text-muted);">Bei richtiger Antwort: <strong>2x deinen Einsatz</strong></p>
+                            <h4 class="help-feature-title">Gewinn</h4>
+                            <p class="help-feature-desc">Bei richtiger Antwort: <strong>2x deinen Einsatz</strong></p>
                         </div>
                     </div>
                 </div>
@@ -80,14 +80,14 @@ export const helpView = () => {
                     <h3 class="card-title">📊 Statistiken & Fortschritt</h3>
                 </div>
                 <div class="card-body">
-                    <p style="margin-bottom: var(--spacing-md);">
+                    <p class="help-intro-text">
                         Im <strong>Statistik-Bereich</strong> siehst du:
                     </p>
-                    <ul style="margin: 0; padding-left: 1.5rem;">
-                        <li style="margin-bottom: var(--spacing-xs);">Gespielte Spiele & Gewinnrate</li>
-                        <li style="margin-bottom: var(--spacing-xs);">Gesamtgewinn & Verluste</li>
-                        <li style="margin-bottom: var(--spacing-xs);">Aktuelle Streak (Serie)</li>
-                        <li style="margin-bottom: var(--spacing-xs);">Highscore & beste Leistungen</li>
+                    <ul class="help-stats-list">
+                        <li>Gespielte Spiele & Gewinnrate</li>
+                        <li>Gesamtgewinn & Verluste</li>
+                        <li>Aktuelle Streak (Serie)</li>
+                        <li>Highscore & beste Leistungen</li>
                         <li>Detaillierte Stats pro Spieltyp</li>
                     </ul>
                 </div>
@@ -99,44 +99,44 @@ export const helpView = () => {
                 </div>
                 <div class="card-body">
                     <div class="flex items-start gap-md mb-md">
-                        <span style="font-size: 2rem;">🎨</span>
+                        <span class="help-icon-large">🎨</span>
                         <div>
-                            <h4 style="margin: 0 0 var(--spacing-xs) 0; color: var(--accent-primary);">Themes & Farben</h4>
-                            <p style="margin: 0; color: var(--text-muted);">Wechsle zwischen Dark/Light Mode und wähle deine Akzentfarbe</p>
+                            <h4 class="help-feature-title">Themes & Farben</h4>
+                            <p class="help-feature-desc">Wechsle zwischen Dark/Light Mode und wähle deine Akzentfarbe</p>
                         </div>
                     </div>
                     
                     <div class="flex items-start gap-md mb-md">
-                        <span style="font-size: 2rem;">🔊</span>
+                        <span class="help-icon-large">🔊</span>
                         <div>
-                            <h4 style="margin: 0 0 var(--spacing-xs) 0; color: var(--accent-primary);">Sound</h4>
-                            <p style="margin: 0; color: var(--text-muted);">Aktiviere/Deaktiviere Soundeffekte</p>
+                            <h4 class="help-feature-title">Sound</h4>
+                            <p class="help-feature-desc">Aktiviere/Deaktiviere Soundeffekte</p>
                         </div>
                     </div>
                     
                     <div class="flex items-start gap-md">
-                        <span style="font-size: 2rem;">🛠️</span>
+                        <span class="help-icon-large">🛠️</span>
                         <div>
-                            <h4 style="margin: 0 0 var(--spacing-xs) 0; color: var(--accent-primary);">Developer Tools</h4>
-                            <p style="margin: 0; color: var(--text-muted);">Debug-Panel für Entwickler (nur in Dev-Mode)</p>
+                            <h4 class="help-feature-title">Developer Tools</h4>
+                            <p class="help-feature-desc">Debug-Panel für Entwickler (nur in Dev-Mode)</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="card mb-lg" style="background: linear-gradient(135deg, var(--bg-card), var(--bg-tertiary)); border: 2px solid var(--accent-primary);">
+            <div class="card mb-lg help-tips-card">
                 <div class="card-header">
                     <h3 class="card-title">💡 Profi-Tipps</h3>
                 </div>
                 <div class="card-body">
-                    <ul style="margin: 0; padding-left: 1.5rem;">
-                        <li style="margin-bottom: var(--spacing-sm);">
+                    <ul class="help-list">
+                        <li>
                             <strong>Starte klein:</strong> Teste neue Spiele erst mit kleinen Einsätzen
                         </li>
-                        <li style="margin-bottom: var(--spacing-sm);">
+                        <li>
                             <strong>Streak aufbauen:</strong> Mehrere richtige Antworten hintereinander = Bonus
                         </li>
-                        <li style="margin-bottom: var(--spacing-sm);">
+                        <li>
                             <strong>Stats nutzen:</strong> Analysiere deine Stärken und Schwächen
                         </li>
                         <li>
@@ -151,14 +151,14 @@ export const helpView = () => {
                     <h3 class="card-title">⌨️ Tastenkombinationen</h3>
                 </div>
                 <div class="card-body">
-                    <div style="display: grid; gap: var(--spacing-sm);">
+                    <div class="help-shortcuts-grid">
                         <div class="flex justify-between items-center">
                             <span>DevTools öffnen/schließen:</span>
-                            <kbd style="background: var(--bg-tertiary); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-family: monospace; border: 1px solid var(--accent-primary);">Ctrl+Shift+D</kbd>
+                            <kbd class="help-kbd">Ctrl+Shift+D</kbd>
                         </div>
                         <div class="flex justify-between items-center">
                             <span>Menu schließen:</span>
-                            <kbd style="background: var(--bg-tertiary); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-family: monospace; border: 1px solid var(--accent-primary);">ESC</kbd>
+                            <kbd class="help-kbd">ESC</kbd>
                         </div>
                     </div>
                 </div>

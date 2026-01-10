@@ -348,3 +348,159 @@ input:checked + .toggle-slider::before {
     border-width: 3px;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
 }
+/* Help View Styles */
+.help-list {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.help-list li {
+    margin-bottom: var(--spacing-sm);
+}
+
+.help-stats-list {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.help-stats-list li {
+    margin-bottom: var(--spacing-xs);
+}
+
+.help-stats-list li:last-child {
+    margin-bottom: 0;
+}
+
+.help-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.help-section-title {
+    color: var(--accent-primary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.help-section-text {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.help-intro-text {
+    margin-bottom: var(--spacing-md);
+}
+
+.help-icon-large {
+    font-size: 2rem;
+}
+
+.help-feature-title {
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--accent-primary);
+}
+
+.help-feature-desc {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.help-tips-card {
+    background: linear-gradient(135deg, var(--bg-card), var(--bg-tertiary));
+    border: 2px solid var(--accent-primary);
+}
+
+.help-kbd {
+    background: var(--bg-tertiary);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    border: 1px solid var(--accent-primary);
+}
+
+.help-shortcuts-grid {
+    display: grid;
+    gap: var(--spacing-sm);
+}
+
+/* Settings View Styles */
+.settings-section {
+    margin-bottom: var(--spacing-sm);
+}
+
+.settings-label {
+    font-weight: 600;
+    margin-bottom: var(--spacing-sm);
+}
+
+.accent-colors-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+}
+
+.accent-color-btn[data-color="green"] {
+    background: #00ff88;
+    color: #000;
+}
+
+.accent-color-btn[data-color="blue"] {
+    background: #00ddff;
+    color: #000;
+}
+
+.accent-color-btn[data-color="purple"] {
+    background: #a855f7;
+    color: #fff;
+}
+
+.accent-color-btn[data-color="pink"] {
+    background: #ff0066;
+    color: #fff;
+}
+
+.accent-color-btn[data-color="orange"] {
+    background: #ff9500;
+    color: #000;
+}
+
+.accent-color-btn[data-color="yellow"] {
+    background: #ffcc00;
+    color: #000;
+}
+
+.settings-select {
+    padding: 0.5rem;
+}
+
+.settings-select-full {
+    padding: 0.5rem;
+    width: 100%;
+}
+
+.settings-note {
+    font-size: 0.875rem;
+}
+
+.settings-version-badge {
+    background: var(--bg-tertiary);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    font-size: 0.75rem;
+}
+
+.settings-dev-item-title {
+    font-weight: 600;
+}
+
+.settings-dev-item-desc {
+    font-size: 0.75rem;
+}
+
+.settings-dev-flex {
+    flex: 1;
+}
+
+.settings-dev-label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}

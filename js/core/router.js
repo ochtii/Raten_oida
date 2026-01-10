@@ -338,25 +338,25 @@ const settingsView = () => {
                         </button>
                     </div>
                     
-                    <div style="margin-bottom: var(--spacing-sm);">
-                        <div style="font-weight: 600; margin-bottom: var(--spacing-sm);">Akzentfarbe:</div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-sm);">
-                            <button class="accent-color-btn ${accentColor === 'green' ? 'active' : ''}" data-color="green" style="background: #00ff88; color: #000;">
+                    <div class="settings-section">
+                        <div class="settings-label">Akzentfarbe:</div>
+                        <div class="accent-colors-grid">
+                            <button class="accent-color-btn ${accentColor === 'green' ? 'active' : ''}" data-color="green">
                                 ${accentColor === 'green' ? '✓ ' : ''}Grün
                             </button>
-                            <button class="accent-color-btn ${accentColor === 'blue' ? 'active' : ''}" data-color="blue" style="background: #00ddff; color: #000;">
+                            <button class="accent-color-btn ${accentColor === 'blue' ? 'active' : ''}" data-color="blue">
                                 ${accentColor === 'blue' ? '✓ ' : ''}Blau
                             </button>
-                            <button class="accent-color-btn ${accentColor === 'purple' ? 'active' : ''}" data-color="purple" style="background: #a855f7; color: #fff;">
+                            <button class="accent-color-btn ${accentColor === 'purple' ? 'active' : ''}" data-color="purple">
                                 ${accentColor === 'purple' ? '✓ ' : ''}Lila
                             </button>
-                            <button class="accent-color-btn ${accentColor === 'pink' ? 'active' : ''}" data-color="pink" style="background: #ff0066; color: #fff;">
+                            <button class="accent-color-btn ${accentColor === 'pink' ? 'active' : ''}" data-color="pink">
                                 ${accentColor === 'pink' ? '✓ ' : ''}Pink
                             </button>
-                            <button class="accent-color-btn ${accentColor === 'orange' ? 'active' : ''}" data-color="orange" style="background: #ff9500; color: #000;">
+                            <button class="accent-color-btn ${accentColor === 'orange' ? 'active' : ''}" data-color="orange">
                                 ${accentColor === 'orange' ? '✓ ' : ''}Orange
                             </button>
-                            <button class="accent-color-btn ${accentColor === 'yellow' ? 'active' : ''}" data-color="yellow" style="background: #ffcc00; color: #000;">
+                            <button class="accent-color-btn ${accentColor === 'yellow' ? 'active' : ''}" data-color="yellow">
                                 ${accentColor === 'yellow' ? '✓ ' : ''}Gelb
                             </button>
                         </div>
@@ -385,7 +385,7 @@ const settingsView = () => {
                 <div class="card-body">
                     <div class="flex justify-between items-center">
                         <span>Schwierigkeit:</span>
-                        <select id="difficulty-select" class="btn btn-outline btn-small" style="padding: 0.5rem;">
+                        <select id="difficulty-select" class="btn btn-outline btn-small settings-select">
                             <option value="easy" ${difficulty === 'easy' ? 'selected' : ''}>Leicht</option>
                             <option value="medium" ${difficulty === 'medium' ? 'selected' : ''}>Mittel</option>
                             <option value="hard" ${difficulty === 'hard' ? 'selected' : ''}>Schwer</option>
@@ -399,7 +399,7 @@ const settingsView = () => {
                     <h3 class="card-title">🛠️ Developer Tools</h3>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted mb-md" style="font-size: 0.875rem;">
+                    <p class="text-muted mb-md settings-note">
                         Debug-Panel mit Console, State Inspector, Performance Monitor und mehr.
                     </p>
                     <div class="flex justify-between items-center mb-md">
@@ -410,7 +410,7 @@ const settingsView = () => {
                     </div>
                     <div class="flex justify-between items-center">
                         <span>Tastenkombination:</span>
-                        <span class="badge" style="background: var(--bg-tertiary); padding: 0.25rem 0.5rem; border-radius: var(--radius-sm); font-family: monospace; font-size: 0.75rem;">
+                        <span class="badge settings-version-badge">
                             Ctrl+Shift+D
                         </span>
                     </div>
@@ -424,8 +424,8 @@ const settingsView = () => {
                 <div class="card-body">
                     <div class="flex justify-between items-center mb-md">
                         <div>
-                            <div style="font-weight: 600;">Debug Mode</div>
-                            <div class="text-muted" style="font-size: 0.75rem;">Erweiterte Logs in der Console</div>
+                            <div class="settings-dev-item-title">Debug Mode</div>
+                            <div class="text-muted settings-dev-item-desc">Erweiterte Logs in der Console</div>
                         </div>
                         <button class="btn btn-outline btn-small" id="toggle-debug-btn">
                             ${store.getSetting('developer')?.debugMode ? '✅ An' : '❌ Aus'}
@@ -434,8 +434,8 @@ const settingsView = () => {
                     
                     <div class="flex justify-between items-center mb-md">
                         <div>
-                            <div style="font-weight: 600;">Auto-Open DevTools</div>
-                            <div class="text-muted" style="font-size: 0.75rem;">DevTools beim Start öffnen</div>
+                            <div class="settings-dev-item-title">Auto-Open DevTools</div>
+                            <div class="text-muted settings-dev-item-desc">DevTools beim Start öffnen</div>
                         </div>
                         <button class="btn btn-outline btn-small" id="toggle-auto-devtools-btn">
                             ${store.getSetting('developer')?.autoOpenDevTools ? '✅ An' : '❌ Aus'}
@@ -444,8 +444,8 @@ const settingsView = () => {
 
                     <div class="flex justify-between items-center mb-md">
                         <div>
-                            <div style="font-weight: 600;">Performance Monitor</div>
-                            <div class="text-muted" style="font-size: 0.75rem;">FPS & Performance-Metriken</div>
+                            <div class="settings-dev-item-title">Performance Monitor</div>
+                            <div class="text-muted settings-dev-item-desc">FPS & Performance-Metriken</div>
                         </div>
                         <button class="btn btn-outline btn-small" id="toggle-perf-monitor-btn">
                             ${store.getSetting('developer')?.performanceMonitor ? '✅ An' : '❌ Aus'}
@@ -453,9 +453,9 @@ const settingsView = () => {
                     </div>
 
                     <div class="flex justify-between items-center mb-md">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; margin-bottom: 0.5rem;">Logging Level</div>
-                            <select id="logging-level-select" class="btn btn-outline btn-small" style="padding: 0.5rem; width: 100%;">
+                        <div class="settings-dev-flex">
+                            <div class="settings-dev-label">Logging Level</div>
+                            <select id="logging-level-select" class="btn btn-outline btn-small settings-select-full">
                                 <option value="normal" ${store.getSetting('developer')?.loggingLevel === 'normal' ? 'selected' : ''}>Normal</option>
                                 <option value="verbose" ${store.getSetting('developer')?.loggingLevel === 'verbose' ? 'selected' : ''}>Verbose</option>
                                 <option value="debug" ${store.getSetting('developer')?.loggingLevel === 'debug' ? 'selected' : ''}>Debug</option>
@@ -463,11 +463,11 @@ const settingsView = () => {
                         </div>
                     </div>
 
-                    <div style="padding-top: var(--spacing-sm); border-top: 1px solid var(--bg-tertiary);">
-                        <button class="btn btn-outline btn-small" id="clear-cache-btn" style="width: 100%; margin-bottom: var(--spacing-sm);">
+                    <div class="pt-sm border-top">
+                        <button class="btn btn-outline btn-small w-full mb-sm" id="clear-cache-btn">
                             🗑️ Cache leeren
                         </button>
-                        <button class="btn btn-outline btn-small" id="export-settings-btn" style="width: 100%;">
+                        <button class="btn btn-outline btn-small w-full" id="export-settings-btn">
                             📥 Einstellungen exportieren
                         </button>
                     </div>
