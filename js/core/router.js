@@ -53,7 +53,7 @@ class Router {
     // Navigation UI updaten
     updateNavigation(activePath) {
         // Bottom Nav
-        const navButtons = document.querySelectorAll('.nav-btn');
+        const navButtons = document.querySelectorAll('.nav-btn, [data-route]');
         navButtons.forEach(btn => {
             const route = btn.getAttribute('data-route');
             if (route === activePath) {
@@ -63,21 +63,21 @@ class Router {
             }
         });
 
-        // Sandwich Menu (falls offen)
-        const menuLinks = document.querySelectorAll('.menu-list a');
+        // Menu Links
+        const menuLinks = document.querySelectorAll('.menu-link');
         menuLinks.forEach(link => {
             const route = link.getAttribute('data-route');
             if (route === activePath) {
-                link.style.color = 'var(--accent-primary)';
+                link.classList.add('active');
             } else {
-                link.style.color = 'var(--text-primary)';
+                link.classList.remove('active');
             }
         });
     }
 
     // Init - Event Listener für Navigation
     init() {
-        // Bottom Nav Click Handler
+        // Global Click Handler für alle data-route Links
         document.addEventListener('click', (e) => {
             const target = e.target.closest('[data-route]');
             if (target) {
@@ -87,9 +87,12 @@ class Router {
 
                 // Sandwich Menu schließen falls offen
                 const sandwichMenu = $('#sandwich-menu');
+                const overlay = $('#nav-overlay');
                 if (sandwichMenu?.classList.contains('open')) {
                     sandwichMenu.classList.remove('open');
                     $('#sandwich-btn')?.classList.remove('active');
+                    overlay?.classList.remove('active');
+                    document.body.classList.remove('menu-open');
                 }
             }
         });

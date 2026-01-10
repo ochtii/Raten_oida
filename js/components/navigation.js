@@ -35,7 +35,20 @@ export class Navigation {
         // Menu Links Click (schließt Menü nach Navigation)
         document.querySelectorAll('.menu-link').forEach(link => {
             link.addEventListener('click', () => {
-                this.closeMenu();
+                // Menü schließen nach kurzer Verzögerung (smooth UX)
+                setTimeout(() => this.closeMenu(), 150);
+            });
+        });
+
+        // Bottom Navigation Buttons
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const route = btn.getAttribute('data-route');
+                if (route) {
+                    e.preventDefault();
+                    // Router wird die Navigation übernehmen
+                    // Active-States werden vom Router gesetzt
+                }
             });
         });
 
@@ -87,8 +100,16 @@ export class Navigation {
 
     updateWallet() {
         const wallet = store.getWallet();
+        
+        // Menu Wallet
         if (this.menuWallet) {
             this.menuWallet.textContent = wallet.toLocaleString('de-AT');
+        }
+        
+        // Header Wallet (falls vorhanden)
+        const headerWallet = $('#header-wallet');
+        if (headerWallet) {
+            headerWallet.textContent = wallet.toLocaleString('de-AT');
         }
     }
 }
