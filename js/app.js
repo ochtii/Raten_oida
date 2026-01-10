@@ -11,6 +11,7 @@ class App {
         this.store = new Store();
         this.router = new Router(this.store);
         this.ui = new UI(this.store);
+        this.isRendering = false;
     }
 
     init() {
@@ -90,10 +91,8 @@ class App {
             walletDisplay.textContent = this.store.getWallet().toLocaleString('de-DE');
         }
         
-        // View neu rendern, wenn auf Home-Seite
-        if (this.router.currentRoute === 'home') {
-            this.router.render();
-        }
+        // View nur neu rendern wenn nicht bereits am rendern und auf Home-Seite
+        // NICHT automatisch neu rendern - das verursacht das Blinken
     }
 }
 

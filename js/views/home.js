@@ -3,9 +3,21 @@
    ========================================== */
 
 export const homeView = (store) => {
-    const stats = store.getStats();
-    const wallet = store.getWallet();
-    const points = store.getPoints();
+    const stats = store.getStats() || {};
+    const wallet = store.getWallet() || 0;
+    const points = store.getPoints() || 0;
+    
+    // Safe defaults
+    const safeStats = {
+        currentStreak: stats.currentStreak || 0,
+        bestStreak: stats.bestStreak || 0,
+        capitalsCorrect: stats.capitalsCorrect || 0,
+        capitalsTotal: stats.capitalsTotal || 0,
+        populationCorrect: stats.populationCorrect || 0,
+        populationTotal: stats.populationTotal || 0,
+        gamesPlayed: stats.gamesPlayed || 0,
+        gamesWon: stats.gamesWon || 0
+    };
 
     return `
         <div class="home-view">
@@ -53,8 +65,8 @@ export const homeView = (store) => {
                     </div>
                     <div class="stat-content">
                         <div class="stat-label">Aktuelle Serie</div>
-                        <div class="stat-value-large">${stats.currentStreak}</div>
-                        <div class="stat-sublabel">Beste: ${stats.bestStreak}</div>
+                        <div class="stat-value-large">${safeStats.currentStreak}</div>
+                        <div class="stat-sublabel">Beste: ${safeStats.bestStreak}</div>
                     </div>
                     <div class="stat-shine"></div>
                 </div>
@@ -66,10 +78,10 @@ export const homeView = (store) => {
                     <h3 class="action-title">Hauptstädte</h3>
                     <p class="action-desc">Rate die Hauptstadt eines Landes</p>
                     <div class="action-stats">
-                        ${stats.capitalsTotal > 0 ? `
+                        ${safeStats.capitalsTotal > 0 ? `
                             <span class="action-stat">
-                                ${stats.capitalsCorrect}/${stats.capitalsTotal} 
-                                (${Math.round((stats.capitalsCorrect / stats.capitalsTotal) * 100)}%)
+                                ${safeStats.capitalsCorrect}/${safeStats.capitalsTotal} 
+                                (${Math.round((safeStats.capitalsCorrect / safeStats.capitalsTotal) * 100)}%)
                             </span>
                         ` : '<span class="action-stat">Noch nicht gespielt</span>'}
                     </div>
@@ -80,10 +92,10 @@ export const homeView = (store) => {
                     <h3 class="action-title">Einwohner</h3>
                     <p class="action-desc">Schätze die Einwohnerzahl</p>
                     <div class="action-stats">
-                        ${stats.populationTotal > 0 ? `
+                        ${safeStats.populationTotal > 0 ? `
                             <span class="action-stat">
-                                ${stats.populationCorrect}/${stats.populationTotal}
-                                (${Math.round((stats.populationCorrect / stats.populationTotal) * 100)}%)
+                                ${safeStats.populationCorrect}/${safeStats.populationTotal}
+                                (${Math.round((safeStats.populationCorrect / safeStats.populationTotal) * 100)}%)
                             </span>
                         ` : '<span class="action-stat">Noch nicht gespielt</span>'}
                     </div>
@@ -98,19 +110,19 @@ export const homeView = (store) => {
                     <div class="stats-list">
                         <div class="stats-item">
                             <span>Spiele gespielt:</span>
-                            <strong>${stats.gamesPlayed}</strong>
+                            <strong>${safeStats.gamesPlayed || 0}</strong>
                         </div>
                         <div class="stats-item">
                             <span>Spiele gewonnen:</span>
-                            <strong>${stats.gamesWon}</strong>
+                            <strong>${safeStats.gamesWon || 0}</strong>
                         </div>
                         <div class="stats-item">
                             <span>Beste Streak:</span>
-                            <strong>${stats.bestStreak}</strong>
+                            <strong>${safeStats.bestStreak}</strong>
                         </div>
                         <div class="stats-item">
                             <span>Gewinnrate:</span>
-                            <strong>${stats.gamesPlayed > 0 ? Math.round((stats.gamesWon / stats.gamesPlayed) * 100) : 0}%</strong>
+                            <strong>${(safeStats.gamesPlayed || 0) > 0 ? Math.round(((safeStats.gamesWon || 0) / safeStats.gamesPlayed) * 100) : 0}%</strong>
                         </div>
                     </div>
                 </div>
