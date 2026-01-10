@@ -206,8 +206,8 @@ export const settingsView = (store) => {
             .toggle {
                 position: relative;
                 display: inline-block;
-                width: 50px;
-                height: 26px;
+                width: 60px;
+                height: 32px;
                 flex-shrink: 0;
             }
 
@@ -215,6 +215,7 @@ export const settingsView = (store) => {
                 opacity: 0;
                 width: 0;
                 height: 0;
+                position: absolute;
             }
 
             .toggle-slider {
@@ -224,36 +225,65 @@ export const settingsView = (store) => {
                 left: 0;
                 right: 0;
                 bottom: 0;
-                background-color: rgba(255, 255, 255, 0.1);
-                border-radius: var(--radius-full);
-                transition: var(--transition-normal);
-                border: 2px solid rgba(0, 255, 136, 0.2);
+                background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0.1));
+                border-radius: 100px;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                border: 2px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 
+                    inset 0 2px 4px rgba(0,0,0,0.2),
+                    0 2px 8px rgba(0,0,0,0.1);
             }
 
             .toggle-slider:before {
                 position: absolute;
                 content: "";
-                height: 18px;
-                width: 18px;
-                left: 2px;
+                height: 24px;
+                width: 24px;
+                left: 3px;
                 bottom: 2px;
-                background-color: var(--text-secondary);
+                background: linear-gradient(135deg, #ffffff, #e0e0e0);
                 border-radius: 50%;
-                transition: var(--transition-normal);
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                box-shadow: 
+                    0 3px 6px rgba(0,0,0,0.3),
+                    0 1px 3px rgba(0,0,0,0.2);
             }
 
             .toggle input:checked + .toggle-slider {
-                background-color: var(--primary);
+                background: linear-gradient(135deg, var(--primary), #00cc6f);
                 border-color: var(--primary);
+                box-shadow: 
+                    inset 0 2px 4px rgba(0,0,0,0.1),
+                    0 0 20px rgba(0, 255, 136, 0.4),
+                    0 4px 12px rgba(0, 255, 136, 0.3);
             }
 
             .toggle input:checked + .toggle-slider:before {
-                transform: translateX(24px);
-                background-color: white;
+                transform: translateX(28px);
+                background: linear-gradient(135deg, #ffffff, #f0f0f0);
+                box-shadow: 
+                    0 4px 8px rgba(0,0,0,0.3),
+                    0 2px 4px rgba(0,0,0,0.2),
+                    0 0 0 2px rgba(0, 255, 136, 0.2);
             }
 
             .toggle-slider:hover {
-                box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+                border-color: var(--primary);
+            }
+
+            .toggle input:checked + .toggle-slider:hover {
+                box-shadow: 
+                    inset 0 2px 4px rgba(0,0,0,0.1),
+                    0 0 25px rgba(0, 255, 136, 0.5),
+                    0 4px 16px rgba(0, 255, 136, 0.4);
+            }
+
+            .toggle:active .toggle-slider:before {
+                width: 28px;
+            }
+
+            .toggle input:checked:active + .toggle-slider:before {
+                transform: translateX(24px);
             }
 
             .select {
@@ -368,28 +398,37 @@ export const settingsView = (store) => {
     `;
 };
 
-// Settings functions
+// Settings functions - DIREKT in localStorage speichern
 window.toggleSetting = (settingName) => {
     if (window.app && window.app.store) {
-        const settings = window.app.store.state.settings;
-        settings[settingName] = !settings[settingName];
-        window.app.store.saveState();
+        // Setting umschalten
+        const currentValue = window.app.store.state.settings[settingName];
+        window.app.store.state.settings[settingName] = !currentValue;
         
-        // Apply animations setting immediately
+        // SOFORT in localStorage speichern
+        localStorage.setItem('raten_oida_v2', JSON.stringify(window.app.store.state));
+        
+        // UI aktualisieren
+        window.app.store.notify();
+        
+        // Spezial-Handling für Animationen
         if (settingName === 'animations') {
-            document.body.style.setProperty('--transition-fast', settings.animations ? '0.15s' : '0s');
-            document.body.style.setProperty('--transition-normal', settings.animations ? '0.3s' : '0s');
-            document.body.style.setProperty('--transition-slow', settings.animations ? '0.5s' : '0s');
+            const animations = window.app.store.state.settings.animations;
+            document.body.style.setProperty('--transition-fast', animations ? '0.2s' : '0s');
+            document.body.style.setProperty('--transition-normal', animations ? '0.3s' : '0s');
+            document.body.style.setProperty('--transition-slow', animations ? '0.5s' : '0s');
         }
 
-        window.app.ui.showNotification('Einstellung wurde aktualisiert', 'success');
+        window.app.ui.showNotification('✓ Gespeichert', 'success');
     }
 };
 
 window.updateVolume = (value) => {
     if (window.app && window.app.store) {
         window.app.store.state.settings.volume = parseInt(value);
-        window.app.store.saveState();
+        
+        // SOFORT in localStorage speichern
+        localStorage.setItem('raten_oida_v2', JSON.stringify(window.app.store.state));
         
         // Update volume display
         const volumeValue = document.querySelector('.volume-value');
@@ -402,7 +441,9 @@ window.updateVolume = (value) => {
 window.updateDifficulty = (value) => {
     if (window.app && window.app.store) {
         window.app.store.state.settings.difficulty = value;
-        window.app.store.saveState();
+        
+        // SOFORT in localStorage speichern
+        localStorage.setItem('raten_oida_v2', JSON.stringify(window.app.store.state));
         
         window.app.ui.showNotification(`Schwierigkeitsgrad: ${value}`, 'info');
     }
