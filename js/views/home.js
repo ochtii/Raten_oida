@@ -130,5 +130,3 @@ export const homeView = (store) => {
         </div>
     `;
 };
-    `;
-};
