@@ -115,6 +115,15 @@ export class UI {
     }
 }
 
+// Global helper für Modal schließen
+window.closeModal = () => {
+    const modal = document.querySelector('.modal-overlay');
+    if (modal) {
+        modal.style.animation = 'fadeOut 0.2s ease-in';
+        setTimeout(() => modal.remove(), 200);
+    }
+};
+
 // Add CSS animations
 const style = document.createElement('style');
 style.textContent = `

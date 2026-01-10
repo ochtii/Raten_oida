@@ -373,8 +373,7 @@ window.toggleSetting = (settingName) => {
     if (window.app && window.app.store) {
         const settings = window.app.store.state.settings;
         settings[settingName] = !settings[settingName];
-        window.app.store.save();
-        window.app.store.notify();
+        window.app.store.saveState();
         
         // Apply animations setting immediately
         if (settingName === 'animations') {
@@ -390,7 +389,7 @@ window.toggleSetting = (settingName) => {
 window.updateVolume = (value) => {
     if (window.app && window.app.store) {
         window.app.store.state.settings.volume = parseInt(value);
-        window.app.store.save();
+        window.app.store.saveState();
         
         // Update volume display
         const volumeValue = document.querySelector('.volume-value');
@@ -403,8 +402,7 @@ window.updateVolume = (value) => {
 window.updateDifficulty = (value) => {
     if (window.app && window.app.store) {
         window.app.store.state.settings.difficulty = value;
-        window.app.store.save();
-        window.app.store.notify();
+        window.app.store.saveState();
         
         window.app.ui.showNotification(`Schwierigkeitsgrad: ${value}`, 'info');
     }
@@ -435,8 +433,7 @@ window.resetWallet = () => {
 window.confirmResetWallet = () => {
     if (window.app && window.app.store) {
         window.app.store.state.wallet = 1000;
-        window.app.store.save();
-        window.app.store.notify();
+        window.app.store.saveState();
 
         window.closeModal();
         window.app.ui.showNotification('Wallet wurde zurückgesetzt', 'success');

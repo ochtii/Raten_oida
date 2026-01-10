@@ -19,6 +19,9 @@ class App {
         console.log('📍 Router:', this.router);
         console.log('🎨 UI:', this.ui);
         
+        // App global verfügbar machen für Settings
+        window.app = this;
+        
         // UI initialisieren
         this.ui.init();
         console.log('✅ UI initialisiert');
