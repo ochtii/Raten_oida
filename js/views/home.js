@@ -128,8 +128,8 @@ export const homeView = (store) => {
                 </div>
             </div>
         </div>
-
-        <style>
+    `;
+};
             .hero {
                 text-align: center;
                 margin-bottom: var(--spacing-xl);
