@@ -28,37 +28,21 @@ export const devView = (store) => {
             
             <!-- Toggle Control Panel -->
             <div class="dev-card toggle-panel">
-                <h3>🎛️ Toggle Control Panel</h3>
+                <h3>🎛️ Toggles</h3>
                 <div class="toggle-grid">
-                    <div class="toggle-item" id="toggleCacheBuster" onclick="window.devToggleCacheBuster()">
-                        <div class="toggle-icon">${cacheBusterEnabled ? '🔄' : '⏸️'}</div>
-                        <div class="toggle-info">
-                            <div class="toggle-label">Cache-Buster</div>
-                            <div class="toggle-status ${cacheBusterEnabled ? 'active' : 'inactive'}">
-                                ${cacheBusterEnabled ? '✓ AKTIV' : '✗ INAKTIV'}
-                            </div>
-                        </div>
-                        <div class="toggle-indicator ${cacheBusterEnabled ? 'on' : 'off'}"></div>
+                    <div class="toggle-compact" id="toggleCacheBuster" onclick="window.devToggleCacheBuster()">
+                        <span class="toggle-compact-label">${cacheBusterEnabled ? '🔄' : '⏸️'} Cache</span>
+                        <div class="toggle-switch ${cacheBusterEnabled ? 'on' : 'off'}"></div>
                     </div>
                     
-                    <div class="toggle-item" id="toggleDebugConsole" onclick="window.toggleDebugConsole()">
-                        <div class="toggle-icon">🐛</div>
-                        <div class="toggle-info">
-                            <div class="toggle-label">Debug Console</div>
-                            <div class="toggle-status">TOGGLE</div>
-                        </div>
-                        <div class="toggle-indicator action"></div>
+                    <div class="toggle-compact" id="toggleDebugConsole" onclick="window.toggleDebugConsole()">
+                        <span class="toggle-compact-label">🐛 Debug</span>
+                        <div class="toggle-switch action"></div>
                     </div>
                     
-                    <div class="toggle-item" id="toggleBottomNav" onclick="window.devQuickToggleBottomNav()">
-                        <div class="toggle-icon">📱</div>
-                        <div class="toggle-info">
-                            <div class="toggle-label">Bottom Navigation</div>
-                            <div class="toggle-status ${bottomNavSettings.visible ? 'active' : 'inactive'}">
-                                ${bottomNavSettings.visible ? '✓ SICHTBAR' : '✗ VERSTECKT'}
-                            </div>
-                        </div>
-                        <div class="toggle-indicator ${bottomNavSettings.visible ? 'on' : 'off'}"></div>
+                    <div class="toggle-compact" id="toggleBottomNav" onclick="window.devQuickToggleBottomNav()">
+                        <span class="toggle-compact-label">📱 Nav</span>
+                        <div class="toggle-switch ${bottomNavSettings.visible ? 'on' : 'off'}"></div>
                     </div>
                 </div>
             </div>
@@ -265,18 +249,11 @@ window.devQuickToggleBottomNav = () => {
     window.applyBottomNavSettings();
     window.app.ui.showNotification(settings.visible ? '📱 Bottom-Nav aktiviert' : '📱 Bottom-Nav deaktiviert', 'info');
     
-    // Toggle-Panel aktualisieren
+    // Toggle-Switch aktualisieren
     setTimeout(() => {
-        const toggleItem = document.getElementById('toggleBottomNav');
-        const status = toggleItem?.querySelector('.toggle-status');
-        const indicator = toggleItem?.querySelector('.toggle-indicator');
-        
-        if (status) {
-            status.className = `toggle-status ${settings.visible ? 'active' : 'inactive'}`;
-            status.textContent = settings.visible ? '✓ SICHTBAR' : '✗ VERSTECKT';
-        }
-        if (indicator) {
-            indicator.className = `toggle-indicator ${settings.visible ? 'on' : 'off'}`;
+        const toggleSwitch = document.querySelector('#toggleBottomNav .toggle-switch');
+        if (toggleSwitch) {
+            toggleSwitch.className = `toggle-switch ${settings.visible ? 'on' : 'off'}`;
         }
     }, 50);
 };
@@ -293,22 +270,16 @@ window.devToggleCacheBuster = () => {
         );
     }
     
-    // Toggle-Panel aktualisieren
+    // Toggle-Switch aktualisieren
     setTimeout(() => {
-        const toggleItem = document.getElementById('toggleCacheBuster');
-        const icon = toggleItem?.querySelector('.toggle-icon');
-        const status = toggleItem?.querySelector('.toggle-status');
-        const indicator = toggleItem?.querySelector('.toggle-indicator');
+        const toggleSwitch = document.querySelector('#toggleCacheBuster .toggle-switch');
+        const label = document.querySelector('#toggleCacheBuster .toggle-compact-label');
         
-        if (icon) {
-            icon.textContent = newState ? '🔄' : '⏸️';
+        if (toggleSwitch) {
+            toggleSwitch.className = `toggle-switch ${newState ? 'on' : 'off'}`;
         }
-        if (status) {
-            status.className = `toggle-status ${newState ? 'active' : 'inactive'}`;
-            status.textContent = newState ? '✓ AKTIV' : '✗ INAKTIV';
-        }
-        if (indicator) {
-            indicator.className = `toggle-indicator ${newState ? 'on' : 'off'}`;
+        if (label) {
+            label.textContent = `${newState ? '🔄' : '⏸️'} Cache`;
         }
     }, 50);
 };
