@@ -22,9 +22,9 @@ export const homeView = (store) => {
     return `
         <div class="home-view">
             <div class="hero">
+                <div class="hero-icon">🎮</div>
                 <h1 class="hero-title">
-                    <span class="hero-icon">🎮</span>
-                    Willkommen bei<br>
+                    Willkommen bei
                     <span class="hero-brand">RATEN<span style="color: var(--accent);">OIDA</span></span>
                 </h1>
                 <p class="hero-subtitle">
