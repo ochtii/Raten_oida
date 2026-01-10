@@ -130,10 +130,11 @@
         document.getElementById('moduleTest').style.background = 'green';
         document.getElementById('moduleTest').textContent = '✅ ES6 MODULE FUNKTIONIEREN';
         
-        // APP LADEN TESTEN
+        // APP LADEN TESTEN - MIT TIMESTAMP CACHE-BUSTING
         setTimeout(async () => {
             try {
-                const appModule = await import('./js/app.js?v=' + Date.now());
+                const timestamp = new Date().getTime();
+                const appModule = await import('./js/app.js?v=' + timestamp);
                 const info = document.createElement('div');
                 info.style = 'background: green; color: white; padding: 20px; font-size: 20px; font-weight: bold; margin-top: 10px;';
                 info.textContent = '✅ APP.JS GELADEN';
@@ -141,8 +142,9 @@
             } catch (e) {
                 const error = document.createElement('div');
                 error.style = 'background: red; color: white; padding: 20px; font-size: 16px; font-weight: bold; margin-top: 10px;';
-                error.innerHTML = '❌ APP.JS FEHLER:<br>' + e.message + '<br>' + (e.stack || '').substring(0, 200);
+                error.innerHTML = '❌ APP.JS FEHLER:<br>' + e.message + '<br><br>LÖSUNG: Schließe Browser komplett und öffne neu!';
                 document.getElementById('mainContent').appendChild(error);
+                console.error('App Error:', e);
             }
         }, 1000);
     </script>
