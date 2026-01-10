@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#0a0e27">
     <title>Raten OIDA 🎮</title>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <link rel="stylesheet" href="./css/app.css">
     <script>
-        // Cache Buster Settings - togglebar über Developer Einstellungen
-        const cacheBusterEnabled = localStorage.getItem('cacheBusterEnabled') !== 'false'; // Standard: true
+        // Cache Buster Settings - IMMER aktiviert für jeden Reload
+        const cacheBusterEnabled = localStorage.getItem('cacheBusterEnabled') !== 'false';
         window.CACHE_BUSTER = cacheBusterEnabled ? Date.now() : 'disabled';
+        
+        // CSS mit Cache-Buster laden
+        const cssLink = document.createElement('link');
+        cssLink.rel = 'stylesheet';
+        cssLink.href = cacheBusterEnabled ? `./css/app.css?v=${window.CACHE_BUSTER}` : './css/app.css';
+        document.head.appendChild(cssLink);
         
         if (cacheBusterEnabled) {
             console.log('🔄 Cache-Buster aktiviert:', window.CACHE_BUSTER);
@@ -120,18 +125,25 @@
     <div id="modalContainer"></div>
 
     <script>
-        // Cache bei jedem Reload löschen
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(registrations => {
-                registrations.forEach(reg => reg.unregister());
-            });
-        }
-        
-        if ('caches' in window) {
-            caches.keys().then(names => {
-                names.forEach(name => caches.delete(name));
-            });
-        }
+        // Aggressives Cache-Clearing bei JEDEM Reload
+        (async () => {
+            // Service Worker entfernen
+            if ('serviceWorker' in navigator) {
+                const registrations = await navigator.serviceWorker.getRegistrations();
+                await Promise.all(registrations.map(reg => reg.unregister()));
+            }
+            
+            // Alle Caches löschen
+            if ('caches' in window) {
+                const cacheNames = await caches.keys();
+                await Promise.all(cacheNames.map(name => caches.delete(name)));
+            }
+            
+            // Session Storage für Cache-Status
+            sessionStorage.setItem('cacheCleared', Date.now().toString());
+            
+            console.log('🧹 Alle Caches geleert');
+        })();
         
         // App mit Cache-Buster laden (wenn aktiviert)
         const appCacheBuster = window.CACHE_BUSTER;
