@@ -21,20 +21,42 @@ export const homeView = (store) => {
             </div>
 
             <div class="stats-grid">
-                <div class="stat-card stat-card-primary">
-                    <div class="stat-icon">💰</div>
-                    <div class="stat-value">${wallet.toLocaleString('de-DE')}</div>
-                    <div class="stat-label">Schülling</div>
+                <div class="stat-card wallet-card">
+                    <div class="stat-background">
+                        <div class="stat-icon-large">💰</div>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Dein Guthaben</div>
+                        <div class="stat-value-large">${wallet.toLocaleString('de-DE')}</div>
+                        <div class="stat-currency">Schülling</div>
+                    </div>
+                    <div class="stat-shine"></div>
                 </div>
-                <div class="stat-card stat-card-secondary">
-                    <div class="stat-icon">⭐</div>
-                    <div class="stat-value">${points.toLocaleString('de-DE')}</div>
-                    <div class="stat-label">Punkte</div>
+                
+                <div class="stat-card points-card">
+                    <div class="stat-background">
+                        <div class="stat-icon-large">⭐</div>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Gesammelte Punkte</div>
+                        <div class="stat-value-large">${points.toLocaleString('de-DE')}</div>
+                        <div class="stat-progress">
+                            ${points >= 1000 ? '🏆 Expert' : points >= 500 ? '📈 Fortgeschritten' : points >= 100 ? '🌱 Anfänger' : '🐣 Neuling'}
+                        </div>
+                    </div>
+                    <div class="stat-shine"></div>
                 </div>
-                <div class="stat-card stat-card-accent">
-                    <div class="stat-icon">🔥</div>
-                    <div class="stat-value">${stats.currentStreak}</div>
-                    <div class="stat-label">Streak</div>
+                
+                <div class="stat-card streak-card">
+                    <div class="stat-background">
+                        <div class="stat-icon-large">🔥</div>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-label">Aktuelle Serie</div>
+                        <div class="stat-value-large">${stats.currentStreak}</div>
+                        <div class="stat-sublabel">Beste: ${stats.bestStreak}</div>
+                    </div>
+                    <div class="stat-shine"></div>
                 </div>
             </div>
 
@@ -132,43 +154,153 @@ export const homeView = (store) => {
             .stats-grid {
                 display: grid;
                 grid-template-columns: repeat(3, 1fr);
-                gap: var(--spacing-sm);
-                margin-bottom: var(--spacing-lg);
+                gap: var(--spacing-md);
+                margin-bottom: var(--spacing-xl);
             }
 
             .stat-card {
-                background: var(--bg-card);
-                border: 1px solid rgba(0, 255, 136, 0.1);
-                border-radius: var(--radius-md);
-                padding: var(--spacing-md);
-                text-align: center;
-                transition: all var(--transition-normal);
+                position: relative;
+                background: linear-gradient(135deg, rgba(10, 14, 39, 0.8), rgba(26, 16, 51, 0.6));
+                border: 2px solid rgba(0, 255, 136, 0.2);
+                border-radius: var(--radius-lg);
+                padding: var(--spacing-lg);
+                overflow: hidden;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                cursor: pointer;
             }
 
             .stat-card:hover {
-                transform: translateY(-4px);
-                box-shadow: var(--shadow-glow);
+                transform: translateY(-8px) scale(1.02);
+                border-color: var(--primary);
+                box-shadow: 
+                    0 12px 40px rgba(0, 0, 0, 0.4),
+                    0 0 30px rgba(0, 255, 136, 0.4);
             }
 
-            .stat-card-primary { border-color: rgba(0, 255, 136, 0.3); }
-            .stat-card-secondary { border-color: rgba(0, 240, 255, 0.3); }
-            .stat-card-accent { border-color: rgba(255, 0, 110, 0.3); }
-
-            .stat-icon {
-                font-size: 2rem;
-                margin-bottom: var(--spacing-xs);
+            .stat-background {
+                position: absolute;
+                top: -20px;
+                right: -20px;
+                opacity: 0.1;
+                pointer-events: none;
             }
 
-            .stat-value {
-                font-size: 1.75rem;
-                font-weight: 900;
-                color: var(--primary);
-                margin-bottom: 0.25rem;
+            .stat-icon-large {
+                font-size: 6rem;
+                filter: blur(4px);
+            }
+
+            .stat-content {
+                position: relative;
+                z-index: 2;
             }
 
             .stat-label {
-                font-size: 0.875rem;
+                font-size: 0.75rem;
+                text-transform: uppercase;
+                letter-spacing: 1px;
                 color: var(--text-secondary);
+                margin-bottom: 0.5rem;
+                font-weight: 600;
+            }
+
+            .stat-value-large {
+                font-size: 2.5rem;
+                font-weight: 900;
+                background: linear-gradient(135deg, var(--primary), var(--secondary));
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 0.25rem;
+                line-height: 1;
+            }
+
+            .stat-currency {
+                font-size: 0.875rem;
+                color: var(--text-muted);
+                font-weight: 500;
+            }
+
+            .stat-progress {
+                font-size: 0.875rem;
+                color: var(--primary);
+                font-weight: 600;
+                margin-top: 0.5rem;
+            }
+
+            .stat-sublabel {
+                font-size: 0.75rem;
+                color: var(--text-muted);
+                margin-top: 0.5rem;
+            }
+
+            .stat-shine {
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+                transition: left 0.6s;
+            }
+
+            .stat-card:hover .stat-shine {
+                left: 100%;
+            }
+
+            /* Spezielle Farben für Karten */
+            .wallet-card {
+                border-color: rgba(255, 215, 0, 0.3);
+            }
+
+            .wallet-card:hover {
+                border-color: #ffd700;
+                box-shadow: 
+                    0 12px 40px rgba(0, 0, 0, 0.4),
+                    0 0 30px rgba(255, 215, 0, 0.4);
+            }
+
+            .wallet-card .stat-value-large {
+                background: linear-gradient(135deg, #ffd700, #ffed4e);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .points-card {
+                border-color: rgba(0, 240, 255, 0.3);
+            }
+
+            .points-card:hover {
+                border-color: #00f0ff;
+                box-shadow: 
+                    0 12px 40px rgba(0, 0, 0, 0.4),
+                    0 0 30px rgba(0, 240, 255, 0.4);
+            }
+
+            .points-card .stat-value-large {
+                background: linear-gradient(135deg, #00f0ff, #00ff88);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .streak-card {
+                border-color: rgba(255, 100, 0, 0.3);
+            }
+
+            .streak-card:hover {
+                border-color: #ff6400;
+                box-shadow: 
+                    0 12px 40px rgba(0, 0, 0, 0.4),
+                    0 0 30px rgba(255, 100, 0, 0.4);
+            }
+
+            .streak-card .stat-value-large {
+                background: linear-gradient(135deg, #ff6400, #ffaa00);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
             }
 
             .quick-actions {
