@@ -139,6 +139,10 @@ export class Store {
     }
 
     // Settings
+    getSettings() {
+        return this.state.settings;
+    }
+
     getSetting(key) {
         return this.state.settings[key];
     }
