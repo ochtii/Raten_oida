@@ -6,21 +6,11 @@ export const devView = (store) => {
     const state = store.state;
     const savedData = localStorage.getItem('raten_oida_v2');
     const cacheBusterEnabled = localStorage.getItem('cacheBusterEnabled') !== 'false';
+    const footerInfoEnabled = localStorage.getItem('footerInfoEnabled') !== 'false';
     
-    // Bottom Nav Settings
-    const bottomNavSettings = JSON.parse(localStorage.getItem('bottomNavSettings') || JSON.stringify({
-        visible: true,
-        opacity: 95,
-        size: 100,
-        items: {
-            home: true,
-            games: true,
-            points: true,
-            stats: true,
-            settings: true,
-            dev: true
-        }
-    }));
+    // Version Info
+    const version = '2.0.0';
+    const buildDate = '2026-01-10T12:17:00Z';
     
     return `
         <div class="dev-view">
@@ -35,14 +25,9 @@ export const devView = (store) => {
                         <div class="toggle-switch ${cacheBusterEnabled ? 'on' : 'off'}"></div>
                     </div>
                     
-                    <div class="toggle-compact" id="toggleDebugConsole" onclick="window.toggleDebugConsole()">
-                        <span class="toggle-compact-label">🐛 Debug</span>
-                        <div class="toggle-switch action"></div>
-                    </div>
-                    
-                    <div class="toggle-compact" id="toggleBottomNav" onclick="window.devQuickToggleBottomNav()">
-                        <span class="toggle-compact-label">📱 Nav</span>
-                        <div class="toggle-switch ${bottomNavSettings.visible ? 'on' : 'off'}"></div>
+                    <div class="toggle-compact" id="toggleFooterInfo" onclick="window.devToggleFooterInfo()">
+                        <span class="toggle-compact-label">📋 Footer</span>
+                        <div class="toggle-switch ${footerInfoEnabled ? 'on' : 'off'}"></div>
                     </div>
                 </div>
             </div>
@@ -181,22 +166,6 @@ window.toggleDebugConsole = () => {
     }
 };
 
-window.devQuickToggleBottomNav = () => {
-    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
-    settings.visible = !settings.visible;
-    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    window.applyBottomNavSettings();
-    window.app.ui.showNotification(settings.visible ? '📱 Bottom-Nav aktiviert' : '📱 Bottom-Nav deaktiviert', 'info');
-    
-    // Toggle-Switch aktualisieren
-    setTimeout(() => {
-        const toggleSwitch = document.querySelector('#toggleBottomNav .toggle-switch');
-        if (toggleSwitch) {
-            toggleSwitch.className = `toggle-switch ${settings.visible ? 'on' : 'off'}`;
-        }
-    }, 50);
-};
-
 window.devToggleCacheBuster = () => {
     const currentState = localStorage.getItem('cacheBusterEnabled') !== 'false';
     const newState = !currentState;
@@ -222,6 +191,61 @@ window.devToggleCacheBuster = () => {
         }
     }, 50);
 };
+
+window.devToggleFooterInfo = () => {
+    const currentState = localStorage.getItem('footerInfoEnabled') !== 'false';
+    const newState = !currentState;
+    localStorage.setItem('footerInfoEnabled', newState.toString());
+    
+    // Footer anzeigen/verstecken
+    window.updateFooterInfo();
+    
+    if (window.app && window.app.ui) {
+        window.app.ui.showNotification(
+            `📋 Footer-Info ${newState ? 'aktiviert' : 'deaktiviert'}`,
+            'info'
+        );
+    }
+    
+    // Toggle-Switch aktualisieren
+    setTimeout(() => {
+        const toggleSwitch = document.querySelector('#toggleFooterInfo .toggle-switch');
+        if (toggleSwitch) {
+            toggleSwitch.className = `toggle-switch ${newState ? 'on' : 'off'}`;
+        }
+    }, 50);
+};
+
+window.updateFooterInfo = () => {
+    const enabled = localStorage.getItem('footerInfoEnabled') !== 'false';
+    let footer = document.getElementById('appFooterInfo');
+    
+    if (enabled) {
+        if (!footer) {
+            footer = document.createElement('div');
+            footer.id = 'appFooterInfo';
+            footer.className = 'app-footer-info';
+            document.body.appendChild(footer);
+        }
+        const version = '2.0.0';
+        const buildDate = new Date('2026-01-10T12:17:00Z').toLocaleString('de-DE');
+        footer.innerHTML = `
+            <span class="footer-version">v${version}</span>
+            <span class="footer-separator">|</span>
+            <span class="footer-date">Build: ${buildDate}</span>
+        `;
+        footer.style.display = 'flex';
+    } else {
+        if (footer) {
+            footer.style.display = 'none';
+        }
+    }
+};
+
+// Footer beim App-Start initialisieren
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => window.updateFooterInfo(), 100);
+});
 
 window.devAddWallet = () => {
     if (window.app) {
@@ -337,61 +361,4 @@ window.devClearStorage = () => {
         window.app.ui.showNotification('🗑️ Storage gelöscht', 'info');
         setTimeout(() => location.reload(), 1000);
     }
-};
-
-// Bottom Nav Functions
-window.devToggleBottomNav = () => {
-    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
-    settings.visible = document.getElementById('bottomNavVisible').checked;
-    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    window.applyBottomNavSettings();
-    window.app.ui.showNotification(settings.visible ? '📱 Bottom-Nav aktiviert' : '📱 Bottom-Nav deaktiviert', 'info');
-};
-
-window.devUpdateBottomNavOpacity = (value) => {
-    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
-    settings.opacity = parseInt(value);
-    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    document.getElementById('opacityValue').textContent = value + '%';
-    window.applyBottomNavSettings();
-};
-
-window.devUpdateBottomNavSize = (value) => {
-    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
-    settings.size = parseInt(value);
-    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    document.getElementById('sizeValue').textContent = value + '%';
-    window.applyBottomNavSettings();
-};
-
-window.devToggleNavItem = (item) => {
-    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
-    if (!settings.items) settings.items = {};
-    
-    // Get current state from checkbox
-    const checkbox = event.target;
-    settings.items[item] = checkbox.checked;
-    
-    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    window.applyBottomNavSettings();
-    window.app.ui.showNotification(`${checkbox.checked ? '✅' : '❌'} ${item.toUpperCase()}`, 'info');
-};
-
-window.devResetBottomNav = () => {
-    const defaultSettings = {
-        visible: true,
-        opacity: 95,
-        size: 100,
-        items: {
-            home: true,
-            games: true,
-            points: true,
-            stats: true,
-            settings: true,
-            dev: false
-        }
-    };
-    localStorage.setItem('bottomNavSettings', JSON.stringify(defaultSettings));
-    window.app.ui.showNotification('🔄 Bottom-Nav zurückgesetzt', 'success');
-    window.app.router.render();
 };

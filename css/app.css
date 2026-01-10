@@ -1970,6 +1970,44 @@ body::before {
     }
 }
 
+/* === APP FOOTER INFO === */
+.app-footer-info {
+    position: fixed;
+    bottom: var(--bottom-nav-height);
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-xs) var(--spacing-md);
+    background: rgba(10, 14, 39, 0.95);
+    backdrop-filter: blur(8px);
+    border-top: 1px solid rgba(0, 255, 136, 0.1);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    z-index: 999;
+}
+
+.footer-version {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.footer-separator {
+    color: rgba(0, 255, 136, 0.3);
+}
+
+.footer-date {
+    color: var(--text-secondary);
+}
+
+@media (min-width: 768px) {
+    .app-footer-info {
+        bottom: 0;
+    }
+}
+
 /* === DEBUG CONSOLE === */
 .debug-console {
     position: fixed;
