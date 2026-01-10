@@ -105,33 +105,24 @@
         document.getElementById('jsTest').style.background = 'green';
         document.getElementById('jsTest').textContent = '✅ JAVASCRIPT FUNKTIONIERT';
         
-        // AGGRESSIVE CACHE LÖSCHEN
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistrations().then(registrations => {
-                registrations.forEach(reg => reg.unregister());
-            });
-        }
-        
-        if ('caches' in window) {
-            caches.keys().then(names => {
-                names.forEach(name => caches.delete(name));
-            });
-        }
-        
-        // LocalStorage löschen für frischen Start
-        try {
-            localStorage.clear();
-            sessionStorage.clear();
-        } catch (e) {}
-        
-        // Seite neu laden wenn cached
-        const lastReload = sessionStorage.getItem('lastCacheReload');
-        const now = Date.now();
-        if (!lastReload || (now - parseInt(lastReload)) > 5000) {
-            sessionStorage.setItem('lastCacheReload', now.toString());
-            setTimeout(() => {
-                window.location.reload(true);
-            }, 100);
+        // Cache löschen (NUR einmal beim ersten Laden)
+        if (!sessionStorage.getItem('cacheCleared')) {
+            // Service Worker
+            if ('serviceWorker' in navigator) {
+                navigator.serviceWorker.getRegistrations().then(registrations => {
+                    registrations.forEach(reg => reg.unregister());
+                });
+            }
+            
+            // Cache API
+            if ('caches' in window) {
+                caches.keys().then(names => {
+                    names.forEach(name => caches.delete(name));
+                });
+            }
+            
+            // Markieren dass Cache gelöscht wurde
+            sessionStorage.setItem('cacheCleared', 'true');
         }
     </script>
     <script type="module">
