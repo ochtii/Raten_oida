@@ -2,12 +2,9 @@
    APP.JS - Main Application Entry Point
    ========================================== */
 
-// Cache Buster für alle Imports
-const cacheBuster = new Date().getTime();
-
-import { Router } from `./core/router.js?v=${cacheBuster}`;
-import { Store } from `./core/store.js?v=${cacheBuster}`;
-import { UI } from `./core/ui.js?v=${cacheBuster}`;
+import { Router } from './core/router.js';
+import { Store } from './core/store.js';
+import { UI } from './core/ui.js';
 
 class App {
     constructor() {
