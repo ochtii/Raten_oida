@@ -33,22 +33,12 @@ export class Navigation {
         });
 
         // Menu Links Click (schließt Menü nach Navigation)
+        // HINWEIS: Router übernimmt die Navigation selbst
+        // Wir müssen nur sicherstellen, dass menu-open entfernt wird
         document.querySelectorAll('.menu-link').forEach(link => {
             link.addEventListener('click', () => {
                 // Menü schließen nach kurzer Verzögerung (smooth UX)
                 setTimeout(() => this.closeMenu(), 150);
-            });
-        });
-
-        // Bottom Navigation Buttons
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const route = btn.getAttribute('data-route');
-                if (route) {
-                    e.preventDefault();
-                    // Router wird die Navigation übernehmen
-                    // Active-States werden vom Router gesetzt
-                }
             });
         });
 

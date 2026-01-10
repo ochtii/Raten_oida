@@ -34,6 +34,9 @@ class Router {
             this.routes[this.currentRoute].cleanup();
         }
 
+        // WICHTIG: Entferne menu-open um Scrolling zu ermöglichen
+        document.body.classList.remove('menu-open');
+
         this.currentRoute = path;
 
         // View rendern
