@@ -1,96 +1,134 @@
 /* ========================================
-   THEMES.CSS - CSS Variables für Dark/Light Mode
+   THEMES.CSS - CSS Variables & Dark Mode
    ======================================== */
 
 :root {
-    /* Dark Mode (Standard) */
-    --bg-primary: #1a1a1a;
-    --bg-secondary: #252525;
-    --bg-tertiary: #2f2f2f;
-    --bg-overlay: rgba(0, 0, 0, 0.85);
-    
-    --text-primary: #ffffff;
-    --text-secondary: #b0b0b0;
-    --text-muted: #707070;
-    
-    /* Neon Akzente - Cyberpunk Style */
-    --accent-primary: #00ff88;      /* Neon Grün */
-    --accent-secondary: #ff006e;    /* Neon Pink */
-    --accent-tertiary: #00d9ff;     /* Neon Cyan */
-    --accent-warning: #ffaa00;      /* Neon Orange */
-    
-    /* UI Elemente */
-    --border-color: #404040;
-    --shadow-color: rgba(0, 0, 0, 0.5);
-    --gradient-primary: linear-gradient(135deg, #00ff88 0%, #00d9ff 100%);
-    --gradient-secondary: linear-gradient(135deg, #ff006e 0%, #ffaa00 100%);
-    
-    /* Schülling Währungsfarbe */
-    --currency-color: #ffd700;
-    
-    /* Transitions */
-    --transition-fast: 0.2s ease;
-    --transition-normal: 0.3s ease;
-    --transition-slow: 0.5s ease;
-    
-    /* Spacing */
+    /* ===== Spacing System ===== */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
-    --spacing-xxl: 3rem;
+    --spacing-2xl: 3rem;
     
-    /* Border Radius */
+    /* ===== Border Radius ===== */
     --radius-sm: 4px;
     --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    --radius-lg: 16px;
+    --radius-xl: 24px;
     --radius-full: 9999px;
     
-    /* Z-Index */
+    /* ===== Transitions ===== */
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+    
+    /* ===== Shadows ===== */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.15);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.2);
+    
+    /* ===== Z-Index ===== */
     --z-base: 1;
-    --z-dropdown: 100;
-    --z-sticky: 200;
-    --z-fixed: 300;
-    --z-modal: 400;
-    --z-toast: 500;
+    --z-dropdown: 50;
+    --z-sticky: 100;
+    --z-overlay: 150;
+    --z-modal: 200;
+    --z-toast: 300;
 }
 
-/* Light Mode Theme */
+/* ========================================
+   DARK THEME (Default)
+   ======================================== */
+:root,
+[data-theme="dark"] {
+    /* Background Colors */
+    --bg-primary: #0a0e1a;
+    --bg-secondary: #141824;
+    --bg-tertiary: #1e2332;
+    --bg-card: #252b3d;
+    
+    /* Neon Accent Colors */
+    --accent-primary: #00ff88;      /* Neon Green */
+    --accent-secondary: #ff0066;    /* Neon Pink */
+    --accent-tertiary: #00ddff;     /* Neon Cyan */
+    --accent-warning: #ffcc00;      /* Neon Yellow */
+    
+    /* Text Colors */
+    --text-primary: #f0f4ff;
+    --text-secondary: #b8c5e0;
+    --text-muted: #6b7a9c;
+    
+    /* Semantic Colors */
+    --success: var(--accent-primary);
+    --error: var(--accent-secondary);
+    --warning: var(--accent-warning);
+    --info: var(--accent-tertiary);
+}
+
+/* ========================================
+   LIGHT THEME
+   ======================================== */
 [data-theme="light"] {
-    --bg-primary: #f5f5f5;
-    --bg-secondary: #ffffff;
-    --bg-tertiary: #e8e8e8;
-    --bg-overlay: rgba(255, 255, 255, 0.95);
+    /* Background Colors */
+    --bg-primary: #ffffff;
+    --bg-secondary: #f7f9fc;
+    --bg-tertiary: #edf1f7;
+    --bg-card: #ffffff;
     
-    --text-primary: #1a1a1a;
-    --text-secondary: #4a4a4a;
-    --text-muted: #9a9a9a;
-    
+    /* Accent Colors (angepasst für Light Mode) */
     --accent-primary: #00cc6a;
-    --accent-secondary: #d90056;
+    --accent-secondary: #e0005c;
     --accent-tertiary: #00b8d4;
-    --accent-warning: #ff9500;
+    --accent-warning: #f5a623;
     
-    --border-color: #d0d0d0;
-    --shadow-color: rgba(0, 0, 0, 0.1);
+    /* Text Colors */
+    --text-primary: #1a1f2e;
+    --text-secondary: #4a5568;
+    --text-muted: #a0aec0;
+    
+    /* Shadows angepasst */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.18);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.25);
 }
 
-/* Neon Glow Effects (für Dark Mode) */
-[data-theme="dark"] .glow-green {
-    box-shadow: 0 0 10px var(--accent-primary),
-                0 0 20px var(--accent-primary),
-                0 0 30px var(--accent-primary);
+/* ========================================
+   THEME UTILITIES
+   ======================================== */
+
+/* Smooth theme transition */
+* {
+    transition-property: background-color, border-color, color, fill, stroke;
+    transition-duration: var(--transition-normal);
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-[data-theme="dark"] .glow-pink {
-    box-shadow: 0 0 10px var(--accent-secondary),
-                0 0 20px var(--accent-secondary),
-                0 0 30px var(--accent-secondary);
+/* Disable transitions on theme change for instant switch */
+[data-theme-transitioning] * {
+    transition: none !important;
+}
+
+/* Glow Effects für Dark Mode */
+[data-theme="dark"] .glow-primary {
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+[data-theme="dark"] .glow-secondary {
+    box-shadow: 0 0 20px rgba(255, 0, 102, 0.5);
 }
 
 [data-theme="dark"] .text-glow {
-    text-shadow: 0 0 10px currentColor,
-                 0 0 20px currentColor;
+    text-shadow: 0 0 10px currentColor;
+}
+
+/* Custom Scrollbar für beide Themes */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track {
+    background: var(--bg-tertiary);
 }

@@ -50,27 +50,33 @@ export class Navigation {
     }
 
     toggleMenu() {
+        const overlay = $('#nav-overlay');
         this.sandwichMenu?.classList.toggle('open');
         this.sandwichBtn?.classList.toggle('active');
+        overlay?.classList.toggle('active');
 
-        // Body Scroll verhindern wenn Menü offen
+        // WICHTIG: Body Scroll Management mit classList statt style
         if (this.sandwichMenu?.classList.contains('open')) {
-            document.body.style.overflow = 'hidden';
+            document.body.classList.add('menu-open');
         } else {
-            document.body.style.overflow = 'auto';
+            document.body.classList.remove('menu-open');
         }
     }
 
     openMenu() {
+        const overlay = $('#nav-overlay');
         this.sandwichMenu?.classList.add('open');
         this.sandwichBtn?.classList.add('active');
-        document.body.style.overflow = 'hidden';
+        overlay?.classList.add('active');
+        document.body.classList.add('menu-open');
     }
 
     closeMenu() {
+        const overlay = $('#nav-overlay');
         this.sandwichMenu?.classList.remove('open');
         this.sandwichBtn?.classList.remove('active');
-        document.body.style.overflow = 'auto';
+        overlay?.classList.remove('active');
+        document.body.classList.remove('menu-open');
     }
 
     updateWallet() {
