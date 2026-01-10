@@ -162,61 +162,111 @@ export const devView = (store) => {
             <div class="dev-card">
                 <h3>📱 Bottom Navigation</h3>
                 
-                <div class="dev-form">
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="bottomNavVisible" ${bottomNavSettings.visible ? 'checked' : ''} onchange="window.devToggleBottomNav()">
-                            Bottom-Nav anzeigen
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Navigation anzeigen</div>
+                            <div class="setting-desc">Bottom-Navigation ein/ausschalten</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" id="bottomNavVisible" ${bottomNavSettings.visible ? 'checked' : ''} 
+                                onchange="window.devToggleBottomNav()">
+                            <span class="toggle-slider"></span>
                         </label>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Transparenz: <strong id="opacityValue">${bottomNavSettings.opacity}%</strong></label>
-                        <input type="range" id="bottomNavOpacity" min="10" max="100" value="${bottomNavSettings.opacity}" 
-                               oninput="window.devUpdateBottomNavOpacity(this.value)" class="dev-slider">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Höhe: <strong id="sizeValue">${bottomNavSettings.size}%</strong></label>
-                        <input type="range" id="bottomNavSize" min="60" max="150" value="${bottomNavSettings.size}" 
-                               oninput="window.devUpdateBottomNavSize(this.value)" class="dev-slider">
-                        <small style="color: var(--text-muted); font-size: 0.75rem;">Ändert nur die Höhe der Navigation</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label style="margin-bottom: var(--spacing-sm);">Sichtbare Elemente:</label>
-                        <div class="bottom-nav-items">
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.home ? 'checked' : ''} onchange="window.devToggleNavItem('home')">
-                                <span>🏠 Home</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.games ? 'checked' : ''} onchange="window.devToggleNavItem('games')">
-                                <span>🎮 Spiele</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.points ? 'checked' : ''} onchange="window.devToggleNavItem('points')">
-                                <span>⭐ Punkte</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.stats ? 'checked' : ''} onchange="window.devToggleNavItem('stats')">
-                                <span>📊 Stats</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.settings ? 'checked' : ''} onchange="window.devToggleNavItem('settings')">
-                                <span>⚙️ Settings</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.dev ? 'checked' : ''} onchange="window.devToggleNavItem('dev')">
-                                <span>🛠️ Dev</span>
-                            </label>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Transparenz</div>
+                            <div class="setting-desc">Deckkraft der Navigation: <strong id="opacityValue">${bottomNavSettings.opacity}%</strong></div>
                         </div>
+                        <input type="range" id="bottomNavOpacity" min="10" max="100" value="${bottomNavSettings.opacity}" 
+                               oninput="window.devUpdateBottomNavOpacity(this.value)" class="volume-slider">
                     </div>
                     
-                    <button class="btn btn-secondary" onclick="window.devResetBottomNav()">
-                        🔄 Zurücksetzen
-                    </button>
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">Höhe</div>
+                            <div class="setting-desc">Größe der Navigation: <strong id="sizeValue">${bottomNavSettings.size}%</strong></div>
+                        </div>
+                        <input type="range" id="bottomNavSize" min="60" max="150" value="${bottomNavSettings.size}" 
+                               oninput="window.devUpdateBottomNavSize(this.value)" class="volume-slider">
+                    </div>
                 </div>
+                
+                <h4 style="color: var(--primary); margin-top: var(--spacing-lg); margin-bottom: var(--spacing-md); font-size: 1rem;">Sichtbare Elemente</h4>
+                
+                <div class="settings-grid">
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">🏠 Home</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" ${bottomNavSettings.items.home ? 'checked' : ''} 
+                                onchange="window.devToggleNavItem('home')">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">🎮 Spiele</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" ${bottomNavSettings.items.games ? 'checked' : ''} 
+                                onchange="window.devToggleNavItem('games')">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">⭐ Punkte</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" ${bottomNavSettings.items.points ? 'checked' : ''} 
+                                onchange="window.devToggleNavItem('points')">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">📊 Stats</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" ${bottomNavSettings.items.stats ? 'checked' : ''} 
+                                onchange="window.devToggleNavItem('stats')">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">⚙️ Settings</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" ${bottomNavSettings.items.settings ? 'checked' : ''} 
+                                onchange="window.devToggleNavItem('settings')">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="setting-item">
+                        <div class="setting-info">
+                            <div class="setting-label">🛠️ Dev</div>
+                        </div>
+                        <label class="toggle">
+                            <input type="checkbox" ${bottomNavSettings.items.dev ? 'checked' : ''} 
+                                onchange="window.devToggleNavItem('dev')">
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                </div>
+                
+                <button class="btn btn-secondary" onclick="window.devResetBottomNav()" style="margin-top: var(--spacing-md); width: 100%;">
+                    🔄 Zurücksetzen
+                </button>
             </div>
             
             <!-- Console Log -->
