@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Diagnose</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #000;
+            color: #fff;
+            padding: 20px;
+            font-size: 16px;
+        }
+        
+        .box {
+            margin: 10px 0;
+            padding: 20px;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            text-align: center;
+        }
+        
+        .success { background: #00ff00; color: #000; }
+        .error { background: #ff0000; color: #fff; }
+        .warning { background: #ffaa00; color: #000; }
+        .info { background: #0088ff; color: #fff; }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #container {
+            background: #222;
+            border: 3px solid #00ff00;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        
+        .detail {
+            background: #333;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 DIAGNOSE</h1>
+    
+    <div class="box success">
+        ✅ HTML LÄDT
+    </div>
+    
+    <div class="box success" id="cssTest">
+        ⏳ CSS WIRD GETESTET...
+    </div>
+    
+    <div class="box warning" id="jsTest">
+        ⏳ JAVASCRIPT WIRD GETESTET...
+    </div>
+    
+    <div class="box warning" id="moduleTest">
+        ⏳ ES6 MODULE WERDEN GETESTET...
+    </div>
+    
+    <div class="box warning" id="domTest">
+        ⏳ DOM WIRD GETESTET...
+    </div>
+    
+    <div id="container">
+        <h2>📦 CONTAINER TEST</h2>
+        <div id="mainContent">Dieser Text sollte sichtbar sein</div>
+    </div>
+    
+    <div id="details"></div>
+    
+    <script>
+        // CSS Test
+        document.getElementById('cssTest').textContent = '✅ CSS FUNKTIONIERT';
+        
+        // JS Test
+        try {
+            document.getElementById('jsTest').className = 'box success';
+            document.getElementById('jsTest').textContent = '✅ JAVASCRIPT FUNKTIONIERT';
+        } catch (e) {
+            document.getElementById('jsTest').className = 'box error';
+            document.getElementById('jsTest').textContent = '❌ JS FEHLER: ' + e.message;
+        }
+        
+        // DOM Test
+        try {
+            const container = document.getElementById('mainContent');
+            if (container) {
+                container.innerHTML = '<div class="box success">✅ DOM MANIPULATION FUNKTIONIERT</div>';
+                document.getElementById('domTest').className = 'box success';
+                document.getElementById('domTest').textContent = '✅ DOM FUNKTIONIERT';
+            } else {
+                throw new Error('Container nicht gefunden');
+            }
+        } catch (e) {
+            document.getElementById('domTest').className = 'box error';
+            document.getElementById('domTest').textContent = '❌ DOM FEHLER: ' + e.message;
+        }
+        
+        // Browser Info sammeln
+        const details = document.getElementById('details');
+        details.innerHTML = `
+            <div class="detail">📱 User Agent: ${navigator.userAgent}</div>
+            <div class="detail">📐 Viewport: ${window.innerWidth} x ${window.innerHeight}</div>
+            <div class="detail">🌐 Online: ${navigator.onLine ? 'JA' : 'NEIN'}</div>
+            <div class="detail">🔧 LocalStorage: ${typeof localStorage !== 'undefined' ? 'VERFÜGBAR' : 'NICHT VERFÜGBAR'}</div>
+        `;
+    </script>
+    
+    <script type="module">
+        // ES6 Module Test
+        try {
+            const testModule = () => 'MODULE FUNKTIONIERT';
+            const result = testModule();
+            
+            document.getElementById('moduleTest').className = 'box success';
+            document.getElementById('moduleTest').textContent = '✅ ES6 ' + result;
+            
+            // Jetzt die echte App testen
+            setTimeout(async () => {
+                const testBox = document.createElement('div');
+                testBox.className = 'box info';
+                testBox.textContent = '🔄 TESTE ECHTE APP...';
+                document.body.appendChild(testBox);
+                
+                try {
+                    // Versuche Store zu laden
+                    const storeModule = await import('./js/core/store.js');
+                    testBox.className = 'box success';
+                    testBox.textContent = '✅ STORE MODULE GELADEN';
+                    
+                    const store = new storeModule.Store();
+                    const wallet = store.getWallet();
+                    
+                    const walletBox = document.createElement('div');
+                    walletBox.className = 'box success';
+                    walletBox.textContent = '✅ STORE FUNKTIONIERT - Wallet: €' + wallet;
+                    document.body.appendChild(walletBox);
+                    
+                    // Versuche Home View zu laden
+                    const homeModule = await import('./js/views/home.js');
+                    const homeBox = document.createElement('div');
+                    homeBox.className = 'box success';
+                    homeBox.textContent = '✅ HOME VIEW GELADEN';
+                    document.body.appendChild(homeBox);
+                    
+                    // Versuche Home View zu rendern
+                    const html = homeModule.homeView(store);
+                    if (html && html.length > 0) {
+                        const renderBox = document.createElement('div');
+                        renderBox.className = 'box success';
+                        renderBox.textContent = '✅ HOME VIEW RENDER OK (' + html.length + ' chars)';
+                        document.body.appendChild(renderBox);
+                        
+                        // Zeige einen Ausschnitt
+                        const previewBox = document.createElement('div');
+                        previewBox.className = 'detail';
+                        previewBox.innerHTML = '<strong>Preview:</strong><br>' + html.substring(0, 200);
+                        document.body.appendChild(previewBox);
+                    }
+                    
+                } catch (e) {
+                    testBox.className = 'box error';
+                    testBox.textContent = '❌ APP FEHLER: ' + e.message;
+                    
+                    const errorBox = document.createElement('div');
+                    errorBox.className = 'detail';
+                    errorBox.style.background = '#ff0000';
+                    errorBox.innerHTML = '<strong>Stack:</strong><br>' + (e.stack || 'Kein Stack verfügbar');
+                    document.body.appendChild(errorBox);
+                }
+            }, 1000);
+            
+        } catch (e) {
+            document.getElementById('moduleTest').className = 'box error';
+            document.getElementById('moduleTest').textContent = '❌ MODULE FEHLER: ' + e.message;
+        }
+    </script>
+</body>
+</html>
