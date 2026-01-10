@@ -61,24 +61,32 @@ class App {
         menuCloseBtn?.addEventListener('click', toggleMenu);
         overlay?.addEventListener('click', toggleMenu);
 
+        // Navigation Items - Bind initial navigation
+        this.bindNavigation(sideMenu, toggleMenu);
+
+        // Hash Change
+        window.addEventListener('hashchange', () => {
+            this.router.navigateTo(window.location.hash.slice(1) || 'home');
+        });
+    }
+
+    bindNavigation(sideMenu, toggleMenu) {
         // Navigation Items
         document.querySelectorAll('[data-route]').forEach(link => {
-            link.addEventListener('click', (e) => {
+            const newLink = link.cloneNode(true);
+            link.parentNode.replaceChild(newLink, link);
+            
+            newLink.addEventListener('click', (e) => {
                 e.preventDefault();
                 const route = e.currentTarget.getAttribute('data-route');
                 
                 // Menu nur schließen wenn es ein Side-Menu Link ist (nicht Bottom-Nav)
-                if (sideMenu.classList.contains('active')) {
+                if (sideMenu && sideMenu.classList.contains('active')) {
                     toggleMenu();
                 }
                 
                 this.router.navigateTo(route);
             });
-        });
-
-        // Hash Change
-        window.addEventListener('hashchange', () => {
-            this.router.navigateTo(window.location.hash.slice(1) || 'home');
         });
     }
 
