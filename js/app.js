@@ -64,8 +64,8 @@ class App {
                 e.preventDefault();
                 const route = e.currentTarget.getAttribute('data-route');
                 
-                // Menu schließen wenn mobil
-                if (window.innerWidth < 768) {
+                // Menu nur schließen wenn es ein Side-Menu Link ist (nicht Bottom-Nav)
+                if (sideMenu.classList.contains('active')) {
                     toggleMenu();
                 }
                 
