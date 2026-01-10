@@ -598,13 +598,20 @@ export class DevTools {
 
 // Auto-initialize in development
 export function initDevTools() {
-    // Check if in development mode (localhost or dev domain)
+    // Check if in development mode
     const isDev = location.hostname === 'localhost' || 
                   location.hostname === '127.0.0.1' ||
-                  location.search.includes('dev=true');
+                  location.hostname.includes('127.0.0.1') ||
+                  location.hostname.includes('gitpod') ||
+                  location.hostname.includes('codespaces') ||
+                  location.hostname.includes('github.dev') ||
+                  location.search.includes('dev=true') ||
+                  location.protocol === 'file:';
 
     if (isDev) {
         window.devTools = new DevTools();
         console.log('🛠️ DevTools loaded! Press Ctrl+Shift+D to open.');
+    } else {
+        console.log('ℹ️ DevTools disabled in production. Add ?dev=true to enable.');
     }
 }
