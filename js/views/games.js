@@ -2,11 +2,8 @@
    GAMES VIEW
    ========================================== */
 
-// Cache Buster für Daten-Imports
-const cacheBuster = new Date().getTime();
-
-import { capitalsData } from `../data/capitals.js?v=${cacheBuster}`;
-import { populationData } from `../data/population.js?v=${cacheBuster}`;
+import { capitalsData } from '../data/capitals.js';
+import { populationData } from '../data/population.js';
 
 
 let currentGame = null;

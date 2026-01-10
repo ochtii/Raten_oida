@@ -2,15 +2,12 @@
    ROUTER.JS - SPA Routing
    ========================================== */
 
-// Cache Buster für alle Imports
-const cacheBuster = new Date().getTime();
-
-import { homeView } from `../views/home.js?v=${cacheBuster}`;
-import { gamesView } from `../views/games.js?v=${cacheBuster}`;
-import { statsView } from `../views/stats.js?v=${cacheBuster}`;
-import { settingsView } from `../views/settings.js?v=${cacheBuster}`;
-import { pointsView } from `../views/points.js?v=${cacheBuster}`;
-import { devView } from `../views/dev.js?v=${cacheBuster}`;
+import { homeView } from '../views/home.js';
+import { gamesView } from '../views/games.js';
+import { statsView } from '../views/stats.js';
+import { settingsView } from '../views/settings.js';
+import { pointsView } from '../views/points.js';
+import { devView } from '../views/dev.js';
 
 export class Router {
     constructor(store) {
