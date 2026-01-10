@@ -398,30 +398,55 @@ function generatePopulationQuestion() {
     const location = correctEntry.city;
     const population = correctEntry.population;
 
-    // Generate 3 plausible wrong options
+    // Generate 3 plausible wrong options (mindestens 20% anders)
     const wrongOptions = [];
-    const variance = population * 0.5; // 50% variance
+    const minDiff = population * 0.2;
+    let attempts = 0;
     
-    while (wrongOptions.length < 3) {
-        const wrongPop = Math.floor(population + (Math.random() - 0.5) * 2 * variance);
-        if (wrongPop !== population && !wrongOptions.includes(wrongPop) && wrongPop > 0) {
+    while (wrongOptions.length < 3 && attempts < 100) {
+        attempts++;
+        // Generiere Zufallszahl zwischen 50% und 200% der echten Bevölkerung
+        const multiplier = 0.5 + Math.random() * 1.5;
+        const wrongPop = Math.round(population * multiplier / 10000) * 10000; // Auf 10.000 runden
+        
+        // Prüfen ob unterschiedlich genug
+        const isDifferent = Math.abs(wrongPop - population) > minDiff;
+        const isUnique = !wrongOptions.includes(wrongPop) && wrongPop !== population;
+        
+        if (isDifferent && isUnique && wrongPop > 0) {
             wrongOptions.push(wrongPop);
         }
+    }
+    
+    // Falls nicht genug Optionen, füge einfache Varianten hinzu
+    while (wrongOptions.length < 3) {
+        const fallback = population * (0.5 + wrongOptions.length * 0.5);
+        wrongOptions.push(Math.round(fallback / 10000) * 10000);
     }
 
     // Mix correct answer with wrong options
     const options = [population, ...wrongOptions];
+    
     // Shuffle options
     for (let i = options.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [options[i], options[j]] = [options[j], options[i]];
     }
 
+    // Finde den korrekten Index nach dem Shuffle
+    let correctIndex = 0;
+    for (let i = 0; i < options.length; i++) {
+        if (options[i] === population) {
+            correctIndex = i;
+            break;
+        }
+    }
+
     currentQuestion = {
         location,
         population,
         options,
-        correctIndex: options.indexOf(population)
+        correctIndex
     };
 }
 
