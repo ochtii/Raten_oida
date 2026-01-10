@@ -158,67 +158,6 @@ export const devView = (store) => {
                 <pre class="dev-json" id="devJson">${JSON.stringify(state, null, 2)}</pre>
             </div>
             
-            <!-- Bottom Navigation Settings -->
-            <div class="dev-card">
-                <h3>📱 Bottom Navigation</h3>
-                
-                <div class="dev-form">
-                    <div class="form-group">
-                        <label>
-                            <input type="checkbox" id="bottomNavVisible" ${bottomNavSettings.visible ? 'checked' : ''} onchange="window.devToggleBottomNav()">
-                            Bottom-Nav anzeigen
-                        </label>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Transparenz: <strong id="opacityValue">${bottomNavSettings.opacity}%</strong></label>
-                        <input type="range" id="bottomNavOpacity" min="10" max="100" value="${bottomNavSettings.opacity}" 
-                               oninput="window.devUpdateBottomNavOpacity(this.value)" class="dev-slider">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Höhe: <strong id="sizeValue">${bottomNavSettings.size}%</strong></label>
-                        <input type="range" id="bottomNavSize" min="60" max="150" value="${bottomNavSettings.size}" 
-                               oninput="window.devUpdateBottomNavSize(this.value)" class="dev-slider">
-                        <small style="color: var(--text-muted); font-size: 0.75rem;">Ändert nur die Höhe der Navigation</small>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label style="margin-bottom: var(--spacing-sm);">Sichtbare Elemente:</label>
-                        <div class="bottom-nav-items">
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.home ? 'checked' : ''} onchange="window.devToggleNavItem('home')">
-                                <span>🏠 Home</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.games ? 'checked' : ''} onchange="window.devToggleNavItem('games')">
-                                <span>🎮 Spiele</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.points ? 'checked' : ''} onchange="window.devToggleNavItem('points')">
-                                <span>⭐ Punkte</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.stats ? 'checked' : ''} onchange="window.devToggleNavItem('stats')">
-                                <span>📊 Stats</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.settings ? 'checked' : ''} onchange="window.devToggleNavItem('settings')">
-                                <span>⚙️ Settings</span>
-                            </label>
-                            <label class="nav-toggle">
-                                <input type="checkbox" ${bottomNavSettings.items.dev ? 'checked' : ''} onchange="window.devToggleNavItem('dev')">
-                                <span>🛠️ Dev</span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-secondary" onclick="window.devResetBottomNav()">
-                        🔄 Zurücksetzen
-                    </button>
-                </div>
-            </div>
-            
             <!-- Console Log -->
             <div class="dev-card">
                 <h3>📝 Console Commands</h3>

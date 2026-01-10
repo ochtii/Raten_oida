@@ -6,6 +6,21 @@ export const settingsView = (store) => {
     const settings = store.getSettings();
     const wallet = store.getWallet();
     const version = '2.0.0';
+    
+    // Bottom Nav Settings
+    const bottomNavSettings = JSON.parse(localStorage.getItem('bottomNavSettings') || JSON.stringify({
+        visible: true,
+        opacity: 95,
+        size: 100,
+        items: {
+            home: true,
+            games: true,
+            points: true,
+            stats: true,
+            settings: true,
+            dev: true
+        }
+    }));
 
     return `
         <div class="settings-view">
@@ -39,6 +54,82 @@ export const settingsView = (store) => {
                                     onchange="window.toggleSetting('animations')">
                                 <span class="toggle-slider"></span>
                             </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">📱 Bottom Navigation</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Navigation anzeigen</div>
+                                <div class="setting-desc">Bottom-Navigation ein- oder ausblenden</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="bottomNavVisible" ${bottomNavSettings.visible ? 'checked' : ''} 
+                                    onchange="window.settingsToggleBottomNav()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Transparenz</div>
+                                <div class="setting-desc">Deckkraft der Navigation: <strong id="opacityValue">${bottomNavSettings.opacity}%</strong></div>
+                            </div>
+                            <input type="range" class="dev-slider" id="bottomNavOpacity" min="10" max="100" value="${bottomNavSettings.opacity}" 
+                                   oninput="window.settingsUpdateBottomNavOpacity(this.value)">
+                        </div>
+                        
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Höhe</div>
+                                <div class="setting-desc">Größe der Navigation: <strong id="sizeValue">${bottomNavSettings.size}%</strong></div>
+                            </div>
+                            <input type="range" class="dev-slider" id="bottomNavSize" min="60" max="150" value="${bottomNavSettings.size}" 
+                                   oninput="window.settingsUpdateBottomNavSize(this.value)">
+                        </div>
+                        
+                        <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
+                            <div class="setting-info" style="margin-bottom: var(--spacing-sm);">
+                                <div class="setting-label">Sichtbare Elemente</div>
+                                <div class="setting-desc">Wähle welche Tabs angezeigt werden</div>
+                            </div>
+                            <div class="bottom-nav-items" style="width: 100%;">
+                                <label class="nav-toggle">
+                                    <input type="checkbox" ${bottomNavSettings.items.home ? 'checked' : ''} onchange="window.settingsToggleNavItem('home')">
+                                    <span>🏠 Home</span>
+                                </label>
+                                <label class="nav-toggle">
+                                    <input type="checkbox" ${bottomNavSettings.items.games ? 'checked' : ''} onchange="window.settingsToggleNavItem('games')">
+                                    <span>🎮 Spiele</span>
+                                </label>
+                                <label class="nav-toggle">
+                                    <input type="checkbox" ${bottomNavSettings.items.points ? 'checked' : ''} onchange="window.settingsToggleNavItem('points')">
+                                    <span>⭐ Punkte</span>
+                                </label>
+                                <label class="nav-toggle">
+                                    <input type="checkbox" ${bottomNavSettings.items.stats ? 'checked' : ''} onchange="window.settingsToggleNavItem('stats')">
+                                    <span>📊 Stats</span>
+                                </label>
+                                <label class="nav-toggle">
+                                    <input type="checkbox" ${bottomNavSettings.items.settings ? 'checked' : ''} onchange="window.settingsToggleNavItem('settings')">
+                                    <span>⚙️ Settings</span>
+                                </label>
+                                <label class="nav-toggle">
+                                    <input type="checkbox" ${bottomNavSettings.items.dev ? 'checked' : ''} onchange="window.settingsToggleNavItem('dev')">
+                                    <span>🛠️ Dev</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-top: var(--spacing-md);">
+                            <button class="btn btn-secondary btn-sm" onclick="window.settingsResetBottomNav()">
+                                🔄 Zurücksetzen
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -287,4 +378,61 @@ window.confirmResetAll = () => {
             window.location.reload();
         }, 1500);
     }
+};
+
+// Bottom Navigation Settings Functions
+window.settingsToggleBottomNav = () => {
+    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
+    settings.visible = document.getElementById('bottomNavVisible').checked;
+    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
+    window.applyBottomNavSettings();
+    window.app.ui.showNotification(settings.visible ? '📱 Navigation aktiviert' : '📱 Navigation deaktiviert', 'info');
+};
+
+window.settingsUpdateBottomNavOpacity = (value) => {
+    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
+    settings.opacity = parseInt(value);
+    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
+    document.getElementById('opacityValue').textContent = value + '%';
+    window.applyBottomNavSettings();
+};
+
+window.settingsUpdateBottomNavSize = (value) => {
+    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
+    settings.size = parseInt(value);
+    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
+    document.getElementById('sizeValue').textContent = value + '%';
+    window.applyBottomNavSettings();
+};
+
+window.settingsToggleNavItem = (item) => {
+    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
+    if (!settings.items) settings.items = {};
+    
+    const checkbox = event.target;
+    settings.items[item] = checkbox.checked;
+    
+    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
+    window.applyBottomNavSettings();
+    window.app.ui.showNotification(`${checkbox.checked ? '✅' : '❌'} ${item.toUpperCase()}`, 'info');
+};
+
+window.settingsResetBottomNav = () => {
+    const defaultSettings = {
+        visible: true,
+        opacity: 95,
+        size: 100,
+        items: {
+            home: true,
+            games: true,
+            points: true,
+            stats: true,
+            settings: true,
+            dev: false
+        }
+    };
+    localStorage.setItem('bottomNavSettings', JSON.stringify(defaultSettings));
+    window.applyBottomNavSettings();
+    window.app.ui.showNotification('🔄 Navigation zurückgesetzt', 'success');
+    window.app.router.render();
 };
