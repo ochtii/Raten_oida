@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔄 Cache Löschen</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .status {
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: white;
+            background: #667eea;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-top: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .info {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            text-align: left;
+        }
+        
+        .info h2 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .info ul {
+            list-style-position: inside;
+            color: #666;
+        }
+        
+        .info li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Cache Löschen</h1>
+        <div class="status loading" id="status">
+            Lösche Cache...
+        </div>
+        
+        <div id="details"></div>
+        
+        <a href="/index.html" class="btn" id="goBtn" style="display: none;">
+            🎮 Zur App
+        </a>
+        
+        <div class="info">
+            <h2>Was wird gelöscht:</h2>
+            <ul>
+                <li>Service Worker</li>
+                <li>Cache API</li>
+                <li>LocalStorage</li>
+                <li>SessionStorage</li>
+                <li>IndexedDB</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const statusEl = document.getElementById('status');
+        const detailsEl = document.getElementById('details');
+        const goBtn = document.getElementById('goBtn');
+        
+        let results = [];
+        
+        async function clearEverything() {
+            try {
+                // 1. Service Worker löschen
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    for (let registration of registrations) {
+                        await registration.unregister();
+                    }
+                    results.push('✅ Service Worker gelöscht (' + registrations.length + ')');
+                } else {
+                    results.push('ℹ️ Service Worker nicht verfügbar');
+                }
+                
+                // 2. Cache API löschen
+                if ('caches' in window) {
+                    const cacheNames = await caches.keys();
+                    for (let name of cacheNames) {
+                        await caches.delete(name);
+                    }
+                    results.push('✅ Cache API gelöscht (' + cacheNames.length + ' caches)');
+                } else {
+                    results.push('ℹ️ Cache API nicht verfügbar');
+                }
+                
+                // 3. LocalStorage löschen
+                try {
+                    const lsCount = localStorage.length;
+                    localStorage.clear();
+                    results.push('✅ LocalStorage gelöscht (' + lsCount + ' items)');
+                } catch (e) {
+                    results.push('⚠️ LocalStorage Fehler: ' + e.message);
+                }
+                
+                // 4. SessionStorage löschen
+                try {
+                    const ssCount = sessionStorage.length;
+                    sessionStorage.clear();
+                    results.push('✅ SessionStorage gelöscht (' + ssCount + ' items)');
+                } catch (e) {
+                    results.push('⚠️ SessionStorage Fehler: ' + e.message);
+                }
+                
+                // 5. IndexedDB löschen
+                if ('indexedDB' in window) {
+                    try {
+                        const dbs = await indexedDB.databases();
+                        for (let db of dbs) {
+                            indexedDB.deleteDatabase(db.name);
+                        }
+                        results.push('✅ IndexedDB gelöscht (' + dbs.length + ' DBs)');
+                    } catch (e) {
+                        results.push('ℹ️ IndexedDB: ' + e.message);
+                    }
+                }
+                
+                // Erfolg anzeigen
+                statusEl.className = 'status success';
+                statusEl.textContent = '✅ Alles gelöscht!';
+                
+                // Details anzeigen
+                detailsEl.innerHTML = '<div class="info"><ul>' + 
+                    results.map(r => '<li>' + r + '</li>').join('') + 
+                    '</ul></div>';
+                
+                // Button anzeigen
+                goBtn.style.display = 'inline-block';
+                
+                // Browser-Info
+                console.log('🔍 Browser:', navigator.userAgent);
+                console.log('📱 Viewport:', window.innerWidth + 'x' + window.innerHeight);
+                console.log('🌐 Online:', navigator.onLine);
+                
+            } catch (error) {
+                statusEl.className = 'status error';
+                statusEl.textContent = '❌ Fehler: ' + error.message;
+                console.error('Cache-Lösch-Fehler:', error);
+            }
+        }
+        
+        // Sofort ausführen
+        clearEverything();
+    </script>
+</body>
+</html>
