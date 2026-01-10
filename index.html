@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raten OIDA - Gaming Edition</title>
+    <title>Raten OIDA - Futuristic Gaming</title>
     
     <!-- CSS -->
     <link rel="stylesheet" href="./assets/css/themes.css">
@@ -12,16 +12,570 @@
     <link rel="stylesheet" href="./assets/css/components.css">
     <link rel="stylesheet" href="./assets/css/utilities.css">
     <link rel="stylesheet" href="./assets/css/devtools.css">
+    
+    <style>
+        :root {
+            --neon-cyan: #00f0ff;
+            --neon-purple: #b700ff;
+            --neon-pink: #ff006e;
+            --dark-bg: #0a0e27;
+            --glass-bg: rgba(10, 14, 39, 0.7);
+            --glow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+
+        * {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, #1a0033 100%);
+            color: #e0e0ff;
+            font-family: 'Courier New', monospace;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(0, 240, 255, 0.03) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(183, 0, 255, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        #app {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            height: 100dvh;
+            position: relative;
+            z-index: 2;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        /* HEADER - FUTURISTIC */
+        #app-header {
+            background: linear-gradient(90deg, rgba(0, 240, 255, 0.1) 0%, rgba(183, 0, 255, 0.1) 100%);
+            border-bottom: 2px solid var(--neon-cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #app-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            animation: scanline 3s infinite;
+        }
+
+        @keyframes scanline {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.3));
+        }
+
+        .logo-text {
+            letter-spacing: 0.2em;
+        }
+
+        .highlight {
+            color: var(--neon-pink);
+            -webkit-text-fill-color: unset;
+            font-weight: 900;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { 
+                text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink);
+                filter: drop-shadow(0 0 8px var(--neon-pink));
+            }
+            50% { 
+                text-shadow: 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink);
+                filter: drop-shadow(0 0 15px var(--neon-pink));
+            }
+        }
+
+        /* SANDWICH BUTTON */
+        .sandwich-btn {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.2), rgba(183, 0, 255, 0.2));
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .sandwich-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at center, rgba(0, 240, 255, 0.3), transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .sandwich-btn:hover::before {
+            opacity: 1;
+        }
+
+        .sandwich-btn span {
+            width: 24px;
+            height: 2px;
+            background: var(--neon-cyan);
+            border-radius: 2px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        .sandwich-btn:hover {
+            border-color: var(--neon-pink);
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 0 20px var(--neon-cyan), inset 0 0 20px rgba(0, 240, 255, 0.2);
+        }
+
+        .sandwich-btn:hover span {
+            background: var(--neon-pink);
+            box-shadow: 0 0 10px var(--neon-pink);
+        }
+
+        .sandwich-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translateY(12px);
+        }
+
+        .sandwich-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .sandwich-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translateY(-12px);
+        }
+
+        /* SANDWICH MENU */
+        #nav-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            z-index: 150;
+        }
+
+        #nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sandwich-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: min(320px, 85vw);
+            height: 100vh;
+            height: 100dvh;
+            background: linear-gradient(135deg, rgba(10, 14, 39, 0.95) 0%, rgba(26, 0, 51, 0.95) 100%);
+            backdrop-filter: blur(20px);
+            border-right: 2px solid var(--neon-cyan);
+            z-index: 200;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.8);
+        }
+
+        .sandwich-menu.open {
+            transform: translateX(0);
+            box-shadow: 20px 0 60px rgba(0, 240, 255, 0.3);
+        }
+
+        .sandwich-content {
+            padding: 2rem 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(183, 0, 255, 0.1));
+            border: 2px solid var(--neon-cyan);
+            border-radius: 50%;
+            color: var(--neon-cyan);
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-btn:hover {
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(183, 0, 255, 0.2));
+            border-color: var(--neon-pink);
+            color: var(--neon-pink);
+            transform: rotate(90deg) scale(1.1);
+            box-shadow: 0 0 20px var(--neon-pink);
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 2rem 0 0 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .menu-list li {
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+        }
+
+        .menu-link {
+            display: block;
+            padding: 1.2rem;
+            color: #e0e0ff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            letter-spacing: 0.05em;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .menu-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--neon-cyan), var(--neon-pink));
+            transform: scaleY(0);
+            transform-origin: top;
+            transition: transform 0.3s;
+        }
+
+        .menu-link:hover {
+            background: rgba(0, 240, 255, 0.1);
+            color: var(--neon-cyan);
+            padding-left: 1.5rem;
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .menu-link:hover::before {
+            transform: scaleY(1);
+        }
+
+        .wallet-display {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(183, 0, 255, 0.1));
+            border: 1px solid var(--neon-cyan);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+            box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.1);
+        }
+
+        .wallet-icon {
+            font-size: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        /* CONTENT AREA */
+        #app-content {
+            flex: 1 1 auto;
+            padding: 2rem 1.5rem;
+            padding-bottom: calc(8rem + 80px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            min-height: 0;
+            position: relative;
+            z-index: 3;
+        }
+
+        #app-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        #app-content::-webkit-scrollbar-track {
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        #app-content::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, var(--neon-cyan), var(--neon-pink));
+            border-radius: 4px;
+        }
+
+        #app-content::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, var(--neon-pink), var(--neon-cyan));
+            box-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        /* BOTTOM NAVIGATION */
+        #bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(180deg, rgba(10, 14, 39, 0.95) 0%, rgba(26, 0, 51, 0.95) 100%);
+            border-top: 2px solid var(--neon-cyan);
+            backdrop-filter: blur(20px);
+            z-index: 100;
+            box-shadow: 0 -10px 40px rgba(0, 240, 255, 0.2);
+        }
+
+        .bottom-nav-content {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0.5rem 0;
+            gap: 0;
+            max-width: 100%;
+        }
+
+        .nav-btn {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            padding: 1rem 0.5rem;
+            background: transparent;
+            border: none;
+            color: #a0a0ff;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            font-family: inherit;
+            font-size: 0.9rem;
+            overflow: hidden;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-cyan), transparent);
+            transform: scaleX(0);
+            transition: transform 0.3s;
+        }
+
+        .nav-btn:hover::before {
+            transform: scaleX(1);
+        }
+
+        .nav-btn:hover,
+        .nav-btn.active {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 10px var(--neon-cyan);
+        }
+
+        .nav-btn.active {
+            text-shadow: 0 0 15px var(--neon-cyan), 0 0 30px var(--neon-cyan);
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s;
+        }
+
+        .nav-btn:hover .nav-icon {
+            transform: scale(1.2) rotateZ(-10deg);
+            filter: drop-shadow(0 0 8px var(--neon-cyan));
+        }
+
+        .nav-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        /* FOOTER */
+        #app-footer {
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            right: 0;
+            height: auto;
+            padding: 0.75rem 1rem;
+            background: linear-gradient(180deg, rgba(10, 14, 39, 0.8) 0%, rgba(26, 0, 51, 0.8) 100%);
+            border-top: 1px solid rgba(0, 240, 255, 0.2);
+            backdrop-filter: blur(10px);
+            z-index: 50;
+            font-size: 0.75rem;
+            font-family: 'Courier New', monospace;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #a0a0ff;
+            letter-spacing: 0.05em;
+        }
+
+        .version-info {
+            color: var(--neon-cyan);
+            font-weight: bold;
+            text-shadow: 0 0 8px var(--neon-cyan);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timestamp {
+            color: var(--neon-pink);
+            text-shadow: 0 0 8px rgba(255, 0, 110, 0.5);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .divider {
+            color: rgba(0, 240, 255, 0.3);
+            opacity: 0.5;
+        }
+
+        .footer-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-links a {
+            color: #a0a0ff;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-links a:hover {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 8px var(--neon-cyan);
+        }
+
+        /* RESPONSIVE FOOTER */
+        @media (max-width: 640px) {
+            #app-footer {
+                padding: 0.5rem 0.75rem;
+                bottom: 55px;
+            }
+
+            .footer-content {
+                gap: 1rem;
+            }
+
+            .footer-info,
+            .footer-links {
+                font-size: 0.7rem;
+            }
+        }
+
+        /* VIEW ANIMATIONS */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .view {
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 640px) {
+            .logo {
+                font-size: 1.4rem;
+            }
+
+            #app-content {
+                padding: 1.5rem 1rem;
+                padding-bottom: calc(3.5rem + 80px);
+            }
+
+            .nav-label {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
     <div id="app">
-        <!-- Header mit Logo und Sandwich -->
+        <!-- HEADER FUTURISTIC -->
         <header id="app-header">
             <div class="header-content">
                 <div class="logo">
-                    <span class="logo-text">RATEN<span class="highlight">OIDA</span></span>
+                    <span class="logo-text">⚡ RATEN<span class="highlight">OIDA</span></span>
                 </div>
-                <button id="sandwich-btn" class="sandwich-btn" aria-label="Menü öffnen">
+                <button id="sandwich-btn" class="sandwich-btn" aria-label="Menü öffnen" title="Navigation">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -29,56 +583,95 @@
             </div>
         </header>
 
-    <!-- Navigation Overlay -->
-    <div id="nav-overlay" class="nav-overlay"></div>
+        <!-- NAVIGATION OVERLAY -->
+        <div id="nav-overlay" class="nav-overlay"></div>
 
-    <!-- Sandwich Menü (Overlay) -->
-    <nav id="sandwich-menu" class="sandwich-menu">
-        <div class="sandwich-content">
-            <button class="close-btn" id="close-sandwich">&times;</button>
-            <ul class="menu-list">
-                <li><a href="#" data-route="home" class="menu-link">🏠 Home</a></li>
-                <li><a href="#" data-route="game-select" class="menu-link">🎮 Spiele</a></li>
-                <li><a href="#" data-route="stats" class="menu-link">📊 Statistiken</a></li>
-                <li><a href="#" data-route="help" class="menu-link">❓ Hilfe</a></li>
-                <li><a href="#" data-route="settings" class="menu-link">⚙️ Einstellungen</a></li>
-                <li class="wallet-display">
-                    <span class="wallet-icon">💰</span>
-                    <span id="menu-wallet">0</span> Schülling
-                </li>
-            </ul>
-        </div>
-    </nav>
+        <!-- SANDWICH MENU FUTURISTIC -->
+        <nav id="sandwich-menu" class="sandwich-menu">
+            <div class="sandwich-content">
+                <button class="close-btn" id="close-sandwich" title="Schließen">×</button>
+                <ul class="menu-list">
+                    <li><a href="#" data-route="home" class="menu-link">🏠 Home</a></li>
+                    <li><a href="#" data-route="game-select" class="menu-link">🎮 Spiele</a></li>
+                    <li><a href="#" data-route="stats" class="menu-link">📊 Statistiken</a></li>
+                    <li><a href="#" data-route="help" class="menu-link">❓ Hilfe</a></li>
+                    <li><a href="#" data-route="settings" class="menu-link">⚙️ Einstellungen</a></li>
+                    <li class="wallet-display">
+                        <span class="wallet-icon">💰</span>
+                        <span id="menu-wallet">0</span> Schülling
+                    </li>
+                </ul>
+            </div>
+        </nav>
 
-    <!-- Main Content Area -->
-    <main id="app-content">
-        <!-- Views werden hier dynamisch geladen -->
-    </main>
+        <!-- CONTENT AREA -->
+        <main id="app-content">
+            <!-- Views werden hier dynamisch geladen -->
+        </main>
 
-    <!-- Bottom Navigation -->
-    <nav id="bottom-nav">
-        <div class="bottom-nav-content">
-            <button data-route="home" class="nav-btn">
-                <span class="nav-icon">🏠</span>
-                <span class="nav-label">Home</span>
-            </button>
-            <button data-route="game-select" class="nav-btn">
-                <span class="nav-icon">🎮</span>
-                <span class="nav-label">Spielen</span>
-            </button>
-            <button data-route="stats" class="nav-btn">
-                <span class="nav-icon">📊</span>
-                <span class="nav-label">Stats</span>
-            </button>
-        </div>
-    </nav>
+        <!-- BOTTOM NAVIGATION FUTURISTIC -->
+        <nav id="bottom-nav">
+            <div class="bottom-nav-content">
+                <button data-route="home" class="nav-btn active" title="Home">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-label">Home</span>
+                </button>
+                <button data-route="game-select" class="nav-btn" title="Spielen">
+                    <span class="nav-icon">🎮</span>
+                    <span class="nav-label">Spielen</span>
+                </button>
+                <button data-route="stats" class="nav-btn" title="Statistiken">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Stats</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- FOOTER -->
+        <footer id="app-footer">
+            <div class="footer-content">
+                <div class="footer-info">
+                    <span class="version-info">v<span id="footer-version">1.0.0</span></span>
+                    <span class="divider">•</span>
+                    <span class="timestamp" id="footer-timestamp">Loading...</span>
+                </div>
+                <div class="footer-links">
+                    <a href="#" data-route="help" title="Hilfe">Hilfe</a>
+                    <span class="divider">•</span>
+                    <a href="#" data-route="settings" title="Einstellungen">Settings</a>
+                </div>
+            </div>
+        </footer>
 
     </div> <!-- #app -->
 
-    <!-- Modal Container -->
+    <!-- MODAL CONTAINER -->
     <div id="modal-container"></div>
 
-    <!-- JavaScript Modules -->
+    <!-- VERSION CONFIG -->
+    <script type="module">
+        import { store } from './js/core/store.js';
+        
+        // Version und Timestamp in Store speichern
+        const buildDate = new Date('2026-01-10T03:30:00Z');
+        store.setState({
+            version: '1.0.0',
+            buildDate: buildDate,
+            buildDateFormatted: buildDate.toLocaleString('de-DE', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            })
+        });
+
+        // Footer aktualisieren
+        document.getElementById('footer-version').textContent = store.getState().version;
+        document.getElementById('footer-timestamp').textContent = store.getState().buildDateFormatted;
+    </script>
+
+    <!-- JAVASCRIPT MODULES -->
     <script type="module" src="./js/app.js"></script>
 </body>
 </html>

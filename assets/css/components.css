@@ -504,3 +504,68 @@ input:checked + .toggle-slider::before {
     font-weight: 600;
     margin-bottom: 0.5rem;
 }
+
+/* VERSION INFO SECTION */
+.settings-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+}
+
+.settings-info-item {
+    text-align: center;
+}
+
+.settings-info-label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.settings-info-value {
+    display: block;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: var(--accent-primary);
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+}
+
+.settings-version-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 200, 255, 0.1));
+    border: 1px solid var(--accent-primary);
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent-primary);
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);
+}
+
+.settings-info-section {
+    margin-bottom: 1rem;
+}
+
+.settings-repo-link a {
+    color: var(--accent-secondary);
+    text-decoration: none;
+    transition: all var(--transition-fast);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    display: inline-block;
+}
+
+.settings-repo-link a:hover {
+    color: var(--accent-primary);
+    text-shadow: 0 0 8px rgba(0, 255, 136, 0.3);
+    transform: translateX(2px);
+}

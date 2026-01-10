@@ -474,6 +474,36 @@ const settingsView = () => {
                 </div>
             </div>
 
+            <div class="card mb-lg">
+                <div class="card-header">
+                    <h3 class="card-title">ℹ️ Über diese Version</h3>
+                </div>
+                <div class="card-body">
+                    <div class="settings-info-grid">
+                        <div class="settings-info-item">
+                            <div class="settings-info-label">Versionsnummer</div>
+                            <div class="settings-info-value settings-version-badge" id="settings-version">
+                                v${store.getState().version || '1.0.0'}
+                            </div>
+                        </div>
+                        <div class="settings-info-item">
+                            <div class="settings-info-label">Build-Datum</div>
+                            <div class="settings-info-value">
+                                ${store.getState().buildDateFormatted || 'Unknown'}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="settings-info-section">
+                        <div class="settings-info-label">Repository</div>
+                        <div class="settings-info-value settings-repo-link">
+                            <a href="https://github.com/ochtii/Raten_oida" target="_blank" rel="noopener">
+                                ochtii/Raten_oida ↗
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="text-center">
                 <button class="btn btn-secondary" id="reset-all-btn">
                     ⚠️ Alles zurücksetzen
