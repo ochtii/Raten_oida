@@ -2,15 +2,9 @@
    APP.JS - Main Application Entry Point
    ========================================== */
 
-// Cache-Buster für dynamische Imports
-const v = window.CACHE_BUSTER || Date.now();
-
-// Dynamische Imports mit Cache-Buster
-const [{ Router }, { Store }, { UI }] = await Promise.all([
-    import(`./core/router.js?v=${v}`),
-    import(`./core/store.js?v=${v}`),
-    import(`./core/ui.js?v=${v}`)
-]);
+import { Router } from './core/router.js';
+import { Store } from './core/store.js';
+import { UI } from './core/ui.js';
 
 class App {
     constructor() {

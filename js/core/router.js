@@ -2,25 +2,12 @@
    ROUTER.JS - SPA Routing
    ========================================== */
 
-// Cache-Buster für dynamische Imports
-const v = window.CACHE_BUSTER || Date.now();
-
-// Dynamische Imports mit Cache-Buster
-const [
-    { homeView },
-    { gamesView },
-    { statsView },
-    { settingsView },
-    { pointsView },
-    { devView }
-] = await Promise.all([
-    import(`../views/home.js?v=${v}`),
-    import(`../views/games.js?v=${v}`),
-    import(`../views/stats.js?v=${v}`),
-    import(`../views/settings.js?v=${v}`),
-    import(`../views/points.js?v=${v}`),
-    import(`../views/dev.js?v=${v}`)
-]);
+import { homeView } from '../views/home.js';
+import { gamesView } from '../views/games.js';
+import { statsView } from '../views/stats.js';
+import { settingsView } from '../views/settings.js';
+import { pointsView } from '../views/points.js';
+import { devView } from '../views/dev.js';
 
 export class Router {
     constructor(store) {

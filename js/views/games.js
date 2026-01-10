@@ -2,15 +2,8 @@
    GAMES VIEW
    ========================================== */
 
-// Cache-Buster für dynamische Imports
-const v = window.CACHE_BUSTER || Date.now();
-
-// Dynamische Imports mit Cache-Buster
-const [{ capitalsData }, { populationData }] = await Promise.all([
-    import(`../data/capitals.js?v=${v}`),
-    import(`../data/population.js?v=${v}`)
-]);
-
+import { capitalsData } from '../data/capitals.js';
+import { populationData } from '../data/population.js';
 
 let currentGame = null;
 let currentQuestion = null;

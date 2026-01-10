@@ -132,17 +132,8 @@
             
             sessionStorage.setItem('cacheCleared', 'true');
         }
-        
-        // Globaler Cache-Buster für alle Module
-        window.CACHE_BUSTER = new Date().getTime();
     </script>
     
-    <script type="module">
-        // Force reload with timestamp cache buster
-        import(`./js/app.js?v=${window.CACHE_BUSTER}`).catch(err => {
-            console.error('Failed to load app:', err);
-            import('./js/app.js');
-        });
-    </script>
+    <script type="module" src="./js/app.js"></script>
 </body>
 </html>
