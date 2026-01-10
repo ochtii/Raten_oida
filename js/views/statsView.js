@@ -2,9 +2,13 @@
    STATS VIEW - Points & Statistics Visualization
    ======================================== */
 
-export const createStatsView = (store) => {
-    const pointsStats = store.getPointsStats();
-    const gameStats = store.getStats();
+import { store } from '../core/store.js';
+
+import { store } from '../core/store.js';
+
+export const createStatsView = (storeInstance) => {
+    const pointsStats = storeInstance.getPointsStats();
+    const gameStats = storeInstance.getStats();
     const totalPoints = pointsStats.total;
     const capitalsPoints = pointsStats.capitalsPoints;
     const populationPoints = pointsStats.populationPoints;
@@ -215,15 +219,5 @@ export const createStatsView = (store) => {
 };
 
 export const statsView = () => {
-    return createStatsView(window.storeReference || {
-        getPointsStats: () => ({ total: 0, capitalsPoints: 0, populationPoints: 0, history: [] }),
-        getStats: () => ({ 
-            gamesPlayed: 0, 
-            gamesWon: 0, 
-            totalEarned: 0,
-            capitalsGame: { played: 0, correct: 0, maxStreak: 0 },
-            populationGame: { played: 0, correct: 0, maxStreak: 0 },
-            highScore: 0
-        })
-    });
+    return createStatsView(store);
 };

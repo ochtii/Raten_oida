@@ -5,7 +5,7 @@
 import { $, render, scrollToTop } from './dom.js';
 import { store } from './store.js';
 import { helpView } from '../views/helpView.js';
-import { createStatsView } from '../views/statsView.js';
+import { statsView } from '../views/statsView.js';
 
 class Router {
     constructor() {
@@ -214,11 +214,6 @@ const gameSelectView = () => {
             </div>
         </div>
     `;
-};
-
-// Stats View
-const statsView = () => {
-    return createStatsView(store);
 };
 
 // Settings View
