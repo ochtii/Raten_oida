@@ -1293,6 +1293,88 @@ body::before {
     }
 }
 
+/* Dev Hero Card - Quick Actions */
+.dev-hero-card {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.08), rgba(0, 240, 255, 0.05));
+    border: 2px solid rgba(0, 255, 136, 0.3);
+    padding: var(--spacing-md) !important;
+}
+
+.dev-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+    justify-content: center;
+}
+
+.dev-hero-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    padding: var(--spacing-md);
+    min-width: 70px;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    flex: 1;
+    max-width: 100px;
+}
+
+.dev-hero-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.dev-hero-btn:active {
+    transform: scale(0.95);
+}
+
+.dev-hero-icon {
+    font-size: 1.75rem;
+}
+
+.dev-hero-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dev-hero-btn-accent {
+    background: linear-gradient(135deg, var(--accent), #d4006e);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 0, 110, 0.3);
+}
+
+.dev-hero-btn-accent:hover {
+    box-shadow: 0 8px 24px rgba(255, 0, 110, 0.5);
+}
+
+.dev-hero-btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: var(--bg-primary);
+    box-shadow: 0 4px 12px rgba(0, 255, 136, 0.3);
+}
+
+.dev-hero-btn-primary:hover {
+    box-shadow: 0 8px 24px rgba(0, 255, 136, 0.5);
+}
+
+.dev-hero-btn-secondary {
+    background: rgba(128, 128, 153, 0.2);
+    border: 1px solid rgba(128, 128, 153, 0.3);
+    color: var(--text-secondary);
+}
+
+.dev-hero-btn-secondary:hover {
+    background: rgba(128, 128, 153, 0.3);
+    border-color: rgba(0, 255, 136, 0.3);
+    color: var(--primary);
+}
+
 .dev-info {
     display: flex;
     flex-direction: column;

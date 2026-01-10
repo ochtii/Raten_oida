@@ -16,6 +16,32 @@ export const devView = (store) => {
         <div class="dev-view">
             <h1 class="section-title">🛠️ Developer Tools</h1>
             
+            <!-- Quick Actions - Hero Section -->
+            <div class="dev-card dev-hero-card">
+                <div class="dev-hero-actions">
+                    <button class="dev-hero-btn dev-hero-btn-accent" onclick="window.toggleDebugConsole()">
+                        <span class="dev-hero-icon">🐛</span>
+                        <span class="dev-hero-label">Debug</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddWallet()">
+                        <span class="dev-hero-icon">💰</span>
+                        <span class="dev-hero-label">+1000</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddPoints()">
+                        <span class="dev-hero-icon">⭐</span>
+                        <span class="dev-hero-label">+100</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-secondary" onclick="window.devResetStats()">
+                        <span class="dev-hero-icon">📊</span>
+                        <span class="dev-hero-label">Reset</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-secondary" onclick="window.devGenerateTestData()">
+                        <span class="dev-hero-icon">🧪</span>
+                        <span class="dev-hero-label">Test</span>
+                    </button>
+                </div>
+            </div>
+            
             <!-- Toggle Control Panel -->
             <div class="dev-card toggle-panel">
                 <h3>🎛️ Toggles</h3>
@@ -76,31 +102,6 @@ export const devView = (store) => {
                             <strong>${state.history?.length ?? 0} Einträge</strong>
                         </div>
                     </div>
-                </div>
-            </div>
-            
-            <!-- Quick Actions -->
-            <div class="dev-card">
-                <h3>⚡ Quick Actions</h3>
-                <div class="dev-actions">
-                    <button class="btn btn-accent" onclick="window.toggleDebugConsole()">
-                        🐛 Debug Console
-                    </button>
-                    <button class="btn ${cacheBusterEnabled ? 'btn-success' : 'btn-secondary'}" onclick="window.devToggleCacheBuster()">
-                        ${cacheBusterEnabled ? '🔄' : '⏸️'} Cache-Buster ${cacheBusterEnabled ? 'AN' : 'AUS'}
-                    </button>
-                    <button class="btn btn-primary" onclick="window.devAddWallet()">
-                        💰 +1000 Wallet
-                    </button>
-                    <button class="btn btn-primary" onclick="window.devAddPoints()">
-                        ⭐ +100 Punkte
-                    </button>
-                    <button class="btn btn-secondary" onclick="window.devResetStats()">
-                        📊 Stats Reset
-                    </button>
-                    <button class="btn btn-secondary" onclick="window.devGenerateTestData()">
-                        🧪 Test-Daten
-                    </button>
                 </div>
             </div>
             
