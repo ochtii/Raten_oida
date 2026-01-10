@@ -74,9 +74,6 @@ class App {
         router.register('help', helpView);
         router.register('settings', settingsView);
     }
-        router.register('stats', statsView);
-        router.register('settings', settingsView);
-    }
 
     // Settings Event Listeners
     setupSettingsListeners() {
