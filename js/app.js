@@ -303,10 +303,6 @@ document.addEventListener('DOMContentLoaded', () => {
     app.init();
 });
 
-// Initalisiere die App
-const app = new App();
-app.init();
-
 // Service Worker (optional für PWA)
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
