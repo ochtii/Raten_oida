@@ -2,8 +2,9 @@
    APP.JS - Main Application Entry Point
    ========================================== */
 
-// Cache-Buster für alle Module
-const v = window.CACHE_BUSTER || Date.now();
+// Cache-Buster für alle Module - nur wenn aktiviert
+const v = window.CACHE_BUSTER;
+const cacheBusterQuery = (v && v !== 'disabled') ? `?v=${v}` : '';
 
 class App {
     constructor() {
@@ -14,12 +15,12 @@ class App {
     }
 
     async init() {
-        // Dynamische Imports mit Cache-Buster
+        // Dynamische Imports mit Cache-Buster (wenn aktiviert)
         const [{ Router }, { Store }, { UI }, { DebugConsole }] = await Promise.all([
-            import(`./core/router.js?v=${v}`),
-            import(`./core/store.js?v=${v}`),
-            import(`./core/ui.js?v=${v}`),
-            import(`./core/debug-console.js?v=${v}`)
+            import(`./core/router.js${cacheBusterQuery}`),
+            import(`./core/store.js${cacheBusterQuery}`),
+            import(`./core/ui.js${cacheBusterQuery}`),
+            import(`./core/debug-console.js${cacheBusterQuery}`)
         ]);
         
         this.store = new Store();

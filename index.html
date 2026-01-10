@@ -10,8 +10,15 @@
     <meta http-equiv="Expires" content="0">
     <link rel="stylesheet" href="./css/app.css">
     <script>
-        // Globaler Cache Buster für alle Dateien bei jedem Reload
-        window.CACHE_BUSTER = Date.now();
+        // Cache Buster Settings - togglebar über Developer Einstellungen
+        const cacheBusterEnabled = localStorage.getItem('cacheBusterEnabled') !== 'false'; // Standard: true
+        window.CACHE_BUSTER = cacheBusterEnabled ? Date.now() : 'disabled';
+        
+        if (cacheBusterEnabled) {
+            console.log('🔄 Cache-Buster aktiviert:', window.CACHE_BUSTER);
+        } else {
+            console.log('⏸️ Cache-Buster deaktiviert');
+        }
     </script>
 </head>
 <body>
@@ -126,11 +133,13 @@
             });
         }
         
-        // App mit Cache-Buster laden
+        // App mit Cache-Buster laden (wenn aktiviert)
         const appCacheBuster = window.CACHE_BUSTER;
         const script = document.createElement('script');
         script.type = 'module';
-        script.src = `./js/app.js?v=${appCacheBuster}`;
+        script.src = (appCacheBuster && appCacheBuster !== 'disabled') 
+            ? `./js/app.js?v=${appCacheBuster}` 
+            : './js/app.js';
         document.body.appendChild(script);
     </script>
 </body>

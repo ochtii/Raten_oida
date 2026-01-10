@@ -2,8 +2,9 @@
    ROUTER.JS - SPA Routing mit Cache-Busting
    ========================================== */
 
-// View Module werden dynamisch geladen mit Cache-Buster
-const v = window.CACHE_BUSTER || Date.now();
+// View Module werden dynamisch geladen mit Cache-Buster (wenn aktiviert)
+const v = window.CACHE_BUSTER;
+const cacheBusterQuery = (v && v !== 'disabled') ? `?v=${v}` : '';
 
 export class Router {
     constructor(store) {
@@ -15,7 +16,7 @@ export class Router {
 
     async loadView(viewName) {
         if (!this.viewModules[viewName]) {
-            const module = await import(`../views/${viewName}.js?v=${v}`);
+            const module = await import(`../views/${viewName}.js${cacheBusterQuery}`);
             this.viewModules[viewName] = module[`${viewName}View`];
         }
         return this.viewModules[viewName];

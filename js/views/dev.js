@@ -5,6 +5,7 @@
 export const devView = (store) => {
     const state = store.state;
     const savedData = localStorage.getItem('raten_oida_v2');
+    const cacheBusterEnabled = localStorage.getItem('cacheBusterEnabled') !== 'false';
     
     // Bottom Nav Settings
     const bottomNavSettings = JSON.parse(localStorage.getItem('bottomNavSettings') || JSON.stringify({
@@ -78,6 +79,9 @@ export const devView = (store) => {
                 <div class="dev-actions">
                     <button class="btn btn-accent" onclick="window.toggleDebugConsole()">
                         🐛 Debug Console
+                    </button>
+                    <button class="btn ${cacheBusterEnabled ? 'btn-success' : 'btn-secondary'}" onclick="window.devToggleCacheBuster()">
+                        ${cacheBusterEnabled ? '🔄' : '⏸️'} Cache-Buster ${cacheBusterEnabled ? 'AN' : 'AUS'}
                     </button>
                     <button class="btn btn-primary" onclick="window.devAddWallet()">
                         💰 +1000 Wallet
@@ -434,6 +438,24 @@ export const devView = (store) => {
 window.toggleDebugConsole = () => {
     if (window.app && window.app.debugConsole) {
         window.app.debugConsole.toggle();
+    }
+};
+
+window.devToggleCacheBuster = () => {
+    const currentState = localStorage.getItem('cacheBusterEnabled') !== 'false';
+    const newState = !currentState;
+    localStorage.setItem('cacheBusterEnabled', newState.toString());
+    
+    if (window.app && window.app.ui) {
+        window.app.ui.showNotification(
+            `🔄 Cache-Buster ${newState ? 'aktiviert' : 'deaktiviert'} - Seite neu laden!`,
+            'info'
+        );
+    }
+    
+    // View neu rendern um Button-Status zu aktualisieren
+    if (window.app && window.app.router) {
+        setTimeout(() => window.app.router.render(), 500);
     }
 };
 
