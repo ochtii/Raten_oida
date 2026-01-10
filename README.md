@@ -14,6 +14,8 @@
 - **Responsive Design**: Mobile-First, funktioniert auf allen Geräten
 - **Framer Motion Animationen**: Smooth Übergänge und Mikrointeraktionen
 - **Österreichischer Dialekt**: Authentische Wiener Wortspiele
+- **PWA-Ready**: Installierbar als App, offline-fähig
+- **Loading States**: Elegante Ladeanimation beim Start
 
 ### 💰 Wirtschaftssystem
 - **Schülling-Währung**: Startwert 500 Schülling
@@ -67,6 +69,17 @@
 - **localStorage Viewer**: Echtzeit-Anzeige aller gespeicherten Daten
 - **Reset-Funktion**: Kompletter Neustart (löscht alle Daten)
 
+### 🔧 Technische Features
+
+- **Service Worker**: Aktiver Cache Buster mit Auto-Update
+- **Error Boundary**: Graceful Error Handling mit Reload-Option
+- **Keyboard Navigation**: Enter-Taste zum Absenden von Antworten
+- **ARIA Labels**: Screen-Reader kompatibel
+- **Social Meta Tags**: Open Graph & Twitter Cards für Social Sharing
+- **Auto-Save**: Alle Daten persistent in localStorage
+- **Version Management**: Automatische Updates ohne manuelle Intervention
+- **Feedback-Animationen**: Visuelle Bestätigung bei richtigen/falschen Antworten
+
 ### 📊 Statistik
 
 - Anzahl gespielter Games
@@ -109,9 +122,11 @@ https://ochtii.github.io/Raten_oida/
 - **Google Fonts** (Orbitron + Inter)
 
 **Single-File Architecture:**
-- Gesamte App in einer `index.html` (795 Zeilen)
+- Gesamte App in einer `index.html` (908 Zeilen)
 - Keine Dependencies, keine Build-Tools
 - Läuft out-of-the-box in jedem Browser
+- PWA Manifest inline als Base64
+- Service Worker inline als Blob
 
 ## 📱 Browser-Kompatibilität
 
@@ -196,6 +211,19 @@ Pull Requests willkommen! Bitte beachte:
 - localStorage kann in privaten Tabs limitiert sein
 - Framer Motion animations können auf schwachen Geräten laggen
 - Text-Eingabe ist case-insensitive, aber Rechtschreibung muss exakt sein
+
+## ✨ Neue Features in v1.0.2
+
+- 🔄 Aktiver Cache Buster mit Service Worker
+- 🎨 PWA Manifest für App-Installation
+- ♿ Accessibility-Verbesserungen (ARIA Labels)
+- ⌨️ Tastatur-Navigation (Enter zum Absenden)
+- 🎭 Error Boundary mit Fehlerbehandlung
+- 📱 Social Sharing Meta Tags (Open Graph, Twitter)
+- 🎬 Loading-Animation beim Start
+- ✅ Zeigt korrekte Antwort bei Fehler an
+- 🎯 Zeitbonus-Anzeige im Feedback
+- 🚀 Auto-Update bei neuen Versionen
 
 ## 📞 Support
 
