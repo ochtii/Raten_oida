@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔍 Storage Debug</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0e27;
+            color: #fff;
+            padding: 20px;
+            font-size: 14px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #00ff88;
+        }
+        
+        .box {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(0,255,136,0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .box h2 {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #00f0ff;
+        }
+        
+        pre {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: #00ff88;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn:hover {
+            background: #00cc6f;
+        }
+        
+        .btn-danger {
+            background: #ff0033;
+            color: #fff;
+        }
+        
+        .btn-danger:hover {
+            background: #cc0029;
+        }
+        
+        .value {
+            color: #00ff88;
+            font-weight: bold;
+        }
+        
+        input {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(0,255,136,0.3);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-right: 10px;
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 LocalStorage Debug Tool</h1>
+        
+        <div class="box">
+            <h2>📊 Aktuelle Werte</h2>
+            <div id="currentValues">Lade...</div>
+        </div>
+        
+        <div class="box">
+            <h2>💾 Raw JSON</h2>
+            <pre id="rawJson">Lade...</pre>
+        </div>
+        
+        <div class="box">
+            <h2>✏️ Werte ändern</h2>
+            <div style="margin-bottom: 15px;">
+                <label>Wallet: </label>
+                <input type="number" id="walletInput" placeholder="1000">
+                <button class="btn" onclick="updateWallet()">Wallet setzen</button>
+            </div>
+            <div style="margin-bottom: 15px;">
+                <label>Punkte: </label>
+                <input type="number" id="pointsInput" placeholder="0">
+                <button class="btn" onclick="updatePoints()">Punkte setzen</button>
+            </div>
+            <div>
+                <button class="btn" onclick="reload()">🔄 Neu laden</button>
+                <button class="btn btn-danger" onclick="resetAll()">🗑️ Alles löschen</button>
+            </div>
+        </div>
+        
+        <div class="box">
+            <h2>🔗 Links</h2>
+            <a href="/index.html" class="btn">Zurück zur App</a>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'raten_oida_v2';
+        
+        function loadData() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            
+            if (!data) {
+                document.getElementById('currentValues').innerHTML = '<p style="color: #ff6b6b;">❌ Keine Daten gefunden!</p>';
+                document.getElementById('rawJson').textContent = 'Kein localStorage Eintrag';
+                return null;
+            }
+            
+            const parsed = JSON.parse(data);
+            
+            // Aktuelle Werte anzeigen
+            document.getElementById('currentValues').innerHTML = `
+                <p>💰 Wallet: <span class="value">${parsed.wallet?.toLocaleString('de-DE') || 'undefined'}</span></p>
+                <p>⭐ Punkte: <span class="value">${parsed.points?.toLocaleString('de-DE') || 'undefined'}</span></p>
+                <p>🎮 Spiele gespielt: <span class="value">${parsed.stats?.gamesPlayed || 0}</span></p>
+                <p>🏆 Spiele gewonnen: <span class="value">${parsed.stats?.gamesWon || 0}</span></p>
+                <p>🔥 Aktuelle Streak: <span class="value">${parsed.stats?.currentStreak || 0}</span></p>
+                <p>⚡ Beste Streak: <span class="value">${parsed.stats?.bestStreak || 0}</span></p>
+                <p>🏛️ Hauptstädte: <span class="value">${parsed.stats?.capitalsCorrect || 0}/${parsed.stats?.capitalsTotal || 0}</span></p>
+                <p>👥 Bevölkerung: <span class="value">${parsed.stats?.populationCorrect || 0}/${parsed.stats?.populationTotal || 0}</span></p>
+            `;
+            
+            // Raw JSON anzeigen
+            document.getElementById('rawJson').textContent = JSON.stringify(parsed, null, 2);
+            
+            // Input-Felder vorbelegen
+            document.getElementById('walletInput').value = parsed.wallet || 1000;
+            document.getElementById('pointsInput').value = parsed.points || 0;
+            
+            return parsed;
+        }
+        
+        function updateWallet() {
+            const value = parseInt(document.getElementById('walletInput').value);
+            if (isNaN(value)) {
+                alert('Bitte gültige Zahl eingeben!');
+                return;
+            }
+            
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            data.wallet = value;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            
+            alert(`✓ Wallet auf ${value} gesetzt!`);
+            loadData();
+        }
+        
+        function updatePoints() {
+            const value = parseInt(document.getElementById('pointsInput').value);
+            if (isNaN(value)) {
+                alert('Bitte gültige Zahl eingeben!');
+                return;
+            }
+            
+            const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+            data.points = value;
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+            
+            alert(`✓ Punkte auf ${value} gesetzt!`);
+            loadData();
+        }
+        
+        function reload() {
+            loadData();
+            alert('✓ Daten neu geladen!');
+        }
+        
+        function resetAll() {
+            if (confirm('⚠️ WIRKLICH ALLE DATEN LÖSCHEN?')) {
+                localStorage.removeItem(STORAGE_KEY);
+                alert('✓ Alle Daten gelöscht!');
+                setTimeout(() => location.reload(), 500);
+            }
+        }
+        
+        // Initial laden
+        loadData();
+    </script>
+</body>
+</html>
