@@ -14,19 +14,20 @@
     <link rel="stylesheet" href="./assets/css/devtools.css">
 </head>
 <body>
-    <!-- Header mit Logo und Sandwich -->
-    <header id="app-header">
-        <div class="header-content">
-            <div class="logo">
-                <span class="logo-text">RATEN<span class="highlight">OIDA</span></span>
+    <div id="app">
+        <!-- Header mit Logo und Sandwich -->
+        <header id="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-text">RATEN<span class="highlight">OIDA</span></span>
+                </div>
+                <button id="sandwich-btn" class="sandwich-btn" aria-label="Menü öffnen">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
-            <button id="sandwich-btn" class="sandwich-btn" aria-label="Menü öffnen">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
-    </header>
+        </header>
 
     <!-- Navigation Overlay -->
     <div id="nav-overlay" class="nav-overlay"></div>
@@ -71,6 +72,8 @@
             </button>
         </div>
     </nav>
+
+    </div> <!-- #app -->
 
     <!-- Modal Container -->
     <div id="modal-container"></div>
