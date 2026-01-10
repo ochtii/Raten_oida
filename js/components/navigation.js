@@ -57,7 +57,7 @@ export class Navigation {
         if (this.sandwichMenu?.classList.contains('open')) {
             document.body.style.overflow = 'hidden';
         } else {
-            document.body.style.overflow = '';
+            document.body.style.overflow = 'auto';
         }
     }
 
@@ -70,7 +70,7 @@ export class Navigation {
     closeMenu() {
         this.sandwichMenu?.classList.remove('open');
         this.sandwichBtn?.classList.remove('active');
-        document.body.style.overflow = '';
+        document.body.style.overflow = 'auto';
     }
 
     updateWallet() {
