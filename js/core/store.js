@@ -54,7 +54,7 @@ export class Store {
     }
 
     getWallet() {
-        return this.state.wallet || 0;
+        return this.state?.wallet ?? 0;
     }
 
     addMoney(amount) {
@@ -63,7 +63,7 @@ export class Store {
     }
 
     getPoints() {
-        return this.state.points || 0;
+        return this.state?.points ?? 0;
     }
 
     addPoints(amount) {
@@ -72,7 +72,7 @@ export class Store {
     }
 
     getStats() {
-        return this.state.stats || {
+        return this.state?.stats ?? {
             gamesPlayed: 0,
             gamesWon: 0,
             currentStreak: 0,
@@ -81,7 +81,7 @@ export class Store {
     }
 
     getHistory() {
-        return this.state.history || [];
+        return this.state?.history ?? [];
     }
 
     addHistory(entry) {
@@ -125,7 +125,7 @@ export class Store {
     }
 
     getSettings() {
-        return this.state.settings || {
+        return this.state?.settings ?? {
             sound: true,
             notifications: true,
             theme: 'dark'

@@ -109,7 +109,8 @@ class App {
         // Wallet in Navigation aktualisieren
         const walletDisplay = document.getElementById('walletDisplay');
         if (walletDisplay) {
-            walletDisplay.textContent = this.store.getWallet().toLocaleString('de-DE');
+            const wallet = this.store.getWallet() ?? 0;
+            walletDisplay.textContent = wallet.toLocaleString('de-DE');
         }
     }
 }

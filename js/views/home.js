@@ -4,8 +4,8 @@
 
 export const homeView = (store) => {
     const stats = store.getStats() || {};
-    const wallet = store.getWallet() || 0;
-    const points = store.getPoints() || 0;
+    const wallet = (store.getWallet() ?? 0) || 0;
+    const points = (store.getPoints() ?? 0) || 0;
     
     // Safe defaults
     const safeStats = {
