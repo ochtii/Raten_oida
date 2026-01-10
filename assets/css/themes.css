@@ -38,6 +38,43 @@
     --z-toast: 300;
 }
 
+/* ===== Accent Color Presets ===== */
+:root[data-accent="green"],
+[data-accent="green"] {
+    --accent-primary: #00ff88;
+    --accent-primary-rgb: 0, 255, 136;
+}
+
+:root[data-accent="blue"],
+[data-accent="blue"] {
+    --accent-primary: #00ddff;
+    --accent-primary-rgb: 0, 221, 255;
+}
+
+:root[data-accent="purple"],
+[data-accent="purple"] {
+    --accent-primary: #a855f7;
+    --accent-primary-rgb: 168, 85, 247;
+}
+
+:root[data-accent="pink"],
+[data-accent="pink"] {
+    --accent-primary: #ff0066;
+    --accent-primary-rgb: 255, 0, 102;
+}
+
+:root[data-accent="orange"],
+[data-accent="orange"] {
+    --accent-primary: #ff9500;
+    --accent-primary-rgb: 255, 149, 0;
+}
+
+:root[data-accent="yellow"],
+[data-accent="yellow"] {
+    --accent-primary: #ffcc00;
+    --accent-primary-rgb: 255, 204, 0;
+}
+
 /* ========================================
    DARK THEME (Default)
    ======================================== */

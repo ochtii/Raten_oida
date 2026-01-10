@@ -27,6 +27,7 @@ class Store {
             wallet: 1000,  // Startkapital in Schülling
             settings: {
                 theme: 'dark',
+                accentColor: 'green', // green, blue, purple, pink, orange, yellow
                 sound: true,
                 difficulty: 'medium',
                 developer: {

@@ -3,7 +3,7 @@
    Initialisiert die App und alle Module
    ======================================== */
 
-import { router, homeView, gameSelectView, statsView, settingsView } from './core/router.js';
+import { router, homeView, gameSelectView, statsView, settingsView, helpView } from './core/router.js';
 import { store } from './core/store.js';
 import { Navigation } from './components/navigation.js';
 import { modal } from './components/modal.js';
@@ -59,7 +59,9 @@ class App {
     // Theme aus Store laden und anwenden
     loadTheme() {
         const theme = store.getSetting('theme');
+        const accentColor = store.getSetting('accentColor') || 'green';
         document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-accent', accentColor);
     }
 
     // Router Routen registrieren
@@ -68,6 +70,10 @@ class App {
         
         router.register('home', homeView);
         router.register('game-select', gameSelectView);
+        router.register('stats', statsView);
+        router.register('help', helpView);
+        router.register('settings', settingsView);
+    }
         router.register('stats', statsView);
         router.register('settings', settingsView);
     }
@@ -101,6 +107,22 @@ class App {
                 if (btn) {
                     btn.textContent = newSound ? '🔊 An' : '🔇 Aus';
                 }
+            }
+
+            // Accent Color Selection
+            if (e.target.closest('.accent-color-btn')) {
+                const color = e.target.closest('.accent-color-btn').getAttribute('data-color');
+                store.setSetting('accentColor', color);
+                document.documentElement.setAttribute('data-accent', color);
+                
+                // Update active states
+                document.querySelectorAll('.accent-color-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    const btnColor = btn.getAttribute('data-color');
+                    const text = btn.textContent.replace('✓ ', '');
+                    btn.textContent = btnColor === color ? `✓ ${text}` : text;
+                });
+                e.target.closest('.accent-color-btn').classList.add('active');
             }
 
             // Reset All
