@@ -143,18 +143,6 @@ export const devView = (store) => {
                 </div>
                 <pre class="dev-json" id="devJson">${JSON.stringify(state, null, 2)}</pre>
             </div>
-            
-            <!-- Console Log -->
-            <div class="dev-card">
-                <h3>📝 Console Commands</h3>
-                <div class="dev-console">
-                    <code>window.app.store.state</code> - Aktueller State<br>
-                    <code>window.app.store.saveState()</code> - Speichern<br>
-                    <code>window.app.router.navigateTo('home')</code> - Navigate<br>
-                    <code>localStorage.clear()</code> - Storage löschen<br>
-                    <code>location.reload()</code> - Seite neu laden
-                </div>
-            </div>
         </div>
         
     `;
