@@ -1172,6 +1172,151 @@ body::before {
     font-size: 1.125rem;
 }
 
+/* Toggle Control Panel */
+.toggle-panel {
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 240, 255, 0.05));
+    border: 2px solid rgba(0, 255, 136, 0.2);
+}
+
+.toggle-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+}
+
+.toggle-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: var(--bg-secondary);
+    border: 2px solid rgba(0, 255, 136, 0.1);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    position: relative;
+    overflow: hidden;
+}
+
+.toggle-item::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.05), transparent);
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+}
+
+.toggle-item:hover {
+    border-color: rgba(0, 255, 136, 0.4);
+    transform: translateX(4px);
+}
+
+.toggle-item:hover::before {
+    transform: translateX(100%);
+}
+
+.toggle-item:active {
+    transform: scale(0.98) translateX(2px);
+}
+
+.toggle-icon {
+    font-size: 2rem;
+    min-width: 48px;
+    text-align: center;
+}
+
+.toggle-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.toggle-label {
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--text-primary);
+}
+
+.toggle-status {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.toggle-status.active {
+    color: var(--primary);
+}
+
+.toggle-status.inactive {
+    color: var(--text-muted);
+}
+
+.toggle-indicator {
+    width: 60px;
+    height: 32px;
+    border-radius: 16px;
+    position: relative;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.toggle-indicator.on {
+    background: linear-gradient(135deg, var(--primary), #00cc6f);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+}
+
+.toggle-indicator.off {
+    background: rgba(128, 128, 153, 0.3);
+    border: 2px solid rgba(128, 128, 153, 0.5);
+}
+
+.toggle-indicator.action {
+    background: linear-gradient(135deg, var(--secondary), var(--primary));
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+}
+
+.toggle-indicator::after {
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    top: 4px;
+    transition: all var(--transition-fast);
+}
+
+.toggle-indicator.on::after {
+    left: 32px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-indicator.off::after {
+    left: 4px;
+    background: rgba(200, 200, 200, 0.8);
+}
+
+.toggle-indicator.action::after {
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #fff, #f0f0ff);
+}
+
+@media (min-width: 640px) {
+    .toggle-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .toggle-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
 .dev-info {
     display: flex;
     flex-direction: column;

@@ -26,6 +26,43 @@ export const devView = (store) => {
         <div class="dev-view">
             <h1 class="section-title">🛠️ Developer Tools</h1>
             
+            <!-- Toggle Control Panel -->
+            <div class="dev-card toggle-panel">
+                <h3>🎛️ Toggle Control Panel</h3>
+                <div class="toggle-grid">
+                    <div class="toggle-item" id="toggleCacheBuster" onclick="window.devToggleCacheBuster()">
+                        <div class="toggle-icon">${cacheBusterEnabled ? '🔄' : '⏸️'}</div>
+                        <div class="toggle-info">
+                            <div class="toggle-label">Cache-Buster</div>
+                            <div class="toggle-status ${cacheBusterEnabled ? 'active' : 'inactive'}">
+                                ${cacheBusterEnabled ? '✓ AKTIV' : '✗ INAKTIV'}
+                            </div>
+                        </div>
+                        <div class="toggle-indicator ${cacheBusterEnabled ? 'on' : 'off'}"></div>
+                    </div>
+                    
+                    <div class="toggle-item" id="toggleDebugConsole" onclick="window.toggleDebugConsole()">
+                        <div class="toggle-icon">🐛</div>
+                        <div class="toggle-info">
+                            <div class="toggle-label">Debug Console</div>
+                            <div class="toggle-status">TOGGLE</div>
+                        </div>
+                        <div class="toggle-indicator action"></div>
+                    </div>
+                    
+                    <div class="toggle-item" id="toggleBottomNav" onclick="window.devQuickToggleBottomNav()">
+                        <div class="toggle-icon">📱</div>
+                        <div class="toggle-info">
+                            <div class="toggle-label">Bottom Navigation</div>
+                            <div class="toggle-status ${bottomNavSettings.visible ? 'active' : 'inactive'}">
+                                ${bottomNavSettings.visible ? '✓ SICHTBAR' : '✗ VERSTECKT'}
+                            </div>
+                        </div>
+                        <div class="toggle-indicator ${bottomNavSettings.visible ? 'on' : 'off'}"></div>
+                    </div>
+                </div>
+            </div>
+            
             <!-- Quick Stats -->
             <div class="dev-grid">
                 <div class="dev-card">
@@ -221,6 +258,29 @@ window.toggleDebugConsole = () => {
     }
 };
 
+window.devQuickToggleBottomNav = () => {
+    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
+    settings.visible = !settings.visible;
+    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
+    window.applyBottomNavSettings();
+    window.app.ui.showNotification(settings.visible ? '📱 Bottom-Nav aktiviert' : '📱 Bottom-Nav deaktiviert', 'info');
+    
+    // Toggle-Panel aktualisieren
+    setTimeout(() => {
+        const toggleItem = document.getElementById('toggleBottomNav');
+        const status = toggleItem?.querySelector('.toggle-status');
+        const indicator = toggleItem?.querySelector('.toggle-indicator');
+        
+        if (status) {
+            status.className = `toggle-status ${settings.visible ? 'active' : 'inactive'}`;
+            status.textContent = settings.visible ? '✓ SICHTBAR' : '✗ VERSTECKT';
+        }
+        if (indicator) {
+            indicator.className = `toggle-indicator ${settings.visible ? 'on' : 'off'}`;
+        }
+    }, 50);
+};
+
 window.devToggleCacheBuster = () => {
     const currentState = localStorage.getItem('cacheBusterEnabled') !== 'false';
     const newState = !currentState;
@@ -233,10 +293,24 @@ window.devToggleCacheBuster = () => {
         );
     }
     
-    // View neu rendern um Button-Status zu aktualisieren
-    if (window.app && window.app.router) {
-        setTimeout(() => window.app.router.render(), 500);
-    }
+    // Toggle-Panel aktualisieren
+    setTimeout(() => {
+        const toggleItem = document.getElementById('toggleCacheBuster');
+        const icon = toggleItem?.querySelector('.toggle-icon');
+        const status = toggleItem?.querySelector('.toggle-status');
+        const indicator = toggleItem?.querySelector('.toggle-indicator');
+        
+        if (icon) {
+            icon.textContent = newState ? '🔄' : '⏸️';
+        }
+        if (status) {
+            status.className = `toggle-status ${newState ? 'active' : 'inactive'}`;
+            status.textContent = newState ? '✓ AKTIV' : '✗ INAKTIV';
+        }
+        if (indicator) {
+            indicator.className = `toggle-indicator ${newState ? 'on' : 'off'}`;
+        }
+    }, 50);
 };
 
 window.devAddWallet = () => {
