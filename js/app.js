@@ -83,10 +83,15 @@ class App {
     }
 
     onStoreUpdate() {
-        // Wallet aktualisieren
+        // Wallet in Navigation aktualisieren
         const walletDisplay = document.getElementById('walletDisplay');
         if (walletDisplay) {
             walletDisplay.textContent = this.store.getWallet().toLocaleString('de-DE');
+        }
+        
+        // View neu rendern, wenn auf Home-Seite
+        if (this.router.currentRoute === 'home') {
+            this.router.render();
         }
     }
 }
