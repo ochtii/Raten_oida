@@ -2,7 +2,7 @@
    GAMES VIEW
    ========================================== */
 
-import { capitalData } from '../data/capitals.js';
+import { capitalsData } from '../data/capitals.js';
 import { populationData } from '../data/population.js';
 
 let currentGame = null;
@@ -359,7 +359,7 @@ window.endGame = () => {
 };
 
 function generateCapitalsQuestion() {
-    const allCountries = Object.entries(capitalData);
+    const allCountries = Object.entries(capitalsData);
     const randomIndex = Math.floor(Math.random() * allCountries.length);
     const [country, capital] = allCountries[randomIndex];
 
