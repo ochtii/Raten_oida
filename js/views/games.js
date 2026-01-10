@@ -157,11 +157,55 @@ export const gamesView = (store) => {
                 background: rgba(0, 255, 136, 0.2);
                 border-color: var(--primary);
                 animation: pulse 0.5s ease-out;
+                opacity: 1 !important;
             }
 
             .answer-btn.incorrect {
                 background: rgba(255, 0, 0, 0.2);
                 border-color: #ff0033;
+            }
+
+            .correct-answer-label {
+                color: var(--primary);
+                font-weight: bold;
+                margin-right: 0.5rem;
+            }
+
+            .solution-reveal {
+                margin-top: var(--spacing-lg);
+                padding: var(--spacing-md);
+                background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(255, 0, 110, 0.05));
+                border: 2px solid var(--accent);
+                border-radius: var(--radius-md);
+                animation: slideDown 0.3s ease-out;
+            }
+
+            .solution-header {
+                font-size: 1.125rem;
+                font-weight: bold;
+                color: var(--accent);
+                margin-bottom: 0.5rem;
+            }
+
+            .solution-text {
+                color: var(--text-primary);
+                font-size: 1rem;
+            }
+
+            .solution-text strong {
+                color: var(--primary);
+                font-size: 1.25rem;
+            }
+
+            @keyframes slideDown {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
             .game-actions {
@@ -308,37 +352,73 @@ window.nextQuestion = () => {
 window.checkAnswer = (answerIndex) => {
     const buttons = document.querySelectorAll('.answer-btn');
     const isCorrect = answerIndex === currentQuestion.correctIndex;
+    const pointsEarned = isCorrect ? 10 * (gameState.streak + 1) : 0;
+    
+    // Bereite Details für Historie vor
+    let question, userAnswer, correctAnswer;
+    if (currentGame === 'capitals') {
+        question = currentQuestion.country;
+        userAnswer = currentQuestion.options[answerIndex];
+        correctAnswer = currentQuestion.capital;
+    } else {
+        question = currentQuestion.location;
+        userAnswer = currentQuestion.options[answerIndex].toLocaleString('de-DE');
+        correctAnswer = currentQuestion.population.toLocaleString('de-DE');
+    }
 
     gameState.questionsAnswered++;
     
     if (isCorrect) {
         gameState.correctAnswers++;
         gameState.streak++;
-        gameState.score += 10 * gameState.streak;
+        gameState.score += pointsEarned;
         buttons[answerIndex].classList.add('correct');
         
         // Show notification
         if (window.app && window.app.ui) {
-            window.app.ui.showNotification('✅ Richtig! +' + (10 * gameState.streak) + ' Punkte', 'success');
+            window.app.ui.showNotification('✅ Richtig! +' + pointsEarned + ' Punkte', 'success');
         }
     } else {
         gameState.streak = 0;
         buttons[answerIndex].classList.add('incorrect');
         buttons[currentQuestion.correctIndex].classList.add('correct');
         
+        // Zeige richtige Lösung an
+        const correctBtn = buttons[currentQuestion.correctIndex];
+        correctBtn.innerHTML = `<span class="correct-answer-label">✓ Richtig:</span> ${correctBtn.textContent}`;
+        
+        // Zeige Lösungs-Info
+        const questionCard = document.querySelector('.question-card');
+        if (questionCard) {
+            const solutionDiv = document.createElement('div');
+            solutionDiv.className = 'solution-reveal';
+            solutionDiv.innerHTML = `
+                <div class="solution-header">❌ Falsche Antwort</div>
+                <div class="solution-text">
+                    Die richtige Antwort war: <strong>${correctAnswer}</strong>
+                </div>
+            `;
+            questionCard.appendChild(solutionDiv);
+        }
+        
         if (window.app && window.app.ui) {
-            window.app.ui.showNotification('❌ Leider falsch!', 'error');
+            window.app.ui.showNotification('❌ Leider falsch! Richtig: ' + correctAnswer, 'error');
         }
     }
 
     // Disable all buttons
     buttons.forEach(btn => btn.disabled = true);
 
-    // Update game stats in store
+    // Update game stats in store mit Details
     if (window.app && window.app.store) {
-        window.app.store.recordGame(currentGame, isCorrect);
+        window.app.store.recordGame(currentGame, isCorrect, pointsEarned, {
+            question,
+            userAnswer,
+            correctAnswer,
+            streak: gameState.streak
+        });
         if (isCorrect) {
-            window.app.store.addMoney(10 * gameState.streak);
+            window.app.store.addMoney(pointsEarned);
         }
     }
 

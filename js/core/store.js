@@ -94,7 +94,7 @@ export class Store {
         return this.state.stats;
     }
 
-    recordGame(type, correct, points) {
+    recordGame(type, correct, points, details = {}) {
         this.state.stats.gamesPlayed++;
         if (correct) {
             this.state.stats.gamesWon++;
@@ -114,23 +114,27 @@ export class Store {
             if (correct) this.state.stats.populationCorrect++;
         }
 
-        this.addPoints(points);
-        this.addHistory(type, correct, points);
+        if (points > 0) this.addPoints(points);
+        this.addHistory(type, correct, points, details);
         this.saveState();
     }
 
     // History
-    addHistory(type, correct, points) {
+    addHistory(type, correct, points, details = {}) {
         this.state.history.unshift({
             timestamp: new Date().toISOString(),
             type,
             correct,
-            points
+            points,
+            question: details.question || '',
+            userAnswer: details.userAnswer || '',
+            correctAnswer: details.correctAnswer || '',
+            streak: details.streak || 0
         });
         
-        // Nur letzte 50 behalten
-        if (this.state.history.length > 50) {
-            this.state.history = this.state.history.slice(0, 50);
+        // Nur letzte 100 behalten
+        if (this.state.history.length > 100) {
+            this.state.history = this.state.history.slice(0, 100);
         }
     }
 

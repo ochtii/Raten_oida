@@ -300,47 +300,106 @@ export const pointsView = (store) => {
                 .history-item {
                     background: var(--bg-card);
                     border: 1px solid rgba(0, 255, 136, 0.1);
-                    border-radius: var(--radius-sm);
-                    padding: var(--spacing-sm);
-                    margin-bottom: var(--spacing-xs);
+                    border-radius: var(--radius-md);
+                    padding: var(--spacing-md);
+                    margin-bottom: var(--spacing-sm);
+                    transition: all 0.3s;
+                }
+
+                .history-item:hover {
+                    transform: translateX(4px);
+                    border-color: rgba(0, 255, 136, 0.3);
+                }
+
+                .history-item.correct {
+                    border-left: 4px solid var(--primary);
+                }
+
+                .history-item.incorrect {
+                    border-left: 4px solid var(--accent);
+                }
+
+                .history-header {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
+                    margin-bottom: 0.5rem;
                 }
-                
-                .history-item.correct {
-                    border-left: 3px solid var(--primary);
-                }
-                
-                .history-item.incorrect {
-                    border-left: 3px solid var(--accent);
-                }
-                
+
                 .history-info {
                     flex: 1;
                 }
-                
+
                 .history-type {
                     font-weight: 600;
                     font-size: 0.875rem;
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
                 }
-                
+
                 .history-time {
                     font-size: 0.75rem;
                     color: var(--text-muted);
                 }
-                
+
                 .history-points {
                     font-weight: bold;
-                    font-size: 1.125rem;
+                    font-size: 1.25rem;
+                    min-width: 60px;
+                    text-align: right;
                 }
-                
+
                 .history-points.positive {
                     color: var(--primary);
                 }
-                
+
                 .history-points.negative {
                     color: var(--accent);
+                }
+
+                .history-details {
+                    margin-top: 0.75rem;
+                    padding-top: 0.75rem;
+                    border-top: 1px solid rgba(0, 255, 136, 0.1);
+                    font-size: 0.875rem;
+                }
+
+                .history-question {
+                    color: var(--text-secondary);
+                    margin-bottom: 0.25rem;
+                }
+
+                .history-answer {
+                    display: flex;
+                    gap: 1rem;
+                    flex-wrap: wrap;
+                }
+
+                .history-answer-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.25rem;
+                }
+
+                .history-answer-item.user {
+                    color: var(--text-secondary);
+                }
+
+                .history-answer-item.user.wrong {
+                    color: var(--accent);
+                    text-decoration: line-through;
+                }
+
+                .history-answer-item.correct-ans {
+                    color: var(--primary);
+                    font-weight: 600;
+                }
+
+                .history-streak {
+                    font-size: 0.75rem;
+                    color: var(--warning);
+                    margin-top: 0.25rem;
                 }
             </style>
             
@@ -407,23 +466,59 @@ export const pointsView = (store) => {
                 <div class="history-list">
                     ${recentPoints.map(item => {
                         const time = new Date(item.timestamp);
+                        const dateStr = time.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit' });
                         const timeStr = time.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' });
                         const typeLabel = item.type === 'capitals' ? '🏛️ Hauptstädte' : '👥 Bevölkerung';
+                        const statusIcon = item.correct ? '✓' : '✗';
                         
                         return `
                             <div class="history-item ${item.correct ? 'correct' : 'incorrect'}">
-                                <div class="history-info">
-                                    <div class="history-type">${typeLabel}</div>
-                                    <div class="history-time">${timeStr}</div>
+                                <div class="history-header">
+                                    <div class="history-info">
+                                        <div class="history-type">
+                                            <span>${statusIcon}</span>
+                                            ${typeLabel}
+                                        </div>
+                                        <div class="history-time">${dateStr} um ${timeStr}</div>
+                                    </div>
+                                    <div class="history-points ${item.points > 0 ? 'positive' : 'negative'}">
+                                        ${item.points > 0 ? '+' : ''}${item.points}
+                                    </div>
                                 </div>
-                                <div class="history-points ${item.points > 0 ? 'positive' : 'negative'}">
-                                    ${item.points > 0 ? '+' : ''}${item.points}
-                                </div>
+                                ${item.question ? `
+                                    <div class="history-details">
+                                        <div class="history-question">
+                                            <strong>Frage:</strong> ${item.question}
+                                        </div>
+                                        <div class="history-answer">
+                                            ${!item.correct && item.userAnswer ? `
+                                                <span class="history-answer-item user wrong">
+                                                    Deine Antwort: ${item.userAnswer}
+                                                </span>
+                                            ` : ''}
+                                            <span class="history-answer-item correct-ans">
+                                                ${item.correct ? '✓' : '→'} ${item.correctAnswer}
+                                            </span>
+                                        </div>
+                                        ${item.streak > 0 ? `
+                                            <div class="history-streak">🔥 Streak: ${item.streak}</div>
+                                        ` : ''}
+                                    </div>
+                                ` : ''}
                             </div>
                         `;
                     }).join('')}
                 </div>
-            ` : ''}
+            ` : `
+                <div class="card" style="text-align: center; margin-top: 2rem;">
+                    <div style="font-size: 3rem; margin-bottom: 1rem;">🎮</div>
+                    <h3 style="color: var(--text-secondary); margin-bottom: 0.5rem;">Noch keine Aktivitäten</h3>
+                    <p style="color: var(--text-muted);">Spiele ein Quiz, um deine Historie zu füllen!</p>
+                    <a href="#games" data-route="games" class="btn btn-primary" style="margin-top: 1rem;">
+                        Jetzt spielen
+                    </a>
+                </div>
+            `}
         </div>
     `;
     } catch (error) {
