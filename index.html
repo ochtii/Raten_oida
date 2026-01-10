@@ -8,15 +8,10 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <link rel="stylesheet" href="./css/app.css">
     <script>
         // Globaler Cache Buster für alle Dateien bei jedem Reload
         window.CACHE_BUSTER = Date.now();
-        
-        // CSS mit Cache-Buster laden
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = `./css/app.css?v=${window.CACHE_BUSTER}`;
-        document.head.appendChild(link);
     </script>
 </head>
 <body>
@@ -132,7 +127,7 @@
         }
         
         // App mit Cache-Buster laden
-        const appCacheBuster = new Date().getTime();
+        const appCacheBuster = window.CACHE_BUSTER;
         const script = document.createElement('script');
         script.type = 'module';
         script.src = `./js/app.js?v=${appCacheBuster}`;
