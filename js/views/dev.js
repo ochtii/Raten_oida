@@ -149,9 +149,10 @@ export const devView = (store) => {
                     </div>
                     
                     <div class="form-group">
-                        <label>Größe: <strong id="sizeValue">${bottomNavSettings.size}%</strong></label>
+                        <label>Höhe: <strong id="sizeValue">${bottomNavSettings.size}%</strong></label>
                         <input type="range" id="bottomNavSize" min="60" max="150" value="${bottomNavSettings.size}" 
                                oninput="window.devUpdateBottomNavSize(this.value)" class="dev-slider">
+                        <small style="color: var(--text-muted); font-size: 0.75rem;">Ändert nur die Höhe der Navigation</small>
                     </div>
                     
                     <div class="form-group">
@@ -571,9 +572,14 @@ window.devUpdateBottomNavSize = (value) => {
 window.devToggleNavItem = (item) => {
     const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
     if (!settings.items) settings.items = {};
-    settings.items[item] = !settings.items[item];
+    
+    // Get current state from checkbox
+    const checkbox = event.target;
+    settings.items[item] = checkbox.checked;
+    
     localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
     applyBottomNavSettings();
+    window.app.ui.showNotification(`${checkbox.checked ? '✅' : '❌'} ${item.toUpperCase()}`, 'info');
 };
 
 window.devResetBottomNav = () => {
@@ -607,10 +613,12 @@ function applyBottomNavSettings() {
     // Opacity
     bottomNav.style.opacity = (settings.opacity || 95) / 100;
     
-    // Size
-    const size = (settings.size || 100) / 100;
-    bottomNav.style.transform = `scale(${size})`;
-    bottomNav.style.transformOrigin = 'center bottom';
+    // Height (Size only affects height, not scaling)
+    const heightPercent = settings.size || 100;
+    const baseHeight = 64; // var(--bottom-nav-height) default
+    const newHeight = (baseHeight * heightPercent) / 100;
+    bottomNav.style.height = `${newHeight}px`;
+    bottomNav.style.transform = 'none'; // Remove scaling
     
     // Items visibility
     if (settings.items) {
