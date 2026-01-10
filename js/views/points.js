@@ -3,11 +3,12 @@
    ========================================== */
 
 export const pointsView = (store) => {
-    const points = store.getPoints();
-    const stats = store.getStats();
-    const history = store.getHistory();
-    
-    // Rang basierend auf Punkten berechnen
+    try {
+        const points = store.getPoints();
+        const stats = store.getStats();
+        const history = store.getHistory();
+        
+        // Rang basierend auf Punkten berechnen
     const getRank = (points) => {
         if (points >= 10000) return { name: 'Grandmaster', icon: '👑', color: '#ffd700', next: null };
         if (points >= 5000) return { name: 'Master', icon: '🏆', color: '#c0c0c0', next: 10000 };
@@ -425,4 +426,16 @@ export const pointsView = (store) => {
             ` : ''}
         </div>
     `;
+    } catch (error) {
+        console.error('Points View Error:', error);
+        return `
+            <div style="padding: 2rem; text-align: center;">
+                <h2 style="color: var(--accent);">❌ Fehler beim Laden</h2>
+                <p style="color: var(--text-secondary); margin-top: 1rem;">${error.message}</p>
+                <pre style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; margin-top: 1rem; text-align: left; overflow-x: auto;">
+                    ${error.stack || 'Kein Stack verfügbar'}
+                </pre>
+            </div>
+        `;
+    }
 };
