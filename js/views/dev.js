@@ -105,34 +105,6 @@ export const devView = (store) => {
                 </div>
             </div>
             
-            <!-- Manual Edit -->
-            <div class="dev-card">
-                <h3>✏️ Manuelle Eingabe</h3>
-                <div class="dev-form">
-                    <div class="form-group">
-                        <label>💰 Wallet setzen:</label>
-                        <div class="input-group">
-                            <input type="number" id="devWallet" value="${state.wallet}" class="dev-input">
-                            <button class="btn btn-sm" onclick="window.devSetWallet()">Setzen</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>⭐ Punkte setzen:</label>
-                        <div class="input-group">
-                            <input type="number" id="devPoints" value="${state.points}" class="dev-input">
-                            <button class="btn btn-sm" onclick="window.devSetPoints()">Setzen</button>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>🔥 Streak setzen:</label>
-                        <div class="input-group">
-                            <input type="number" id="devStreak" value="${state.stats?.currentStreak ?? 0}" class="dev-input">
-                            <button class="btn btn-sm" onclick="window.devSetStreak()">Setzen</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
             <!-- JSON Viewer -->
             <div class="dev-card">
                 <h3>🔍 Raw JSON</h3>
@@ -288,39 +260,6 @@ window.devGenerateTestData = () => {
         };
         window.app.store.saveState();
         window.app.ui.showNotification('🧪 Test-Daten generiert', 'success');
-        window.app.router.render();
-    }
-};
-
-window.devSetWallet = () => {
-    const value = parseInt(document.getElementById('devWallet').value);
-    if (window.app && !isNaN(value)) {
-        window.app.store.state.wallet = value;
-        window.app.store.saveState();
-        window.app.ui.showNotification('💰 Wallet gesetzt', 'success');
-        window.app.router.render();
-    }
-};
-
-window.devSetPoints = () => {
-    const value = parseInt(document.getElementById('devPoints').value);
-    if (window.app && !isNaN(value)) {
-        window.app.store.state.points = value;
-        window.app.store.saveState();
-        window.app.ui.showNotification('⭐ Punkte gesetzt', 'success');
-        window.app.router.render();
-    }
-};
-
-window.devSetStreak = () => {
-    const value = parseInt(document.getElementById('devStreak').value);
-    if (window.app && !isNaN(value)) {
-        window.app.store.state.stats.currentStreak = value;
-        if (value > window.app.store.state.stats.bestStreak) {
-            window.app.store.state.stats.bestStreak = value;
-        }
-        window.app.store.saveState();
-        window.app.ui.showNotification('🔥 Streak gesetzt', 'success');
         window.app.router.render();
     }
 };
