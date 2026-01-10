@@ -1,0 +1,96 @@
+/* ========================================
+   THEMES.CSS - CSS Variables für Dark/Light Mode
+   ======================================== */
+
+:root {
+    /* Dark Mode (Standard) */
+    --bg-primary: #1a1a1a;
+    --bg-secondary: #252525;
+    --bg-tertiary: #2f2f2f;
+    --bg-overlay: rgba(0, 0, 0, 0.85);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-muted: #707070;
+    
+    /* Neon Akzente - Cyberpunk Style */
+    --accent-primary: #00ff88;      /* Neon Grün */
+    --accent-secondary: #ff006e;    /* Neon Pink */
+    --accent-tertiary: #00d9ff;     /* Neon Cyan */
+    --accent-warning: #ffaa00;      /* Neon Orange */
+    
+    /* UI Elemente */
+    --border-color: #404040;
+    --shadow-color: rgba(0, 0, 0, 0.5);
+    --gradient-primary: linear-gradient(135deg, #00ff88 0%, #00d9ff 100%);
+    --gradient-secondary: linear-gradient(135deg, #ff006e 0%, #ffaa00 100%);
+    
+    /* Schülling Währungsfarbe */
+    --currency-color: #ffd700;
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    
+    /* Spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem;
+    
+    /* Border Radius */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 16px;
+    --radius-full: 9999px;
+    
+    /* Z-Index */
+    --z-base: 1;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-fixed: 300;
+    --z-modal: 400;
+    --z-toast: 500;
+}
+
+/* Light Mode Theme */
+[data-theme="light"] {
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --bg-tertiary: #e8e8e8;
+    --bg-overlay: rgba(255, 255, 255, 0.95);
+    
+    --text-primary: #1a1a1a;
+    --text-secondary: #4a4a4a;
+    --text-muted: #9a9a9a;
+    
+    --accent-primary: #00cc6a;
+    --accent-secondary: #d90056;
+    --accent-tertiary: #00b8d4;
+    --accent-warning: #ff9500;
+    
+    --border-color: #d0d0d0;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+}
+
+/* Neon Glow Effects (für Dark Mode) */
+[data-theme="dark"] .glow-green {
+    box-shadow: 0 0 10px var(--accent-primary),
+                0 0 20px var(--accent-primary),
+                0 0 30px var(--accent-primary);
+}
+
+[data-theme="dark"] .glow-pink {
+    box-shadow: 0 0 10px var(--accent-secondary),
+                0 0 20px var(--accent-secondary),
+                0 0 30px var(--accent-secondary);
+}
+
+[data-theme="dark"] .text-glow {
+    text-shadow: 0 0 10px currentColor,
+                 0 0 20px currentColor;
+}

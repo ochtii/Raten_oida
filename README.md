@@ -161,7 +161,229 @@ Raten_oida/
 ├── .github/
 │   └── workflows/
 │       └── pages.yml       # GitHub Pages Auto-Deploy
-└── README.md               # Diese Datei
+└── # 🎮 Raten OIDA - Vanilla JS Edition
+
+Eine moderne Gaming Quiz-App im Cyberpunk-Style, komplett in Vanilla JavaScript entwickelt.
+
+## 🚀 Features
+
+### 🎯 Zwei Spielmodi
+- **Hauptstädte OIDA**: Rate die richtigen Hauptstädte weltweit
+- **Einwohner Battle**: Vergleiche Einwohnerzahlen von Städten
+
+### 💰 Wirtschaftssystem
+- Virtuelle Währung: **Schülling**
+- Verdiene Schülling durch richtige Antworten
+- Kaufe Tipps mit Schülling (50/50 Joker)
+
+### 📊 Statistiken
+- Detaillierte Spielstatistiken
+- Highscores und Streaks
+- Wirtschaftsübersicht
+
+### 🎨 Design
+- **Dark/Light Mode** mit CSS Variables
+- Modern Gaming / Cyberpunk-Lite Ästhetik
+- Neon-Akzente (Grün/Pink/Cyan)
+- Responsive Layout (Mobile-First)
+
+### ⚙️ Einstellungen
+- Theme-Wechsel
+- Sound-Einstellungen
+- Schwierigkeitsgrade (Leicht/Mittel/Schwer)
+
+## 📂 Projektstruktur
+
+```
+/projekt-root
+  index.html
+  /assets
+    /css
+      themes.css          # CSS Variables (Dark/Light Mode)
+      main.css            # Reset, Typography
+      layout.css          # Header, Navigation
+      components.css      # Buttons, Cards, Modals
+      utilities.css       # Helper-Klassen
+  /js
+    app.js                # Main Entry Point
+    /core
+      router.js           # View Management
+      store.js            # State & LocalStorage
+      dom.js              # DOM Helper Functions
+    /components
+      navigation.js       # Sandwich Menu
+      modal.js            # Dialog System
+    /data
+      capitals.js         # Hauptstädte Daten
+      population.js       # Einwohner Daten
+    /games
+      gameEngine.js       # Basis Spiellogik
+      capitalsGame.js     # Hauptstädte Spiel
+      populationGame.js   # Einwohner Spiel
+```
+
+## 🛠️ Tech Stack
+
+- **HTML5** - Semantisches Markup
+- **CSS3** - Modern CSS mit Variables, Flexbox, Grid
+- **Vanilla JavaScript (ES6+)** - Modules, Classes, Async/Await
+- **LocalStorage** - Persistente Datenhaltung
+- **No Frameworks** - Komplett framework-frei!
+
+## 🎮 Installation & Start
+
+### Variante 1: Live Server (VS Code)
+1. Installiere die Extension "Live Server" in VS Code
+2. Rechtsklick auf `index.html` → "Open with Live Server"
+3. App öffnet sich im Browser
+
+### Variante 2: Python Server
+```bash
+# Python 3
+python -m http.server 8000
+
+# Python 2
+python -m SimpleHTTPServer 8000
+```
+Dann öffne: `http://localhost:8000`
+
+### Variante 3: Node.js (http-server)
+```bash
+npx http-server -p 8000
+```
+
+## 🎯 Spielanleitung
+
+### Hauptstädte OIDA
+1. Wähle Schwierigkeitsgrad
+2. Rate die Hauptstadt des angezeigten Landes
+3. Kaufe Tipps für 50 Schülling (entfernt falsche Antworten)
+4. Verdiene Schülling für richtige Antworten
+5. Baue Streaks auf für Bonuspunkte
+
+### Einwohner Battle
+1. Vergleiche zwei Städte
+2. Wähle die Stadt mit MEHR Einwohnern
+3. Verdiene Schülling für richtige Antworten
+4. Baue Streaks auf für Bonuspunkte
+
+## 💡 Architektur-Highlights
+
+### State Management
+- Eigenes Store-System mit Observer Pattern
+- Automatische LocalStorage-Synchronisation
+- Reactive Updates
+
+### Routing
+- Simuliertes Client-Side Routing
+- History API Integration
+- View-basierte Architektur
+
+### Modular
+- ES6 Modules (import/export)
+- Klare Trennung von Concerns
+- Wiederverwendbare Components
+
+### Performance
+- Keine externen Dependencies
+- Minimale Bundle Size
+- Native Browser APIs
+
+## 🎨 Theming
+
+Das Theming-System nutzt CSS Custom Properties:
+
+```css
+/* Dark Mode (Standard) */
+--bg-primary: #1a1a1a;
+--accent-primary: #00ff88;  /* Neon Grün */
+--accent-secondary: #ff006e; /* Neon Pink */
+
+/* Light Mode */
+[data-theme="light"] {
+  --bg-primary: #f5f5f5;
+  /* ... */
+}
+```
+
+Theme wechseln:
+```javascript
+store.toggleTheme();
+```
+
+## 🔧 Konfiguration
+
+### Schwierigkeitsgrade
+In `js/data/capitals.js` sind die Länder mit Schwierigkeitsgrad markiert:
+- `easy`: Bekannte Länder
+- `medium`: Mitteleuropäische Länder
+- `hard`: Schwierigere Länder
+
+### Spieleinstellungen
+In `js/games/gameEngine.js`:
+```javascript
+this.maxRounds = 10;  // Anzahl Runden pro Spiel
+```
+
+### Wirtschaft
+In `js/games/capitalsGame.js`:
+```javascript
+const hintCost = 50;  // Kosten für Tipps
+```
+
+## 📱 Responsive Design
+
+- Mobile-First Ansatz
+- Breakpoints:
+  - Mobile: < 640px
+  - Tablet: 640px - 1024px
+  - Desktop: > 1024px
+
+## 🎵 Sound (geplant)
+
+Sound-System ist vorbereitet aber noch nicht implementiert.
+Toggle in Settings verfügbar.
+
+## 🚀 Erweiterungen
+
+### Mögliche Features:
+- [ ] PWA Support (Service Worker)
+- [ ] Sound Effects
+- [ ] Mehr Spielmodi
+- [ ] Multiplayer (WebSocket)
+- [ ] Achievements System
+- [ ] Leaderboard
+- [ ] Social Sharing
+
+## 🐛 Debugging
+
+Browser DevTools öffnen:
+- Chrome/Edge: `F12` oder `Ctrl+Shift+I`
+- Firefox: `F12`
+- Safari: `Cmd+Option+I`
+
+Console Logs:
+```javascript
+console.log('🎮 Raten OIDA wird initialisiert...');
+```
+
+## 📄 Lizenz
+
+Open Source - Frei verwendbar für Lern- und Demozwecke.
+
+## 🇦🇹 Österreichischer Charme
+
+Die App nutzt bewusst österreichischen Dialekt und Humor:
+- "OIDA" - Typisch österreichischer Ausruf
+- "Schülling" - Anlehnung an alte österreichische Währung
+- "Hau di über d'Häuser" - Wienerisch für "viel Erfolg"
+- "Passt!" - Österreichisch für "OK/Gut"
+
+---
+
+**Entwickelt mit ❤️ und Vanilla JavaScript**
+
+Hau di über d'Häuser! 🎯               # Diese Datei
 ```
 
 ## 🎨 Design-System

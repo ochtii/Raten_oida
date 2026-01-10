@@ -1,0 +1,227 @@
+/* ========================================
+   LAYOUT.CSS - Header, Navigation, Main Layout
+   ======================================== */
+
+/* Header */
+#app-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-secondary);
+    border-bottom: 2px solid var(--accent-primary);
+    padding: var(--spacing-md);
+    z-index: var(--z-sticky);
+    box-shadow: 0 2px 10px var(--shadow-color);
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-text {
+    font-size: 1.5rem;
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+}
+
+.logo-text .highlight {
+    color: var(--accent-primary);
+    text-shadow: 0 0 10px var(--accent-primary);
+}
+
+/* Sandwich Button */
+.sandwich-btn {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: var(--spacing-sm);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+}
+
+.sandwich-btn:hover {
+    transform: scale(1.1);
+}
+
+.sandwich-btn span {
+    display: block;
+    width: 28px;
+    height: 3px;
+    background-color: var(--accent-primary);
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-normal);
+}
+
+.sandwich-btn.active span:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.sandwich-btn.active span:nth-child(2) {
+    opacity: 0;
+}
+
+.sandwich-btn.active span:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* Sandwich Menu (Overlay) */
+.sandwich-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: var(--bg-overlay);
+    backdrop-filter: blur(10px);
+    z-index: var(--z-modal);
+    transform: translateX(-100%);
+    transition: transform var(--transition-normal);
+}
+
+.sandwich-menu.open {
+    transform: translateX(0);
+}
+
+.sandwich-content {
+    position: relative;
+    width: 80%;
+    max-width: 400px;
+    height: 100%;
+    background-color: var(--bg-secondary);
+    padding: var(--spacing-xl);
+    border-right: 2px solid var(--accent-primary);
+    box-shadow: 5px 0 20px var(--shadow-color);
+}
+
+.close-btn {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: 2.5rem;
+    color: var(--accent-secondary);
+    background: none;
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform var(--transition-fast);
+}
+
+.close-btn:hover {
+    transform: rotate(90deg);
+}
+
+.menu-list {
+    margin-top: var(--spacing-xxl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-lg);
+}
+
+.menu-list li a {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    font-size: 1.25rem;
+    font-weight: 600;
+    padding: var(--spacing-md);
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    color: var(--text-primary);
+}
+
+.menu-list li a:hover {
+    background-color: var(--bg-tertiary);
+    transform: translateX(10px);
+    color: var(--accent-primary);
+}
+
+.wallet-display {
+    margin-top: var(--spacing-xl);
+    padding: var(--spacing-lg);
+    background: var(--gradient-primary);
+    border-radius: var(--radius-lg);
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--bg-primary);
+}
+
+.wallet-icon {
+    font-size: 2rem;
+}
+
+/* Main Content */
+#app-content {
+    min-height: calc(100vh - 120px - 70px); /* Header + Bottom Nav */
+    padding: var(--spacing-xl) var(--spacing-md);
+    padding-bottom: calc(70px + var(--spacing-xl)); /* Space for bottom nav */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-secondary);
+    border-top: 2px solid var(--accent-primary);
+    padding: var(--spacing-sm);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-sm);
+    z-index: var(--z-fixed);
+    box-shadow: 0 -2px 10px var(--shadow-color);
+}
+
+.nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-xs);
+    padding: var(--spacing-sm);
+    background: transparent;
+    border-radius: var(--radius-md);
+    transition: all var(--transition-fast);
+    color: var(--text-secondary);
+}
+
+.nav-btn:hover,
+.nav-btn.active {
+    background-color: var(--bg-tertiary);
+    color: var(--accent-primary);
+    transform: translateY(-2px);
+}
+
+.nav-icon {
+    font-size: 1.5rem;
+}
+
+.nav-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .sandwich-content {
+        width: 90%;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+}
