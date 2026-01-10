@@ -126,6 +126,14 @@
             sessionStorage.setItem('cacheCleared', 'true');
         }
     </script>
-    <script type="module" src="./js/app.js"></script>
+    
+    <script type="module">
+        // Force reload with timestamp cache buster
+        const timestamp = new Date().getTime();
+        import(`./js/app.js?v=${timestamp}`).catch(err => {
+            console.error('Failed to load app:', err);
+            import('./js/app.js');
+        });
+    </script>
 </body>
 </html>
