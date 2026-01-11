@@ -1,3 +1,37 @@
+/* === DEV CHEAT BUTTONS === */
+.dev-cheat-group {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.dev-cheat-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    margin-right: 0.5rem;
+    min-width: 70px;
+}
+
+.dev-cheat-group .dev-hero-btn {
+    min-width: 60px;
+    max-width: 60px;
+    height: 2.1em;
+    padding: 0.1em 0.5em;
+    font-size: 1em;
+    line-height: 1.1;
+    margin: 0;
+}
+
+.dev-cheat-group .dev-hero-btn:not(:last-child) {
+    margin-right: 0.4em;
+}
+
+.dev-cheat-group .dev-hero-btn,
+.dev-cheat-group .dev-hero-btn span {
+    gap: 0;
+}
+
 /* ==========================================
    RATEN OIDA - Modern Mobile-First Design
    ========================================== */

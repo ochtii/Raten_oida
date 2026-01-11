@@ -42,34 +42,18 @@ export const devView = (store) => {
                     <!-- Wallet Controls -->
                     <div class="dev-cheat-group">
                         <span class="dev-cheat-label">💰 Schülling:</span>
-                        <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddWallet()">
-                            +1000
-                        </button>
-                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWallet()">
-                            -1000
-                        </button>
-                        <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddWalletMax()">
-                            +10k
-                        </button>
-                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWalletMax()">
-                            -10k
-                        </button>
+                        <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddWallet()">+1000</button>
+                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWallet()">-1000</button>
+                        <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddWalletMax()">+10k</button>
+                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWalletMax()">-10k</button>
                     </div>
                     <!-- Points Controls -->
                     <div class="dev-cheat-group">
                         <span class="dev-cheat-label">⭐ Punkte:</span>
-                        <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddPoints()">
-                            +100
-                        </button>
-                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePoints()">
-                            -100
-                        </button>
-                        <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddPointsMax()">
-                            +1000
-                        </button>
-                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePointsMax()">
-                            -1000
-                        </button>
+                        <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddPoints()">+100</button>
+                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePoints()">-100</button>
+                        <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddPointsMax()">+1000</button>
+                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePointsMax()">-1000</button>
                     </div>
                     <!-- Sonstige Cheats -->
                     <button class="dev-hero-btn dev-hero-btn-success" onclick="window.devMaxStreak()">
