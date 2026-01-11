@@ -1953,8 +1953,10 @@ body.debug-console-visible .main {
 
 /* ==========================================
    TOGGLE STYLES - Multiple Modern Designs
+   Inspiriert von: iOS, Material Design, Fluent, Neon Custom
    ========================================== */
 
+/* Base Toggle */
 .toggle {
     position: relative;
     display: inline-block;
@@ -2004,158 +2006,215 @@ body.debug-console-visible .main {
     transform: translateX(24px);
 }
 
-/* === TOGGLE STYLE: iOS === */
+/* === TOGGLE STYLE: iOS 14+ (Apple Design) === */
 [data-toggle-style="ios"] .toggle:not(.toggle-classic):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal),
 .toggle.toggle-ios {
-    width: 56px;
-    height: 32px;
+    width: 51px;
+    height: 31px;
 }
 
 [data-toggle-style="ios"] .toggle:not(.toggle-classic):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal) .toggle-slider,
 .toggle.toggle-ios .toggle-slider {
-    background-color: #e0e0e0;
-    border: none;
-    border-radius: 32px;
+    background-color: rgba(120, 120, 128, 0.16);
+    border: 0.5px solid rgba(0, 0, 0, 0.04);
+    border-radius: 31px;
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 [data-toggle-style="ios"] .toggle:not(.toggle-classic):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal) .toggle-slider:before,
 .toggle.toggle-ios .toggle-slider:before {
-    height: 28px;
-    width: 28px;
+    height: 27px;
+    width: 27px;
     left: 2px;
     bottom: 2px;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), 0 3px 1px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
 }
 
 [data-toggle-style="ios"] .toggle:not(.toggle-classic):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal) input:checked + .toggle-slider,
 .toggle.toggle-ios input:checked + .toggle-slider {
-    background: linear-gradient(135deg, #34c759, #30d158);
-    border-color: transparent;
+    background: #34c759;
+    border-color: rgba(0, 0, 0, 0.04);
     box-shadow: none;
 }
 
 [data-toggle-style="ios"] .toggle:not(.toggle-classic):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal) input:checked + .toggle-slider:before,
 .toggle.toggle-ios input:checked + .toggle-slider:before {
-    transform: translateX(24px);
+    transform: translateX(20px);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15), 0 3px 1px rgba(0, 0, 0, 0.06);
 }
 
-/* === TOGGLE STYLE: Material === */
+/* === TOGGLE STYLE: Material Design 3 (Google) === */
 [data-toggle-style="material"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-neon):not(.toggle-minimal),
 .toggle.toggle-material {
-    width: 48px;
-    height: 24px;
+    width: 52px;
+    height: 32px;
 }
 
 [data-toggle-style="material"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-neon):not(.toggle-minimal) .toggle-slider,
 .toggle.toggle-material .toggle-slider {
-    background-color: rgba(0, 0, 0, 0.26);
-    border: none;
-    border-radius: 12px;
+    background-color: #e7e0ec;
+    border: 2px solid #79747e;
+    border-radius: 16px;
+    transition: all 0.2s cubic-bezier(0.2, 0.0, 0, 1.0);
 }
 
 [data-toggle-style="material"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-neon):not(.toggle-minimal) .toggle-slider:before,
 .toggle.toggle-material .toggle-slider:before {
-    height: 20px;
-    width: 20px;
-    left: 2px;
-    bottom: 2px;
-    background-color: #fafafa;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-    transition: all 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+    height: 16px;
+    width: 16px;
+    left: 6px;
+    bottom: 6px;
+    background-color: #79747e;
+    box-shadow: none;
+    transition: all 0.2s cubic-bezier(0.2, 0.0, 0, 1.0);
+}
+
+[data-toggle-style="material"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-neon):not(.toggle-minimal) .toggle-slider:after,
+.toggle.toggle-material .toggle-slider:after {
+    content: '';
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.04);
+    left: -4px;
+    top: -6px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+[data-toggle-style="material"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-neon):not(.toggle-minimal) .toggle-slider:active:after,
+.toggle.toggle-material .toggle-slider:active:after {
+    opacity: 1;
 }
 
 [data-toggle-style="material"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-neon):not(.toggle-minimal) input:checked + .toggle-slider,
 .toggle.toggle-material input:checked + .toggle-slider {
-    background: rgba(33, 150, 243, 0.5);
-    border-color: transparent;
-    box-shadow: none;
+    background: #d0bcff;
+    border-color: #d0bcff;
 }
 
 [data-toggle-style="material"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-neon):not(.toggle-minimal) input:checked + .toggle-slider:before,
 .toggle.toggle-material input:checked + .toggle-slider:before {
-    transform: translateX(24px);
-    background-color: #2196f3;
+    transform: translateX(18px);
+    background-color: #381e72;
+    width: 24px;
+    height: 24px;
+    left: 2px;
+    bottom: 2px;
 }
 
-/* === TOGGLE STYLE: Neon === */
+[data-toggle-style="material"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-neon):not(.toggle-minimal) input:checked + .toggle-slider:after,
+.toggle.toggle-material input:checked + .toggle-slider:after {
+    left: 16px;
+    background: rgba(208, 188, 255, 0.12);
+}
+
+/* === TOGGLE STYLE: Neon Cyberpunk === */
 [data-toggle-style="neon"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-minimal),
 .toggle.toggle-neon {
-    width: 60px;
-    height: 30px;
+    width: 64px;
+    height: 34px;
 }
 
 [data-toggle-style="neon"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-minimal) .toggle-slider,
 .toggle.toggle-neon .toggle-slider {
-    background: linear-gradient(135deg, rgba(0, 0, 0, 0.4), rgba(20, 20, 40, 0.4));
-    border: 2px solid rgba(128, 128, 153, 0.4);
-    border-radius: 30px;
-    box-shadow: inset 0 2px 8px rgba(0,0,0,0.3);
+    background: #000;
+    border: 2px solid #ff006e;
+    border-radius: 17px;
+    box-shadow: inset 0 0 10px rgba(255, 0, 110, 0.5), 0 0 5px rgba(255, 0, 110, 0.3);
+    transition: all 0.4s ease;
 }
 
 [data-toggle-style="neon"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-minimal) .toggle-slider:before,
 .toggle.toggle-neon .toggle-slider:before {
-    height: 22px;
-    width: 22px;
+    content: "OFF";
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8px;
+    font-weight: 900;
+    color: #ff006e;
+    height: 26px;
+    width: 26px;
     left: 3px;
     bottom: 2px;
-    background: linear-gradient(135deg, #fff, #f0f0f0);
-    box-shadow: 0 0 8px rgba(255,255,255,0.6), 0 2px 4px rgba(0,0,0,0.3);
+    background: radial-gradient(circle, #1a0010, #000);
+    border: 2px solid #ff006e;
+    box-shadow: 0 0 10px rgba(255, 0, 110, 0.8), inset 0 0 5px rgba(255, 0, 110, 0.5);
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 [data-toggle-style="neon"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-minimal) input:checked + .toggle-slider,
 .toggle.toggle-neon input:checked + .toggle-slider {
-    background: linear-gradient(135deg, var(--primary), #00cc6f);
-    border-color: var(--primary);
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.6), inset 0 2px 8px rgba(0,0,0,0.2);
-    animation: neon-pulse 2s infinite;
+    background: #000;
+    border-color: #00ff88;
+    box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 255, 136, 0.6);
+    animation: neon-pulse 1.5s infinite;
 }
 
 [data-toggle-style="neon"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-minimal) input:checked + .toggle-slider:before,
 .toggle.toggle-neon input:checked + .toggle-slider:before {
+    content: "ON";
     transform: translateX(30px);
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.8), 0 2px 4px rgba(0,0,0,0.3);
+    color: #00ff88;
+    background: radial-gradient(circle, #001a0f, #000);
+    border-color: #00ff88;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 1), inset 0 0 8px rgba(0, 255, 136, 0.6);
 }
 
 @keyframes neon-pulse {
-    0%, 100% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.6), inset 0 2px 8px rgba(0,0,0,0.2); }
-    50% { box-shadow: 0 0 30px rgba(0, 255, 136, 0.9), inset 0 2px 8px rgba(0,0,0,0.2); }
+    0%, 100% { 
+        box-shadow: inset 0 0 10px rgba(0, 255, 136, 0.5), 0 0 20px rgba(0, 255, 136, 0.6);
+    }
+    50% { 
+        box-shadow: inset 0 0 15px rgba(0, 255, 136, 0.7), 0 0 30px rgba(0, 255, 136, 0.9);
+    }
 }
 
-/* === TOGGLE STYLE: Minimal === */
+/* === TOGGLE STYLE: Minimal Fluent (Microsoft) === */
 [data-toggle-style="minimal"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon),
 .toggle.toggle-minimal {
     width: 44px;
-    height: 24px;
+    height: 20px;
 }
 
 [data-toggle-style="minimal"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon) .toggle-slider,
 .toggle.toggle-minimal .toggle-slider {
-    background-color: transparent;
-    border: 2px solid rgba(128, 128, 153, 0.5);
-    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 10px;
+    backdrop-filter: blur(10px);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.6, 1);
 }
 
 [data-toggle-style="minimal"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon) .toggle-slider:before,
 .toggle.toggle-minimal .toggle-slider:before {
-    height: 16px;
-    width: 16px;
-    left: 2px;
-    bottom: 2px;
-    background-color: rgba(128, 128, 153, 0.7);
+    height: 12px;
+    width: 12px;
+    left: 3px;
+    bottom: 2.5px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.6, 1);
 }
 
 [data-toggle-style="minimal"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon) input:checked + .toggle-slider,
 .toggle.toggle-minimal input:checked + .toggle-slider {
-    background-color: transparent;
-    border-color: var(--primary);
-    box-shadow: none;
+    background: rgba(0, 255, 136, 0.15);
+    border-color: rgba(0, 255, 136, 0.5);
+    box-shadow: inset 0 0 8px rgba(0, 255, 136, 0.2);
 }
 
 [data-toggle-style="minimal"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon) input:checked + .toggle-slider:before,
 .toggle.toggle-minimal input:checked + .toggle-slider:before {
-    transform: translateX(20px);
-    background-color: var(--primary);
+    transform: translateX(24px);
+    background: linear-gradient(135deg, #00ff88, #00cc6f);
+    box-shadow: 0 2px 6px rgba(0, 255, 136, 0.3), 0 0 8px rgba(0, 255, 136, 0.2);
 }
 
 /* === TOGGLE STYLE PICKER === */
@@ -3561,21 +3620,27 @@ body.debug-console-visible .main {
 /* === FILE BAR IN CHANGELOG - Modern Split Style === */
 .file-item {
     display: flex;
+    flex-direction: column;
+    margin-bottom: 0.75rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.file-item-content {
+    display: flex;
     align-items: center;
     gap: var(--spacing-sm);
-    margin-bottom: 0.5rem;
+    padding: 0.5rem;
 }
 
 .file-bar-modern {
-    flex: 1;
     display: flex;
-    height: 8px;
-    border-radius: 4px;
+    height: 4px;
+    width: 100%;
     overflow: hidden;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    min-width: 100px;
-    max-width: 200px;
+    background: rgba(0, 0, 0, 0.4);
 }
 
 .file-bar-add {
@@ -3622,6 +3687,14 @@ body.debug-console-visible .main {
     color: var(--text-muted);
     white-space: nowrap;
     font-family: 'Courier New', monospace;
+    margin-left: auto;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
 }
 
 /* Aktueller Build Highlight */

@@ -196,13 +196,17 @@ function renderChangelog(container, changes) {
                                     
                                     return `
                                     <li class="file-item">
-                                        <span class="file-icon">${getFileIcon(file)}</span>
-                                        <span class="file-name">${file}</span>
+                                        <div class="file-item-content">
+                                            <div class="file-info">
+                                                <span class="file-icon">${getFileIcon(file)}</span>
+                                                <span class="file-name">${file}</span>
+                                            </div>
+                                            <span class="file-stats">+${fileAdditions} -${fileDeletions}</span>
+                                        </div>
                                         <div class="file-bar-modern">
                                             <div class="file-bar-add" style="width: ${fileAddPercent}%"></div>
                                             <div class="file-bar-del" style="width: ${fileDelPercent}%"></div>
                                         </div>
-                                        <span class="file-stats">+${fileAdditions} -${fileDeletions}</span>
                                     </li>
                                 `}).join('')}
                             </ul>
