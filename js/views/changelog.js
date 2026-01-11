@@ -47,6 +47,38 @@ window.loadChangelog = async () => {
 function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
+                {
+            version: '1.0.6.0',
+            date: '2026-01-11',
+            message: 'feat: Enhanced Cachebuster System with Auto-Changelog',
+            details: 'feat: Enhanced Cachebuster System with Auto-Changelog
+
+✨ Features:
+- Auto-update changelog with versioning system
+- Cachebuster support for HTML files
+- Granular cachebuster toggles (HTML/CSS/JS)
+- Visual cachebuster header banner
+
+📦 New Files:
+- js/core/cachebuster.js: Complete cachebuster module
+
+🔧 Modified:
+- auto-version.js: Added updateChangelog() method
+- js/views/dev.js: Granular toggles + enhanced info modal
+- index.html: Cachebuster integration
+- js/app.js: Updated module loading
+- js/core/router.js: Cachebuster API integration
+- css/app.css: Banner styles + animations
+
+🎨 Banner Features:
+- Animated rotating icon
+- Active types display (HTML • CSS • JS)
+- Build ID + timestamp
+- Auto-minimize after 10s
+- Mobile responsive',
+            files: [],
+            stats: { additions: 0, deletions: 0 }
+        },
         {
             version: '1.0.5.0',
             date: '2026-01-11',

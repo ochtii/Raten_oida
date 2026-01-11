@@ -77,10 +77,16 @@ window.navigateToSection = (sectionId) => {
     });
     
     // Zeige ausgewählte Section
-    document.getElementById(sectionId)?.style.display = 'block';
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.style.display = 'block';
+    }
     
     // Scrolle zu Top
-    document.querySelector('.settings-content')?.scrollTo({ top: 0, behavior: 'smooth' });
+    const contentContainer = document.querySelector('.settings-content');
+    if (contentContainer) {
+        contentContainer.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     
     // Speichere letzte Section
     localStorage.setItem('lastSettingsSection', sectionId);
