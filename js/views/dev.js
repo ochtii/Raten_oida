@@ -39,38 +39,39 @@ export const devView = (store) => {
             <div class="dev-card dev-hero-card dev-cheat-card">
                 <h3>🎮 Cheats</h3>
                 <div class="dev-hero-actions">
-                    <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddWallet()">
-                        <span class="dev-hero-icon">💰</span>
-                        <span class="dev-hero-label">+1000</span>
-                    </button>
-                    <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWallet()">
-                        <span class="dev-hero-icon">💰</span>
-                        <span class="dev-hero-label">-1000</span>
-                    </button>
-                    <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddPoints()">
-                        <span class="dev-hero-icon">⭐</span>
-                        <span class="dev-hero-label">+100</span>
-                    </button>
-                    <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePoints()">
-                        <span class="dev-hero-icon">⭐</span>
-                        <span class="dev-hero-label">-100</span>
-                    </button>
-                    <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddWalletMax()">
-                        <span class="dev-hero-icon">💰</span>
-                        <span class="dev-hero-label">+10k</span>
-                    </button>
-                    <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWalletMax()">
-                        <span class="dev-hero-icon">💰</span>
-                        <span class="dev-hero-label">-10k</span>
-                    </button>
-                    <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddPointsMax()">
-                        <span class="dev-hero-icon">⭐</span>
-                        <span class="dev-hero-label">+1000</span>
-                    </button>
-                    <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePointsMax()">
-                        <span class="dev-hero-icon">⭐</span>
-                        <span class="dev-hero-label">-1000</span>
-                    </button>
+                    <!-- Wallet Controls -->
+                    <div class="dev-cheat-group">
+                        <span class="dev-cheat-label">💰 Schülling:</span>
+                        <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddWallet()">
+                            +1000
+                        </button>
+                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWallet()">
+                            -1000
+                        </button>
+                        <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddWalletMax()">
+                            +10k
+                        </button>
+                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWalletMax()">
+                            -10k
+                        </button>
+                    </div>
+                    <!-- Points Controls -->
+                    <div class="dev-cheat-group">
+                        <span class="dev-cheat-label">⭐ Punkte:</span>
+                        <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddPoints()">
+                            +100
+                        </button>
+                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePoints()">
+                            -100
+                        </button>
+                        <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddPointsMax()">
+                            +1000
+                        </button>
+                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePointsMax()">
+                            -1000
+                        </button>
+                    </div>
+                    <!-- Sonstige Cheats -->
                     <button class="dev-hero-btn dev-hero-btn-success" onclick="window.devMaxStreak()">
                         <span class="dev-hero-icon">🔥</span>
                         <span class="dev-hero-label">Streak</span>
