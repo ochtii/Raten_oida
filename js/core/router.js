@@ -49,6 +49,9 @@ export class Router {
             return;
         }
 
+        // Route-spezifische Layout-Klassen setzen
+        container.classList.toggle('settings-expanded', this.currentRoute === 'settings');
+
         try {
             const viewFunction = await this.loadView(this.currentRoute);
             const html = viewFunction(this.store);
