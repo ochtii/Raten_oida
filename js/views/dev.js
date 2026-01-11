@@ -53,15 +53,15 @@ export const devView = (store) => {
                     <div class="dev-cheat-group">
                         <span class="dev-cheat-label">💰 Schülling:</span>
                         <div class="dev-split-btn">
-                            <button class="dev-split-btn-minus" onclick="window.devChangeWallet(-window.devCheatStep, this)">-</button>
-                            <button class="dev-split-btn-plus" onclick="window.devChangeWallet(window.devCheatStep, this)">+</button>
+                            <button class="dev-split-btn-minus" onclick="event.preventDefault(); window.devChangeWallet(-window.devCheatStep, this)">-</button>
+                            <button class="dev-split-btn-plus" onclick="event.preventDefault(); window.devChangeWallet(window.devCheatStep, this)">+</button>
                         </div>
                     </div>
                     <div class="dev-cheat-group">
                         <span class="dev-cheat-label">⭐ Punkte:</span>
                         <div class="dev-split-btn">
-                            <button class="dev-split-btn-minus" onclick="window.devChangePoints(-window.devCheatStep, this)">-</button>
-                            <button class="dev-split-btn-plus" onclick="window.devChangePoints(window.devCheatStep, this)">+</button>
+                            <button class="dev-split-btn-minus" onclick="event.preventDefault(); window.devChangePoints(-window.devCheatStep, this)">-</button>
+                            <button class="dev-split-btn-plus" onclick="event.preventDefault(); window.devChangePoints(window.devCheatStep, this)">+</button>
                         </div>
                     </div>
                     <!-- Sonstige Cheats -->
