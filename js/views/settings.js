@@ -15,9 +15,56 @@ window.setToggleStyle = (style) => {
     window.ui.showNotification('Toggle-Style geändert zu: ' + style, 'success');
 };
 
+// Theme wechseln
+window.setTheme = (theme) => {
+    localStorage.setItem('appTheme', theme);
+    
+    // Auto-Theme prüft System-Preference
+    if (theme === 'auto') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    } else {
+        document.body.setAttribute('data-theme', theme);
+    }
+    
+    // Aktualisiere visuelle Auswahl
+    document.querySelectorAll('.theme-option').forEach(option => {
+        option.classList.toggle('active', option.dataset.theme === theme);
+    });
+    
+    window.ui.showNotification('Theme geändert zu: ' + theme, 'success');
+};
+
+// Theme initialisieren beim App-Start
+window.initTheme = () => {
+    const savedTheme = localStorage.getItem('appTheme') || 'dark';
+    
+    if (savedTheme === 'auto') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        
+        // Listener für System-Theme-Änderungen
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+            if (localStorage.getItem('appTheme') === 'auto') {
+                document.body.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            }
+        });
+    } else {
+        document.body.setAttribute('data-theme', savedTheme);
+    }
+};
+
 export const settingsView = (store) => {
     const settings = store.getSettings();
     const wallet = store.getWallet();
+    
+    // Theme initialisieren
+    setTimeout(() => {
+        const savedTheme = localStorage.getItem('appTheme') || 'dark';
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.classList.toggle('active', option.dataset.theme === savedTheme);
+        });
+    }, 100);
     
     // Toggle-Style initialisieren
     setTimeout(() => {
@@ -117,16 +164,107 @@ export const settingsView = (store) => {
                             </div>
                         </div>
 
-                        <div class="setting-item">
+                        <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
                             <div class="setting-info">
-                                <div class="setting-label">Dark Mode</div>
-                                <div class="setting-desc">Dunkles Design für bessere Lesbarkeit</div>
+                                <div class="setting-label">App-Theme</div>
+                                <div class="setting-desc">Wähle dein bevorzugtes Farbschema</div>
                             </div>
-                            <label class="toggle">
-                                <input type="checkbox" ${settings.darkMode ? 'checked' : ''} 
-                                    onchange="window.toggleSetting('darkMode')">
-                                <span class="toggle-slider"></span>
-                            </label>
+                            <div class="theme-picker">
+                                <div class="theme-option" data-theme="auto" onclick="window.setTheme('auto')">
+                                    <div class="theme-preview theme-preview-auto">
+                                        <div class="theme-preview-colors">
+                                            <span>🌙</span><span>☀️</span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">Auto</span>
+                                </div>
+                                <div class="theme-option" data-theme="light" onclick="window.setTheme('light')">
+                                    <div class="theme-preview theme-preview-light">
+                                        <div class="theme-preview-colors">
+                                            <span style="background: #ffffff"></span>
+                                            <span style="background: #f0f0f0"></span>
+                                            <span style="background: #e0e0e0"></span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">Hell</span>
+                                </div>
+                                <div class="theme-option" data-theme="dark" onclick="window.setTheme('dark')">
+                                    <div class="theme-preview theme-preview-dark">
+                                        <div class="theme-preview-colors">
+                                            <span style="background: #0a0e27"></span>
+                                            <span style="background: #1a1033"></span>
+                                            <span style="background: #00ff88"></span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">Dunkel</span>
+                                </div>
+                                <div class="theme-option" data-theme="metal" onclick="window.setTheme('metal')">
+                                    <div class="theme-preview theme-preview-metal">
+                                        <div class="theme-preview-colors">
+                                            <span style="background: linear-gradient(135deg, #silver, #808080)"></span>
+                                            <span style="background: linear-gradient(135deg, #c0c0c0, #a0a0a0)"></span>
+                                            <span style="background: #4a4a4a"></span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">Metall</span>
+                                </div>
+                                <div class="theme-option" data-theme="rapid" onclick="window.setTheme('rapid')">
+                                    <div class="theme-preview theme-preview-rapid">
+                                        <div class="theme-preview-colors">
+                                            <span style="background: #00a64f"></span>
+                                            <span style="background: #ffffff"></span>
+                                            <span style="background: #00a64f"></span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">Rapid Wien</span>
+                                </div>
+                                <div class="theme-option" data-theme="gaylord" onclick="window.setTheme('gaylord')">
+                                    <div class="theme-preview theme-preview-gaylord">
+                                        <div class="theme-preview-colors rainbow-gradient">
+                                            <span style="background: linear-gradient(90deg, red, orange, yellow, green, blue, purple)"></span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">Gaylord</span>
+                                </div>
+                                <div class="theme-option" data-theme="spritzkack" onclick="window.setTheme('spritzkack')">
+                                    <div class="theme-preview theme-preview-spritzkack">
+                                        <div class="theme-preview-colors">
+                                            <span style="background: #5c4033"></span>
+                                            <span style="background: #8b6f47"></span>
+                                            <span style="background: #3d2817"></span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">Spritzkack</span>
+                                </div>
+                                <div class="theme-option" data-theme="spongebob" onclick="window.setTheme('spongebob')">
+                                    <div class="theme-preview theme-preview-spongebob">
+                                        <div class="theme-preview-colors">
+                                            <span style="background: #ffcc00"></span>
+                                            <span style="background: #00b8d4"></span>
+                                            <span style="background: #ff6f61"></span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">Spongebob</span>
+                                </div>
+                                <div class="theme-option" data-theme="420" onclick="window.setTheme('420')">
+                                    <div class="theme-preview theme-preview-420">
+                                        <div class="theme-preview-colors">
+                                            <span style="background: #228b22"></span>
+                                            <span style="background: #32cd32"></span>
+                                            <span style="background: #006400">🌿</span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">420</span>
+                                </div>
+                                <div class="theme-option" data-theme="acid" onclick="window.setTheme('acid')">
+                                    <div class="theme-preview theme-preview-acid">
+                                        <div class="theme-preview-colors acid-animated">
+                                            <span style="background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00)"></span>
+                                        </div>
+                                    </div>
+                                    <span class="theme-name">✨ Acid Special</span>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="setting-item">

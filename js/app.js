@@ -49,6 +49,11 @@ class App {
             this.ui.init();
             this.router.init();
             
+            // Theme initialisieren
+            if (window.initTheme) {
+                window.initTheme();
+            }
+            
             // Einstellungen synchronisieren
             this.ui.syncSettings();
             

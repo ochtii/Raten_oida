@@ -80,8 +80,9 @@
    RATEN OIDA - Modern Mobile-First Design
    ========================================== */
 
-/* === CSS VARIABLES === */
-:root {
+/* === CSS VARIABLES - Default Dark Theme === */
+:root,
+[data-theme="dark"] {
     /* Colors - Neon Theme */
     --primary: #00ff88;
     --primary-dark: #00cc6f;
@@ -127,6 +128,256 @@
     /* Layout */
     --header-height: 64px;
     --bottom-nav-height: 64px;
+}
+
+/* === THEME: LIGHT === */
+[data-theme="light"] {
+    --primary: #00cc70;
+    --primary-dark: #00a65c;
+    --secondary: #00b8d4;
+    --accent: #d6004b;
+    --warning: #ff9800;
+    
+    --bg-primary: #f5f5f5;
+    --bg-secondary: #ffffff;
+    --bg-card: rgba(255, 255, 255, 0.9);
+    --bg-glass: rgba(255, 255, 255, 0.7);
+    
+    --text-primary: #212121;
+    --text-secondary: #424242;
+    --text-muted: #757575;
+    
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+    --shadow-glow: 0 0 20px rgba(0, 204, 112, 0.2);
+}
+
+/* === THEME: METAL === */
+[data-theme="metal"] {
+    --primary: #c0c0c0;
+    --primary-dark: #a8a8a8;
+    --secondary: #e8e8e8;
+    --accent: #ff6b35;
+    --warning: #ffd700;
+    
+    --bg-primary: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+    --bg-secondary: #3a3a3a;
+    --bg-card: rgba(58, 58, 58, 0.8);
+    --bg-glass: rgba(42, 42, 42, 0.9);
+    
+    --text-primary: #e0e0e0;
+    --text-secondary: #b8b8b8;
+    --text-muted: #808080;
+    
+    --shadow-sm: 0 2px 8px rgba(255, 255, 255, 0.05);
+    --shadow-md: 0 4px 16px rgba(255, 255, 255, 0.08);
+    --shadow-lg: 0 8px 32px rgba(255, 255, 255, 0.12);
+    --shadow-glow: 0 0 20px rgba(192, 192, 192, 0.4);
+}
+
+[data-theme="metal"] body {
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+}
+
+/* === THEME: RAPID WIEN === */
+[data-theme="rapid"] {
+    --primary: #00a64f;
+    --primary-dark: #008a42;
+    --secondary: #ffffff;
+    --accent: #ffd700;
+    --warning: #ff9800;
+    
+    --bg-primary: #0d3d1f;
+    --bg-secondary: #166b33;
+    --bg-card: rgba(0, 166, 79, 0.15);
+    --bg-glass: rgba(13, 61, 31, 0.9);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #d0f0d0;
+    --text-muted: #90c090;
+    
+    --shadow-glow: 0 0 20px rgba(0, 166, 79, 0.4);
+}
+
+[data-theme="rapid"] body {
+    background: linear-gradient(135deg, #0d3d1f 0%, #166b33 100%);
+}
+
+/* === THEME: GAYLORD (LGBTQ Rainbow) === */
+[data-theme="gaylord"] {
+    --primary: #ff00ff;
+    --primary-dark: #cc00cc;
+    --secondary: #00ffff;
+    --accent: #ffff00;
+    --warning: #ff8800;
+    
+    --bg-primary: #1a0033;
+    --bg-secondary: #2d0052;
+    --bg-card: rgba(45, 0, 82, 0.7);
+    --bg-glass: rgba(26, 0, 51, 0.85);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #ffb3ff;
+    --text-muted: #cc99ff;
+}
+
+[data-theme="gaylord"] body {
+    background: linear-gradient(135deg, 
+        #1a0033 0%, #2d0052 25%, 
+        #4a0066 50%, #2d0052 75%, #1a0033 100%);
+    animation: rainbow-pulse 10s ease-in-out infinite;
+}
+
+@keyframes rainbow-pulse {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(360deg); }
+}
+
+/* === THEME: SPRITZKACK (Kot/Braun) === */
+[data-theme="spritzkack"] {
+    --primary: #8b6f47;
+    --primary-dark: #6b5437;
+    --secondary: #a0826d;
+    --accent: #d4a574;
+    --warning: #c19a6b;
+    
+    --bg-primary: #3d2817;
+    --bg-secondary: #5c4033;
+    --bg-card: rgba(92, 64, 51, 0.7);
+    --bg-glass: rgba(61, 40, 23, 0.85);
+    
+    --text-primary: #f5deb3;
+    --text-secondary: #d2b48c;
+    --text-muted: #a0826d;
+    
+    --shadow-glow: 0 0 20px rgba(139, 111, 71, 0.3);
+}
+
+[data-theme="spritzkack"] body {
+    background: linear-gradient(135deg, #3d2817 0%, #5c4033 50%, #4a3426 100%);
+}
+
+/* === THEME: SPONGEBOB === */
+[data-theme="spongebob"] {
+    --primary: #ffcc00;
+    --primary-dark: #e6b800;
+    --secondary: #00b8d4;
+    --accent: #ff6f61;
+    --warning: #ff9800;
+    
+    --bg-primary: #87ceeb;
+    --bg-secondary: #5dade2;
+    --bg-card: rgba(255, 204, 0, 0.15);
+    --bg-glass: rgba(135, 206, 235, 0.8);
+    
+    --text-primary: #1e3a5f;
+    --text-secondary: #2c5f8d;
+    --text-muted: #5a8fb8;
+    
+    --shadow-glow: 0 0 20px rgba(255, 204, 0, 0.4);
+}
+
+[data-theme="spongebob"] body {
+    background: linear-gradient(180deg, #87ceeb 0%, #5dade2 50%, #3498db 100%);
+}
+
+/* === THEME: 420 (Cannabis) === */
+[data-theme="420"] {
+    --primary: #32cd32;
+    --primary-dark: #228b22;
+    --secondary: #98fb98;
+    --accent: #ff6347;
+    --warning: #ffa500;
+    
+    --bg-primary: #0f2a0f;
+    --bg-secondary: #1a4d1a;
+    --bg-card: rgba(26, 77, 26, 0.7);
+    --bg-glass: rgba(15, 42, 15, 0.85);
+    
+    --text-primary: #e0ffe0;
+    --text-secondary: #b8e6b8;
+    --text-muted: #80c080;
+    
+    --shadow-glow: 0 0 20px rgba(50, 205, 50, 0.4);
+}
+
+[data-theme="420"] body {
+    background: linear-gradient(135deg, #0f2a0f 0%, #1a4d1a 50%, #0f2a0f 100%);
+    animation: smoke-drift 8s ease-in-out infinite;
+}
+
+@keyframes smoke-drift {
+    0%, 100% { filter: blur(0px); }
+    50% { filter: blur(2px); }
+}
+
+/* === THEME: ACID SPECIAL (Psychedelic) === */
+[data-theme="acid"] {
+    --primary: #ff00ff;
+    --primary-dark: #cc00cc;
+    --secondary: #00ffff;
+    --accent: #ffff00;
+    --warning: #ff00aa;
+    
+    --bg-primary: #000000;
+    --bg-secondary: #1a001a;
+    --bg-card: rgba(26, 0, 26, 0.5);
+    --bg-glass: rgba(0, 0, 0, 0.7);
+    
+    --text-primary: #ffffff;
+    --text-secondary: #ff99ff;
+    --text-muted: #cc66cc;
+}
+
+[data-theme="acid"] body {
+    background: linear-gradient(135deg, #000000 0%, #1a001a 25%, #001a1a 50%, #1a1a00 75%, #000000 100%);
+    animation: acid-trip 15s linear infinite, acid-pulse 3s ease-in-out infinite;
+}
+
+@keyframes acid-trip {
+    0% { filter: hue-rotate(0deg) saturate(1.5); }
+    100% { filter: hue-rotate(360deg) saturate(1.5); }
+}
+
+@keyframes acid-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+}
+
+[data-theme="acid"] * {
+    animation: acid-shimmer 4s ease-in-out infinite;
+}
+
+@keyframes acid-shimmer {
+    0%, 100% { 
+        text-shadow: 0 0 5px rgba(255, 0, 255, 0.5),
+                     0 0 10px rgba(0, 255, 255, 0.3);
+    }
+    50% { 
+        text-shadow: 0 0 10px rgba(0, 255, 255, 0.7),
+                     0 0 20px rgba(255, 0, 255, 0.5),
+                     0 0 30px rgba(255, 255, 0, 0.3);
+    }
+}
+
+[data-theme="acid"] .card,
+[data-theme="acid"] .btn {
+    animation: acid-glow 2s ease-in-out infinite;
+    filter: blur(0.5px);
+}
+
+@keyframes acid-glow {
+    0%, 100% { 
+        box-shadow: 0 0 10px rgba(255, 0, 255, 0.5),
+                    0 0 20px rgba(0, 255, 255, 0.3),
+                    inset 0 0 10px rgba(255, 255, 0, 0.2);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(0, 255, 255, 0.7),
+                    0 0 40px rgba(255, 0, 255, 0.5),
+                    inset 0 0 20px rgba(255, 255, 0, 0.4);
+    }
 }
 
 /* === RESET & BASE === */
@@ -2271,6 +2522,102 @@ body.debug-console-visible .main {
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
+}
+
+/* === THEME PICKER === */
+.theme-picker {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+    width: 100%;
+}
+
+.theme-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    background: var(--bg-secondary);
+    border: 2px solid rgba(128, 128, 153, 0.2);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 0 0 auto;
+}
+
+.theme-option:hover {
+    border-color: var(--primary);
+    background: rgba(0, 255, 136, 0.05);
+    transform: translateY(-2px);
+}
+
+.theme-option.active {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 204, 111, 0.05));
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+}
+
+.theme-option.active .theme-name {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.theme-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    min-height: 50px;
+    min-width: 60px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-card);
+}
+
+.theme-preview-colors {
+    display: flex;
+    gap: 0.25rem;
+    align-items: center;
+}
+
+.theme-preview-colors span {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: block;
+    font-size: 1.2rem;
+}
+
+.theme-preview-auto {
+    background: linear-gradient(90deg, #1a1033 50%, #f5f5f5 50%);
+}
+
+.rainbow-gradient {
+    animation: rainbow-rotate 3s linear infinite;
+}
+
+@keyframes rainbow-rotate {
+    0%, 100% { filter: hue-rotate(0deg); }
+    50% { filter: hue-rotate(180deg); }
+}
+
+.acid-animated {
+    animation: acid-rotate 2s linear infinite;
+}
+
+@keyframes acid-rotate {
+    0% { filter: hue-rotate(0deg) saturate(2); }
+    100% { filter: hue-rotate(360deg) saturate(2); }
+}
+
+.theme-name {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    text-align: center;
 }
     transition: all 0.3s ease;
 }
