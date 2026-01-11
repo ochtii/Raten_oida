@@ -689,6 +689,27 @@ body.debug-console-visible .main {
     border-bottom: none;
 }
 
+.setting-item-compact {
+    padding: var(--spacing-md);
+    border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+    transition: background-color var(--transition-fast);
+}
+
+.setting-item-compact:hover {
+    background: rgba(0, 255, 136, 0.02);
+}
+
+.setting-item-compact:last-child {
+    border-bottom: none;
+}
+
+.setting-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
 .setting-info {
     flex: 1;
     min-width: 0;

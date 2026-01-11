@@ -15,9 +15,29 @@ export class UI {
         console.log('🎨 UI initialisiert');
     }
 
+    showNotificationWithHTML(html, type = 'info') {
+        // Verwende cached settings um infinite loop zu vermeiden
+        if (this.isTrackingLS) return;
+        
+        const settings = this.cachedSettings || this.store.getSettings();
+        const notifications = settings.notifications || {};
+        
+        // Prüfe ob Benachrichtigungen aktiviert sind
+        if (notifications.enabled === false) return;
+        
+        // Prüfe ob dieser Typ aktiviert ist
+        if (notifications.types && notifications.types[type] === false) return;
+        
+        const notification = document.createElement('div');
+        notification.className = `notification notification-${type}`;
+        notification.innerHTML = html;
+        
+        this.displayNotification(notification, notifications, type);
+    }
+    
     showNotification(message, type = 'info') {
         // Prüfe Benachrichtigungs-Einstellungen
-        const settings = this.store.getSettings();
+        const settings = this.cachedSettings || this.store.getSettings();
         const notifications = settings.notifications || {};
         
         // Prüfe ob Benachrichtigungen aktiviert sind
@@ -65,6 +85,43 @@ export class UI {
             offset = -(existingNotifications.length * notificationHeight);
         }
         
+        this.displayNotification(notification, notifications, type);
+    }
+    
+    displayNotification(notification, notifications, type) {
+        const position = notifications.position || 'bottom-right';
+        let positionStyles = '';
+        
+        switch (position) {
+            case 'top-right':
+                positionStyles = 'top: 20px; right: 20px;';
+                break;
+            case 'top-left':
+                positionStyles = 'top: 20px; left: 20px;';
+                break;
+            case 'bottom-left':
+                positionStyles = 'bottom: 20px; left: 20px;';
+                break;
+            case 'top-center':
+                positionStyles = 'top: 20px; left: 50%; transform: translateX(-50%);';
+                break;
+            case 'bottom-center':
+                positionStyles = 'bottom: 20px; left: 50%; transform: translateX(-50%);';
+                break;
+            default: // bottom-right
+                positionStyles = 'bottom: 20px; right: 20px;';
+        }
+        
+        const existingNotifications = document.querySelectorAll('.notification');
+        const notificationHeight = 80;
+        let offset = 0;
+        
+        if (position.includes('top')) {
+            offset = existingNotifications.length * notificationHeight;
+        } else {
+            offset = -(existingNotifications.length * notificationHeight);
+        }
+        
         notification.style.cssText = `
             position: fixed;
             ${positionStyles}
@@ -82,8 +139,11 @@ export class UI {
         
         document.body.appendChild(notification);
         
-        // Speichere in Historie
-        this.saveNotificationToHistory(message, type);
+        // Speichere in Historie (nur wenn nicht schon im tracking)
+        if (!this.isTrackingLS) {
+            const message = notification.textContent || notification.innerText;
+            this.saveNotificationToHistory(message, type);
+        }
         
         // Bestimme Dauer
         const duration = (notifications.duration || 3) * 1000;
@@ -186,14 +246,16 @@ export class UI {
     initLocalStorageTracking() {
         // Überschreibe localStorage Methoden um Events zu tracken
         const self = this;
+        this.isTrackingLS = false; // Verhindere rekursive Aufrufe
         
         const originalSetItem = localStorage.setItem;
         localStorage.setItem = function(key, value) {
+            const oldValue = localStorage.getItem(key);
             try {
                 originalSetItem.call(this, key, value);
-                self.trackLocalStorageEvent('schreiben', key, true);
+                self.trackLocalStorageEvent('schreiben', key, true, oldValue, value);
             } catch (error) {
-                self.trackLocalStorageEvent('schreiben', key, false, error.message);
+                self.trackLocalStorageEvent('schreiben', key, false, oldValue, value, error.message);
                 throw error;
             }
         };
@@ -202,21 +264,22 @@ export class UI {
         localStorage.getItem = function(key) {
             try {
                 const result = originalGetItem.call(this, key);
-                self.trackLocalStorageEvent('lesen', key, true);
+                self.trackLocalStorageEvent('lesen', key, true, null, result);
                 return result;
             } catch (error) {
-                self.trackLocalStorageEvent('lesen', key, false, error.message);
+                self.trackLocalStorageEvent('lesen', key, false, null, null, error.message);
                 throw error;
             }
         };
         
         const originalRemoveItem = localStorage.removeItem;
         localStorage.removeItem = function(key) {
+            const oldValue = localStorage.getItem(key);
             try {
                 originalRemoveItem.call(this, key);
-                self.trackLocalStorageEvent('löschen', key, true);
+                self.trackLocalStorageEvent('löschen', key, true, oldValue, null);
             } catch (error) {
-                self.trackLocalStorageEvent('löschen', key, false, error.message);
+                self.trackLocalStorageEvent('löschen', key, false, oldValue, null, error.message);
                 throw error;
             }
         };
@@ -225,25 +288,55 @@ export class UI {
         localStorage.clear = function() {
             try {
                 originalClear.call(this);
-                self.trackLocalStorageEvent('leeren', 'all', true);
+                self.trackLocalStorageEvent('leeren', 'all', true, null, null);
             } catch (error) {
-                self.trackLocalStorageEvent('leeren', 'all', false, error.message);
+                self.trackLocalStorageEvent('leeren', 'all', false, null, null, error.message);
                 throw error;
             }
         };
     }
 
-    trackLocalStorageEvent(operation, key, success, errorMessage = null) {
-        if (!this.localStorageEventsEnabled) return;
+    trackLocalStorageEvent(operation, key, success, oldValue = null, newValue = null, errorMessage = null) {
+        if (!this.localStorageEventsEnabled || this.isTrackingLS) return;
         
-        const message = `local storage event - Type: ${operation}${key !== 'all' ? ` - Key: ${key}` : ''}`;
-        const type = success ? 'localstorage' : 'error';
+        // Verhindere Tracking während wir tracken (verhindert infinite loop)
+        this.isTrackingLS = true;
         
-        if (!success && errorMessage) {
-            this.showNotification(`${message} - Fehler: ${errorMessage}`, type);
-        } else {
-            this.showNotification(message, type);
+        try {
+            let message = `local storage event - Type: ${operation}`;
+            
+            // Zweite Zeile mit Variable und Werten
+            if (key !== 'all') {
+                message += `<br><span style="font-size: 0.85em; color: var(--text-muted);">${key}: `;
+                
+                if (operation === 'schreiben' && oldValue !== null) {
+                    message += `<span style="color: #ff4444;">${this.truncateValue(oldValue)}</span> → `;
+                    message += `<span style="color: #00ff88;">${this.truncateValue(newValue)}</span>`;
+                } else if (operation === 'lesen') {
+                    message += `<span style="color: #00f0ff;">${this.truncateValue(newValue)}</span>`;
+                } else if (operation === 'löschen') {
+                    message += `<span style="color: #ff4444;">${this.truncateValue(oldValue)}</span>`;
+                }
+                
+                message += `</span>`;
+            }
+            
+            const type = success ? 'localstorage' : 'error';
+            
+            if (!success && errorMessage) {
+                this.showNotificationWithHTML(`${message}<br><span style="color: var(--accent);">Fehler: ${errorMessage}</span>`, type);
+            } else {
+                this.showNotificationWithHTML(message, type);
+            }
+        } finally {
+            this.isTrackingLS = false;
         }
+    }
+    
+    truncateValue(value) {
+        if (value === null || value === undefined) return 'null';
+        const str = String(value);
+        return str.length > 30 ? str.substring(0, 30) + '...' : str;
     }
 
     enableLocalStorageEvents(enabled) {
@@ -252,12 +345,16 @@ export class UI {
 
     syncSettings() {
         // Synchronisiere Einstellungen beim Laden der Seite
+        this.isTrackingLS = true; // Verhindere Tracking während Sync
         const settings = this.store.getSettings();
+        this.cachedSettings = settings; // Cache für spätere Verwendung
+        this.isTrackingLS = false;
+        
         this.enableLocalStorageEvents(settings.notifications?.types?.localstorage === true);
         
         // Zeige Synchronisations-Benachrichtigung
         setTimeout(() => {
-            this.showNotification('Einstellungen erfolgreich synchronisiert', 'localstorage');
+            this.showNotification('Einstellungen erfolgreich synchronisiert', 'success');
         }, 100);
     }
 }

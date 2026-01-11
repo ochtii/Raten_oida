@@ -206,16 +206,16 @@ export const settingsView = (store) => {
                         <h2 class="card-title">� Benachrichtigungen</h2>
                     </div>
                     <div class="card-body">
-                        <div class="setting-item">
-                            <div class="setting-info">
+                        <div class="setting-item-compact">
+                            <div class="setting-row">
                                 <div class="setting-label">Benachrichtigungen aktivieren</div>
-                                <div class="setting-desc">Zeige Toast-Benachrichtigungen an</div>
+                                <label class="toggle">
+                                    <input type="checkbox" id="notificationsEnabled" ${settings.notifications?.enabled !== false ? 'checked' : ''} 
+                                        onchange="window.settingsToggleNotifications()">
+                                    <span class="toggle-slider"></span>
+                                </label>
                             </div>
-                            <label class="toggle">
-                                <input type="checkbox" id="notificationsEnabled" ${settings.notifications?.enabled !== false ? 'checked' : ''} 
-                                    onchange="window.settingsToggleNotifications()">
-                                <span class="toggle-slider"></span>
-                            </label>
+                            <div class="setting-desc">Zeige Toast-Benachrichtigungen an</div>
                         </div>
 
                         <div class="setting-item">
