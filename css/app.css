@@ -3558,18 +3558,92 @@ body.debug-console-visible .main {
     50% { transform: scale(1.1); }
 }
 
-/* === FILE BAR IN CHANGELOG === */
-.file-bar {
+/* === FILE BAR IN CHANGELOG - Modern Split Style === */
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: 0.5rem;
+}
+
+.file-bar-modern {
     flex: 1;
-    font-family: 'Courier New', monospace;
-    font-size: 0.75rem;
-    color: var(--primary);
-    background: rgba(0, 0, 0, 0.3);
-    padding: 0.25rem 0.5rem;
-    border-radius: var(--radius-sm);
-    white-space: nowrap;
+    display: flex;
+    height: 8px;
+    border-radius: 4px;
     overflow: hidden;
-    text-overflow: ellipsis;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    min-width: 100px;
+    max-width: 200px;
+}
+
+.file-bar-add {
+    background: linear-gradient(90deg, #00ff88, #00cc6f);
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.file-bar-add::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite;
+}
+
+.file-bar-del {
+    background: linear-gradient(90deg, #ff006e, #cc0058);
+    transition: width 0.5s ease;
+    position: relative;
+}
+
+.file-bar-del::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    animation: shimmer 2s infinite 0.5s;
+}
+
+@keyframes shimmer {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
+}
+
+.file-stats {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+    font-family: 'Courier New', monospace;
+}
+
+/* Aktueller Build Highlight */
+.changelog-item-current {
+    border: 2px solid var(--primary);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 204, 111, 0.02));
+}
+
+.changelog-item-current .changelog-version {
+    animation: pulse-glow 2s infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { 
+        box-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+    50% { 
+        box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+        text-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
+    }
 }
 
 /* === VISUAL DIAGRAM FOR CHANGELOG === */

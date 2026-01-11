@@ -48,6 +48,15 @@ function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
         {
+            version: '1.0.4.0',
+            date: '2026-01-11',
+            message: 'Feature: Moderne Toggle-Styles mit Picker',
+            details: '5 verschiedene Toggle-Designs (Classic, iOS, Material, Neon, Minimal) implementiert. Toggle-Style-Picker zu Design-Einstellungen hinzugefügt mit Live-Vorschau für jeden Style und localStorage-Persistierung.',
+            files: ['js/views/settings.js', 'css/app.css', 'version.json', 'js/views/dev.js'],
+            stats: { additions: 291, deletions: 3 },
+            expanded: true
+        },
+        {
             version: '1.0.2.9',
             date: '2026-01-11',
             message: 'Benachrichtigungshistorie komplett neu gestaltet',
@@ -138,14 +147,11 @@ function renderChangelog(container, changes) {
         const additionPercent = totalChanges > 0 ? (change.stats.additions / totalChanges) * 100 : 0;
         const deletionPercent = totalChanges > 0 ? (change.stats.deletions / totalChanges) * 100 : 0;
         
-        // Visualisierung als Balken
-        const maxBars = 20;
-        const additionBars = Math.round((change.stats.additions / totalChanges) * maxBars);
-        const deletionBars = maxBars - additionBars;
-        const visualBar = '+'.repeat(additionBars) + '-'.repeat(deletionBars);
+        // Erste Version (aktueller Build) ist standardmäßig expandiert
+        const isExpanded = change.expanded === true || index === 0;
 
         return `
-            <div class="changelog-item" data-index="${index}">
+            <div class="changelog-item ${isExpanded ? 'changelog-item-current' : ''}" data-index="${index}">
                 <div class="changelog-header">
                     <div class="changelog-title-row">
                         <span class="changelog-version">v${change.version}</span>
@@ -170,10 +176,10 @@ function renderChangelog(container, changes) {
                 </div>
 
                 <button class="btn btn-sm btn-outline changelog-toggle" onclick="window.toggleChangelogDetails(${index})">
-                    <span class="toggle-icon">▼</span> Details
+                    <span class="toggle-icon">${isExpanded ? '▲' : '▼'}</span> ${isExpanded ? 'Details ausblenden' : 'Details'}
                 </button>
 
-                <div class="changelog-details" id="changelog-details-${index}" style="display: none;">
+                <div class="changelog-details" id="changelog-details-${index}" style="display: ${isExpanded ? 'block' : 'none'};">
                     <div class="details-content">
                         <p class="details-description">${change.details}</p>
                         
@@ -185,16 +191,18 @@ function renderChangelog(container, changes) {
                                     const fileAdditions = Math.round(change.stats.additions / change.files.length);
                                     const fileDeletions = Math.round(change.stats.deletions / change.files.length);
                                     const fileTotal = fileAdditions + fileDeletions;
-                                    const fileMaxBars = 10;
-                                    const fileAddBars = Math.round((fileAdditions / fileTotal) * fileMaxBars);
-                                    const fileDelBars = fileMaxBars - fileAddBars;
-                                    const fileVisualBar = '+'.repeat(fileAddBars) + '-'.repeat(fileDelBars);
+                                    const fileAddPercent = fileTotal > 0 ? (fileAdditions / fileTotal) * 100 : 0;
+                                    const fileDelPercent = fileTotal > 0 ? (fileDeletions / fileTotal) * 100 : 0;
                                     
                                     return `
                                     <li class="file-item">
                                         <span class="file-icon">${getFileIcon(file)}</span>
                                         <span class="file-name">${file}</span>
-                                        <span class="file-bar">${fileVisualBar}</span>
+                                        <div class="file-bar-modern">
+                                            <div class="file-bar-add" style="width: ${fileAddPercent}%"></div>
+                                            <div class="file-bar-del" style="width: ${fileDelPercent}%"></div>
+                                        </div>
+                                        <span class="file-stats">+${fileAdditions} -${fileDeletions}</span>
                                     </li>
                                 `}).join('')}
                             </ul>
