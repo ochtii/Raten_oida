@@ -9,7 +9,7 @@ export const devView = (store) => {
     const footerInfoEnabled = localStorage.getItem('footerInfoEnabled') !== 'false';
     
     // Version Info
-    const version = '1.0.5.5';
+    const version = '1.0.5.6';
     const buildDate = '2026-01-10T12:17:00Z';
     
     return `
@@ -85,6 +85,22 @@ export const devView = (store) => {
                         <button type="button" class="toggle-info-btn" onclick="event.stopPropagation(); window.devShowCacheBusterInfo()" title="Info">❓</button>
                         <div class="toggle-switch ${cacheBusterEnabled ? 'on' : 'off'}"></div>
                     </div>
+                    
+                    ${cacheBusterEnabled ? `
+                    <!-- Granular Cachebuster Controls -->
+                    <div class="toggle-compact granular-toggle" id="toggleCacheBusterHTML" onclick="window.devToggleCacheBusterType('html')">
+                        <span class="toggle-compact-label">📄 HTML</span>
+                        <div class="toggle-switch ${localStorage.getItem('cacheBusterHTML') !== 'false' ? 'on' : 'off'}"></div>
+                    </div>
+                    <div class="toggle-compact granular-toggle" id="toggleCacheBusterCSS" onclick="window.devToggleCacheBusterType('css')">
+                        <span class="toggle-compact-label">🎨 CSS</span>
+                        <div class="toggle-switch ${localStorage.getItem('cacheBusterCSS') !== 'false' ? 'on' : 'off'}"></div>
+                    </div>
+                    <div class="toggle-compact granular-toggle" id="toggleCacheBusterJS" onclick="window.devToggleCacheBusterType('js')">
+                        <span class="toggle-compact-label">⚙️ JS</span>
+                        <div class="toggle-switch ${localStorage.getItem('cacheBusterJS') !== 'false' ? 'on' : 'off'}"></div>
+                    </div>
+                    ` : ''}
                     
                     <div class="toggle-compact" id="toggleFooterInfo" onclick="window.devToggleFooterInfo()">
                         <span class="toggle-compact-label">📋 Footer</span>
@@ -286,9 +302,9 @@ window.toggleDebugConsole = () => {
 };
 
 window.devToggleCacheBuster = () => {
-    const currentState = localStorage.getItem('cacheBusterEnabled') !== 'false';
-    const newState = !currentState;
-    localStorage.setItem('cacheBusterEnabled', newState.toString());
+    if (!window.cacheBuster) return;
+    
+    const newState = window.cacheBuster.toggle();
     
     if (window.app && window.app.ui) {
         window.app.ui.showNotification(
@@ -297,16 +313,30 @@ window.devToggleCacheBuster = () => {
         );
     }
     
+    // View neu rendern für granulare Toggles
+    if (window.app && window.app.router) {
+        window.app.router.render();
+    }
+};
+
+window.devToggleCacheBusterType = (type) => {
+    if (!window.cacheBuster) return;
+    
+    const newState = window.cacheBuster.toggleType(type);
+    
+    if (window.app && window.app.ui) {
+        const typeNames = { html: 'HTML', css: 'CSS', js: 'JS' };
+        window.app.ui.showNotification(
+            `${newState ? '✅' : '⏸️'} ${typeNames[type]}-Cachebuster ${newState ? 'aktiviert' : 'deaktiviert'}`,
+            'info'
+        );
+    }
+    
     // Toggle-Switch aktualisieren
     setTimeout(() => {
-        const toggleSwitch = document.querySelector('#toggleCacheBuster .toggle-switch');
-        const label = document.querySelector('#toggleCacheBuster .toggle-compact-label');
-        
+        const toggleSwitch = document.querySelector(`#toggleCacheBuster${type.toUpperCase()} .toggle-switch`);
         if (toggleSwitch) {
             toggleSwitch.className = `toggle-switch ${newState ? 'on' : 'off'}`;
-        }
-        if (label) {
-            label.textContent = `${newState ? '🔄' : '⏸️'} Cache`;
         }
     }, 50);
 };
@@ -616,19 +646,149 @@ window.devWinAll = () => {
 };
 
 window.devShowCacheBusterInfo = () => {
-    if (window.app) {
-        const content = `
-            <div class="dev-info-content">
-                <h4>🔄 Cachebuster - Cache-Busting System</h4>
-                <p>Der Cachebuster verhindert Browser-Caching-Probleme während der Entwicklung:</p>
+    if (!window.app || !window.cacheBuster) return;
+    
+    const status = window.cacheBuster.getStatus();
+    const activeTypes = [];
+    if (status.html) activeTypes.push('HTML');
+    if (status.css) activeTypes.push('CSS');
+    if (status.js) activeTypes.push('JS');
+    
+    const content = `
+        <div class="dev-info-content">
+            <h4>🔄 Cachebuster - Cache-Busting System</h4>
+            <p>Der Cachebuster verhindert Browser-Caching-Probleme während der Entwicklung:</p>
 
-                <div class="dev-info-section">
-                    <h5>🚀 Funktionen:</h5>
-                    <ul>
-                        <li><strong>Cache-Busting:</strong> Fügt Timestamp zu CSS/JS-URLs hinzu</li>
-                        <li><strong>Auto-Clear:</strong> Löscht Browser-Caches bei jedem Reload</li>
-                        <li><strong>Service Worker:</strong> Umgehung von Cache-Strategien</li>
-                        <li><strong>Versionierung:</strong> Erzwingt frisches Laden von Assets</li>
+            <div class="dev-info-section">
+                <h5>📊 Aktueller Status:</h5>
+                <div class="dev-info-grid">
+                    <div class="dev-info-item">
+                        <span class="dev-info-label">Status:</span>
+                        <strong style="color: ${status.enabled ? 'var(--primary)' : 'var(--accent)'}">
+                            ${status.enabled ? '✅ Aktiviert' : '⏸️ Deaktiviert'}
+                        </strong>
+                    </div>
+                    <div class="dev-info-item">
+                        <span class="dev-info-label">Build ID:</span>
+                        <code>${status.buildId.split('-')[1]}</code>
+                    </div>
+                    <div class="dev-info-item">
+                        <span class="dev-info-label">Zeitstempel:</span>
+                        <code>${new Date(status.timestamp).toLocaleString('de-DE')}</code>
+                    </div>
+                    <div class="dev-info-item">
+                        <span class="dev-info-label">Aktive Typen:</span>
+                        <strong style="color: var(--primary)">${activeTypes.join(', ') || 'Keine'}</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dev-info-section">
+                <h5>🚀 Funktionen:</h5>
+                <ul>
+                    <li><strong>Granulare Kontrolle:</strong> HTML, CSS und JS separat steuerbar</li>
+                    <li><strong>Auto-Versioning:</strong> Eindeutige Build-IDs für jede Änderung</li>
+                    <li><strong>Service Worker:</strong> Umgehung von Cache-Strategien</li>
+                    <li><strong>Visual Feedback:</strong> Banner zeigt aktiven Status</li>
+                    <li><strong>Cache-Clear:</strong> Automatisches Löschen bei Reload</li>
+                </ul>
+            </div>
+
+            <div class="dev-info-section">
+                <h5>🎯 Verwendung:</h5>
+                <ul>
+                    <li><strong>Master-Toggle:</strong> Aktiviert/Deaktiviert das gesamte System</li>
+                    <li><strong>HTML-Toggle:</strong> Steuert HTML-View Caching</li>
+                    <li><strong>CSS-Toggle:</strong> Steuert Stylesheet Caching (app.css)</li>
+                    <li><strong>JS-Toggle:</strong> Steuert JavaScript Module Caching</li>
+                    <li><strong>Banner:</strong> Wird automatisch angezeigt wenn aktiv</li>
+                </ul>
+            </div>
+
+            <div class="dev-info-section">
+                <h5>⚠️ Wichtig:</h5>
+                <ul>
+                    <li>Nur für Entwicklung gedacht - niemals in Production!</li>
+                    <li>Erhöhter Netzwerk-Traffic durch ständiges Neu-Laden</li>
+                    <li>Nach Änderungen Seite neu laden für vollständige Wirkung</li>
+                    <li>Granulare Toggles nur sichtbar wenn Master aktiv ist</li>
+                </ul>
+            </div>
+        </div>
+        
+        <style>
+            .dev-info-content { 
+                padding: 1rem; 
+                max-width: 600px;
+            }
+            .dev-info-content h4 {
+                margin-top: 0;
+                color: var(--primary);
+                font-size: 1.3rem;
+            }
+            .dev-info-content h5 {
+                color: var(--secondary);
+                margin: 1.5rem 0 0.75rem 0;
+                font-size: 1.1rem;
+            }
+            .dev-info-content p {
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+            .dev-info-content ul {
+                margin: 0.5rem 0;
+                padding-left: 1.5rem;
+            }
+            .dev-info-content li {
+                margin: 0.5rem 0;
+                line-height: 1.5;
+                color: var(--text-secondary);
+            }
+            .dev-info-content li strong {
+                color: var(--text-primary);
+            }
+            .dev-info-section {
+                background: rgba(255, 255, 255, 0.02);
+                padding: 1rem;
+                border-radius: var(--radius-md);
+                margin: 1rem 0;
+                border: 1px solid rgba(0, 255, 136, 0.1);
+            }
+            .dev-info-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1rem;
+                margin-top: 0.75rem;
+            }
+            .dev-info-item {
+                display: flex;
+                flex-direction: column;
+                gap: 0.25rem;
+            }
+            .dev-info-label {
+                font-size: 0.85rem;
+                color: var(--text-muted);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+            .dev-info-item code {
+                background: rgba(0, 255, 136, 0.1);
+                padding: 0.25rem 0.5rem;
+                border-radius: var(--radius-sm);
+                font-family: 'Courier New', monospace;
+                font-size: 0.9rem;
+                color: var(--primary);
+            }
+        </style>
+    `;
+
+    window.app.ui.showModal('Cachebuster Info', content, [{
+        label: 'Schließen',
+        type: 'primary',
+        action: 'close'
+    }]);
+};
                     </ul>
                 </div>
 

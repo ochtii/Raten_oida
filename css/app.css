@@ -5170,3 +5170,183 @@ body.debug-console-visible .main {
     background: #9c27b0;
     color: #fff;
 }
+/* ==========================================
+   CACHEBUSTER BANNER
+   ========================================== */
+
+.cachebuster-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-bottom: 2px solid var(--primary);
+    box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
+    animation: slideInTop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transition: transform 0.3s ease-out;
+}
+
+.cachebuster-banner-minimized {
+    transform: translateY(-100%);
+}
+
+@keyframes slideInTop {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideOutTop {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+}
+
+.cachebuster-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cachebuster-icon {
+    font-size: 1.5rem;
+    animation: rotate 2s linear infinite;
+    flex-shrink: 0;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.cachebuster-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.cachebuster-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.cachebuster-details {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+}
+
+.cachebuster-types {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.cachebuster-separator {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.cachebuster-build {
+    opacity: 0.8;
+}
+
+.cachebuster-time {
+    opacity: 0.7;
+}
+
+.cachebuster-close {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.cachebuster-close:hover {
+    background: rgba(255, 68, 68, 0.2);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: rotate(90deg);
+}
+
+/* Mobile Optimierung */
+@media (max-width: 768px) {
+    .cachebuster-content {
+        padding: 0.5rem 1rem;
+        gap: 0.75rem;
+    }
+    
+    .cachebuster-icon {
+        font-size: 1.2rem;
+    }
+    
+    .cachebuster-title {
+        font-size: 0.85rem;
+    }
+    
+    .cachebuster-details {
+        font-size: 0.7rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .cachebuster-close {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+    }
+}
+
+/* Adjust main content when banner is visible */
+body:has(.cachebuster-banner:not(.cachebuster-banner-minimized)) {
+    padding-top: 60px;
+}
+
+@media (max-width: 768px) {
+    body:has(.cachebuster-banner:not(.cachebuster-banner-minimized)) {
+        padding-top: 50px;
+    }
+}
+
+/* Granular Toggle Styles in Dev Panel */
+.toggle-grid .granular-toggle {
+    opacity: 0.9;
+    font-size: 0.85rem;
+}
+
+.toggle-grid .granular-toggle .toggle-compact-label {
+    font-size: 0.85rem;
+}
+
+.toggle-grid .granular-toggle:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+}

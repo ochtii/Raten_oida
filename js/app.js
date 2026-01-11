@@ -2,10 +2,13 @@
    APP.JS - Main Application Entry Point
    ========================================== */
 
-// Global Cache-Buster Helper
+// Import CacheBuster first
+import CacheBuster from './core/cachebuster.js';
+
+// Global Cache-Buster Helper (legacy support)
 window.getCacheBuster = () => {
-    const v = window.CACHE_BUSTER;
-    return (v && v !== 'disabled') ? `?v=${v}` : '';
+    if (!window.cacheBuster) return '';
+    return window.cacheBuster.enabled ? `?_cb=${window.cacheBuster.buildId}` : '';
 };
 
 class App {
@@ -23,7 +26,12 @@ class App {
             // Theme ZUERST initialisieren (vor allem anderen)
             this.initializeTheme();
             
-            const cb = window.getCacheBuster();
+            // Helper function to get cache-busted URLs
+            const getCachebustedUrl = (path) => {
+                return window.cacheBuster 
+                    ? window.cacheBuster.bustCache(path, 'js')
+                    : path;
+            };
             
             // Module laden
             const [
@@ -32,10 +40,10 @@ class App {
                 { UI },
                 { DebugConsole }
             ] = await Promise.all([
-                import(`./core/router.js${cb}`),
-                import(`./core/store.js${cb}`),
-                import(`./core/ui.js${cb}`),
-                import(`./core/debug-console.js${cb}`)
+                import(getCachebustedUrl('./core/router.js')),
+                import(getCachebustedUrl('./core/store.js')),
+                import(getCachebustedUrl('./core/ui.js')),
+                import(getCachebustedUrl('./core/debug-console.js'))
             ]);
             
             // Instanzen erstellen

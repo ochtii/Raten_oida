@@ -147,6 +147,78 @@ class AutoVersion {
         } catch (error) {
             console.log('⚠️ README.md not found or no version badges to update');
         }
+        
+        // Update changelog.js automatically
+        this.updateChangelog(newVersion);
+    }
+    
+    // Automatically update changelog with latest commit
+    updateChangelog(newVersion) {
+        try {
+            console.log('📜 Updating changelog...');
+            
+            // Get commit message and changed files
+            const commitMsg = execSync('git log -1 --pretty=%B', { encoding: 'utf8' }).trim();
+            const changedFiles = execSync('git diff --cached --name-only', { encoding: 'utf8' })
+                .trim()
+                .split('\n')
+                .filter(file => file.length > 0);
+            
+            // Get stats
+            const stats = execSync('git diff --cached --numstat', { encoding: 'utf8' })
+                .trim()
+                .split('\n')
+                .reduce((acc, line) => {
+                    const [add, del] = line.split('\t');
+                    return {
+                        additions: acc.additions + parseInt(add || 0),
+                        deletions: acc.deletions + parseInt(del || 0)
+                    };
+                }, { additions: 0, deletions: 0 });
+            
+            // Read current changelog
+            let changelogJs = fs.readFileSync('./js/views/changelog.js', 'utf8');
+            
+            // Create new changelog entry
+            const newEntry = {
+                version: newVersion,
+                date: new Date().toISOString().split('T')[0],
+                message: commitMsg.split('\n')[0], // First line only
+                details: commitMsg,
+                files: changedFiles,
+                stats: stats,
+                expanded: true
+            };
+            
+            // Insert new entry at the beginning of staticChanges array
+            const entryStr = `        {
+            version: '${newEntry.version}',
+            date: '${newEntry.date}',
+            message: '${newEntry.message.replace(/'/g, "\\'")}',
+            details: '${newEntry.details.replace(/'/g, "\\'")}',
+            files: ${JSON.stringify(newEntry.files)},
+            stats: { additions: ${newEntry.stats.additions}, deletions: ${newEntry.stats.deletions} },
+            expanded: true
+        },`;
+            
+            // Find the staticChanges array and insert
+            changelogJs = changelogJs.replace(
+                /(const staticChanges = \[\s*)/,
+                `$1${entryStr}\n        `
+            );
+            
+            // Remove expanded: true from previous first entry
+            changelogJs = changelogJs.replace(
+                /,\s*expanded: true\s*}\s*,\s*{\s*version:/,
+                '\n        },\n        {\n            version:'
+            );
+            
+            fs.writeFileSync('./js/views/changelog.js', changelogJs);
+            console.log('✅ Updated changelog.js');
+            
+        } catch (error) {
+            console.log('⚠️ Could not update changelog:', error.message);
+        }
     }
 
     // Main versioning function

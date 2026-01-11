@@ -9,21 +9,22 @@
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
     <script>
-        // Cache Buster Settings - IMMER aktiviert für jeden Reload
-        const cacheBusterEnabled = localStorage.getItem('cacheBusterEnabled') !== 'false';
-        window.CACHE_BUSTER = cacheBusterEnabled ? Date.now() : 'disabled';
+        // Temporary placeholder until cachebuster loads
+        window.cacheBuster = {
+            enabled: localStorage.getItem('cacheBusterEnabled') !== 'false',
+            cssEnabled: localStorage.getItem('cacheBusterCSS') !== 'false'
+        };
         
         // CSS mit Cache-Buster laden
         const cssLink = document.createElement('link');
         cssLink.rel = 'stylesheet';
-        cssLink.href = cacheBusterEnabled ? `./css/app.css?v=${window.CACHE_BUSTER}` : './css/app.css';
+        const timestamp = Date.now();
+        cssLink.href = (window.cacheBuster.enabled && window.cacheBuster.cssEnabled) 
+            ? `./css/app.css?_cb=${timestamp}` 
+            : './css/app.css';
         document.head.appendChild(cssLink);
         
-        if (cacheBusterEnabled) {
-            console.log('🔄 Cache-Buster aktiviert:', window.CACHE_BUSTER);
-        } else {
-            console.log('⏸️ Cache-Buster deaktiviert');
-        }
+        console.log(window.cacheBuster.enabled ? '🔄 CSS Cache-Buster aktiv' : '⏸️ CSS Cache-Buster deaktiviert');
         
         // Bottom Navigation Settings - MUSS VOR APP-START GELADEN WERDEN
         window.applyBottomNavSettings = function() {
@@ -203,8 +204,12 @@
     <div id="modalContainer"></div>
 
     <script>
-        // Aggressives Cache-Clearing bei JEDEM Reload
+        // Initialize Cachebuster System FIRST
         (async () => {
+            // Import cachebuster module
+            const { default: CacheBuster } = await import('./js/core/cachebuster.js');
+            window.cacheBuster = new CacheBuster();
+            
             // Service Worker entfernen
             if ('serviceWorker' in navigator) {
                 const registrations = await navigator.serviceWorker.getRegistrations();
@@ -217,20 +222,16 @@
                 await Promise.all(cacheNames.map(name => caches.delete(name)));
             }
             
-            // Session Storage für Cache-Status
-            sessionStorage.setItem('cacheCleared', Date.now().toString());
-            
             console.log('🧹 Alle Caches geleert');
+            console.log('🔄 Cachebuster initialisiert:', window.cacheBuster.getStatus());
+            
+            // App laden mit Cachebuster
+            const appUrl = window.cacheBuster.bustCache('./js/app.js', 'js');
+            const script = document.createElement('script');
+            script.type = 'module';
+            script.src = appUrl;
+            document.body.appendChild(script);
         })();
-        
-        // App mit Cache-Buster laden (wenn aktiviert)
-        const appCacheBuster = window.CACHE_BUSTER;
-        const script = document.createElement('script');
-        script.type = 'module';
-        script.src = (appCacheBuster && appCacheBuster !== 'disabled') 
-            ? `./js/app.js?v=${appCacheBuster}` 
-            : './js/app.js';
-        document.body.appendChild(script);
     </script>
 </body>
 </html>
