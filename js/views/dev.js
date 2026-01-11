@@ -426,25 +426,142 @@ window.devRemovePointsMax = () => {
 
 window.devMaxStreak = () => {
     if (window.app) {
-        window.app.store.state.stats.currentStreak = 99;
-        window.app.store.state.stats.bestStreak = 99;
-        window.app.store.saveState();
-        window.app.ui.showNotification('🔥 Streak auf 99 gesetzt!', 'success');
-        window.app.router.render();
+        const content = `
+            <div class="dev-modal-input-group">
+                <label for="streak-input">Streak-Wert setzen (0-999):</label>
+                <input type="number" id="streak-input" class="dev-input" min="0" max="999" placeholder="z.B. 50" value="99">
+                <div class="dev-input-error" id="streak-error" style="display: none; color: #ff0033; font-size: 0.875rem; margin-top: 0.5rem;">
+                    Ungültiger Wert! Bitte geben Sie eine Zahl zwischen 0 und 999 ein.
+                </div>
+            </div>
+        `;
+
+        const validateInput = () => {
+            const input = document.getElementById('streak-input');
+            const error = document.getElementById('streak-error');
+            const okBtn = document.querySelector('[data-action="set-streak"]');
+            const value = parseInt(input.value);
+
+            if (isNaN(value) || value < 0 || value > 999) {
+                input.classList.add('input-error');
+                error.style.display = 'block';
+                if (okBtn) okBtn.disabled = true;
+                return false;
+            } else {
+                input.classList.remove('input-error');
+                error.style.display = 'none';
+                if (okBtn) okBtn.disabled = false;
+                return true;
+            }
+        };
+
+        window.app.ui.showModal('🔥 Streak setzen', content, [
+            {
+                label: 'Abbrechen',
+                type: 'secondary',
+                action: 'cancel'
+            },
+            {
+                label: 'OK',
+                type: 'primary',
+                action: 'set-streak',
+                callback: () => {
+                    if (validateInput()) {
+                        const value = parseInt(document.getElementById('streak-input').value);
+                        window.app.store.state.stats.currentStreak = value;
+                        window.app.store.state.stats.bestStreak = Math.max(window.app.store.state.stats.bestStreak, value);
+                        window.app.store.saveState();
+                        window.app.ui.showNotification(`🔥 Streak auf ${value} gesetzt!`, 'success');
+                        window.app.router.render();
+                    }
+                }
+            }
+        ]);
+
+        // Initiale Validierung
+        setTimeout(() => {
+            const input = document.getElementById('streak-input');
+            const okBtn = document.querySelector('[data-action="set-streak"]');
+            input.addEventListener('input', validateInput);
+            input.addEventListener('change', validateInput);
+            validateInput(); // Initial check
+        }, 100);
     }
 };
 
 window.devWinAll = () => {
     if (window.app) {
-        const stats = window.app.store.state.stats;
-        stats.gamesPlayed = 100;
-        stats.gamesWon = 100;
-        stats.capitalsCorrect = 100;
-        stats.capitalsTotal = 100;
-        stats.populationCorrect = 100;
-        stats.populationTotal = 100;
-        window.app.store.saveState();
-        window.app.ui.showNotification('🏆 100% Win-Rate aktiviert!', 'success');
-        window.app.router.render();
+        const content = `
+            <div class="dev-modal-input-group">
+                <label for="winrate-input">Win-Rate setzen (0-100%):</label>
+                <input type="number" id="winrate-input" class="dev-input" min="0" max="100" placeholder="z.B. 85" value="100">
+                <div class="dev-input-error" id="winrate-error" style="display: none; color: #ff0033; font-size: 0.875rem; margin-top: 0.5rem;">
+                    Ungültiger Wert! Bitte geben Sie eine Zahl zwischen 0 und 100 ein.
+                </div>
+            </div>
+        `;
+
+        const validateInput = () => {
+            const input = document.getElementById('winrate-input');
+            const error = document.getElementById('winrate-error');
+            const okBtn = document.querySelector('[data-action="set-winrate"]');
+            const value = parseInt(input.value);
+
+            if (isNaN(value) || value < 0 || value > 100) {
+                input.classList.add('input-error');
+                error.style.display = 'block';
+                if (okBtn) okBtn.disabled = true;
+                return false;
+            } else {
+                input.classList.remove('input-error');
+                error.style.display = 'none';
+                if (okBtn) okBtn.disabled = false;
+                return true;
+            }
+        };
+
+        window.app.ui.showModal('🏆 Win-Rate setzen', content, [
+            {
+                label: 'Abbrechen',
+                type: 'secondary',
+                action: 'cancel'
+            },
+            {
+                label: 'OK',
+                type: 'primary',
+                action: 'set-winrate',
+                callback: () => {
+                    if (validateInput()) {
+                        const percentage = parseInt(document.getElementById('winrate-input').value);
+                        const stats = window.app.store.state.stats;
+
+                        // Berechne die Anzahl der Spiele basierend auf dem Prozentsatz
+                        // Nehmen wir an, es gibt mindestens 10 Spiele für eine aussagekräftige Statistik
+                        const totalGames = Math.max(10, stats.gamesPlayed || 10);
+                        const wonGames = Math.round(totalGames * percentage / 100);
+
+                        stats.gamesPlayed = totalGames;
+                        stats.gamesWon = wonGames;
+
+                        // Setze auch die anderen Stats proportional
+                        stats.capitalsCorrect = Math.round((stats.capitalsTotal || 100) * percentage / 100);
+                        stats.populationCorrect = Math.round((stats.populationTotal || 100) * percentage / 100);
+
+                        window.app.store.saveState();
+                        window.app.ui.showNotification(`🏆 Win-Rate auf ${percentage}% gesetzt!`, 'success');
+                        window.app.router.render();
+                    }
+                }
+            }
+        ]);
+
+        // Initiale Validierung
+        setTimeout(() => {
+            const input = document.getElementById('winrate-input');
+            const okBtn = document.querySelector('[data-action="set-winrate"]');
+            input.addEventListener('input', validateInput);
+            input.addEventListener('change', validateInput);
+            validateInput(); // Initial check
+        }, 100);
     }
 };

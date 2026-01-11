@@ -2371,3 +2371,26 @@ body::before {
 .debug-log-message {
     white-space: pre-wrap;
 }
+
+/* === DEV MODAL INPUT VALIDATION === */
+.dev-modal-input-group {
+    margin-bottom: 1rem;
+}
+
+.dev-modal-input-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.dev-input.input-error {
+    border-color: #ff0033 !important;
+    box-shadow: 0 0 0 2px rgba(255, 0, 51, 0.2) !important;
+}
+
+.dev-input-error {
+    color: #ff0033;
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
