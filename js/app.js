@@ -20,6 +20,9 @@ class App {
         try {
             console.log('🚀 Raten OIDA wird initialisiert...');
             
+            // Theme ZUERST initialisieren (vor allem anderen)
+            this.initializeTheme();
+            
             const cb = window.getCacheBuster();
             
             // Module laden
@@ -48,11 +51,6 @@ class App {
             this.debugConsole.init();
             this.ui.init();
             this.router.init();
-            
-            // Theme initialisieren
-            if (window.initTheme) {
-                window.initTheme();
-            }
             
             // Einstellungen synchronisieren
             this.ui.syncSettings();
@@ -118,6 +116,24 @@ class App {
             const route = window.location.hash.slice(1) || 'home';
             this.router.navigateTo(route);
         });
+    }
+
+    initializeTheme() {
+        const savedTheme = localStorage.getItem('appTheme') || 'dark';
+        
+        if (savedTheme === 'auto') {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+            
+            // Listener für System-Theme-Änderungen
+            window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+                if (localStorage.getItem('appTheme') === 'auto') {
+                    document.body.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+                }
+            });
+        } else {
+            document.body.setAttribute('data-theme', savedTheme);
+        }
     }
 
     onStoreUpdate() {

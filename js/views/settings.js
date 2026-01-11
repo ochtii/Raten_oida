@@ -17,6 +17,7 @@ window.setToggleStyle = (style) => {
 
 // Theme wechseln
 window.setTheme = (theme) => {
+    // Im localStorage speichern
     localStorage.setItem('appTheme', theme);
     
     // Auto-Theme prüft System-Preference
@@ -32,10 +33,33 @@ window.setTheme = (theme) => {
         option.classList.toggle('active', option.dataset.theme === theme);
     });
     
+    // Synchronisiere mit anderen Tabs
+    window.dispatchEvent(new StorageEvent('storage', {
+        key: 'appTheme',
+        newValue: theme
+    }));
+    
     window.ui.showNotification('Theme geändert zu: ' + theme, 'success');
 };
 
-// Theme initialisieren beim App-Start
+// Theme-Synchronisierung zwischen Tabs
+window.addEventListener('storage', (e) => {
+    if (e.key === 'appTheme' && e.newValue) {
+        const theme = e.newValue;
+        if (theme === 'auto') {
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+        } else {
+            document.body.setAttribute('data-theme', theme);
+        }
+        // UI aktualisieren
+        document.querySelectorAll('.theme-option').forEach(option => {
+            option.classList.toggle('active', option.dataset.theme === theme);
+        });
+    }
+});
+
+// Theme initialisieren beim App-Start - ENTFERNT, wird in app.js gemacht
 window.initTheme = () => {
     const savedTheme = localStorage.getItem('appTheme') || 'dark';
     

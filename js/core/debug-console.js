@@ -12,6 +12,7 @@ export class DebugConsole {
         this.logs = [];
         this.maxLogs = 100;
         this.container = null;
+        this.theme = localStorage.getItem('debugTheme') || 'default';
         
         // Original console methods
         this.originalLog = console.log;
@@ -44,15 +45,18 @@ export class DebugConsole {
 
     createConsole() {
         const html = `
-            <div id="debugConsole" class="debug-console ${this.position} ${this.isMinimized ? 'minimized' : ''}">
+            <div id="debugConsole" class="debug-console ${this.position} ${this.isMinimized ? 'minimized' : ''}" data-debug-theme="${this.theme}">
                 <div class="debug-header">
                     <div class="debug-header-left">
                         <span class="debug-title">🐛 Debug Console</span>
                         <button class="debug-btn" id="debugClear" title="Clear">🗑️</button>
+                        <button class="debug-btn" id="debugTheme" title="Theme: ${this.theme}">
+                            ${this.theme === 'matrix' ? '🟢' : this.theme === 'hacker' ? '🔴' : '🎨'}
+                        </button>
                     </div>
                     <div class="debug-header-right">
                         <button class="debug-btn" id="debugMinimize" title="Minimize Header">
-                            ${this.isMinimized ? '⬆️' : '⬇️'}
+                            ${this.isMinimized ? '📐' : '📏'}
                         </button>
                         <button class="debug-btn" id="debugPosition" title="Position">
                             ${this.position === 'bottom' ? '⬆️' : '⬇️'}
@@ -83,6 +87,7 @@ export class DebugConsole {
         document.getElementById('debugPosition')?.addEventListener('click', () => this.togglePosition());
         document.getElementById('debugLock')?.addEventListener('click', () => this.toggleLock());
         document.getElementById('debugMinimize')?.addEventListener('click', () => this.toggleMinimize());
+        document.getElementById('debugTheme')?.addEventListener('click', () => this.toggleTheme());
 
         // Resize
         const resizeHandle = document.getElementById('debugResizeHandle');
@@ -234,8 +239,31 @@ export class DebugConsole {
         this.isMinimized = !this.isMinimized;
         this.container?.classList.toggle('minimized', this.isMinimized);
         const minimizeBtn = document.getElementById('debugMinimize');
-        minimizeBtn.textContent = this.isMinimized ? '⬆️' : '⬇️';
+        minimizeBtn.textContent = this.isMinimized ? '📐' : '📏';
         this.saveState();
+    }
+
+    toggleTheme() {
+        const themes = ['default', 'matrix', 'hacker'];
+        const currentIndex = themes.indexOf(this.theme);
+        const nextIndex = (currentIndex + 1) % themes.length;
+        this.theme = themes[nextIndex];
+        
+        // Update attribute
+        this.container?.setAttribute('data-debug-theme', this.theme);
+        
+        // Save to localStorage
+        localStorage.setItem('debugTheme', this.theme);
+        
+        // Update button
+        const btn = document.getElementById('debugTheme');
+        if (btn) {
+            const icons = { default: '🎨', matrix: '🟢', hacker: '🔴' };
+            btn.innerHTML = icons[this.theme];
+            btn.title = `Theme: ${this.theme}`;
+        }
+        
+        this.log('info', `Debug Console Theme: ${this.theme}`);
     }
 
     loadState() {

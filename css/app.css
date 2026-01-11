@@ -2470,9 +2470,9 @@ body.debug-console-visible .main {
 
 /* === TOGGLE STYLE PICKER === */
 .toggle-style-picker {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
     gap: 0.75rem;
-    flex-wrap: wrap;
     margin-top: 0.75rem;
     width: 100%;
 }
@@ -2481,14 +2481,14 @@ body.debug-console-visible .main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    padding: 0.75rem;
+    padding: 1rem 0.5rem;
     background: var(--bg-secondary);
     border: 2px solid rgba(128, 128, 153, 0.2);
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: all 0.3s ease;
-    flex: 0 0 auto;
 }
 
 .toggle-style-option:hover {
@@ -2512,23 +2512,25 @@ body.debug-console-visible .main {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem 0;
-    min-height: 50px;
+    padding: 0.75rem;
+    min-height: 60px;
+    width: 100%;
 }
 
 .toggle-style-name {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
+    text-align: center;
 }
 
 /* === THEME PICKER === */
 .theme-picker {
-    display: flex;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 0.75rem;
-    flex-wrap: wrap;
     margin-top: 0.75rem;
     width: 100%;
 }
@@ -2537,14 +2539,14 @@ body.debug-console-visible .main {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 0.5rem;
-    padding: 0.75rem;
+    padding: 1rem 0.5rem;
     background: var(--bg-secondary);
     border: 2px solid rgba(128, 128, 153, 0.2);
     border-radius: var(--radius-md);
     cursor: pointer;
     transition: all 0.3s ease;
-    flex: 0 0 auto;
 }
 
 .theme-option:hover {
@@ -2568,25 +2570,27 @@ body.debug-console-visible .main {
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 0.5rem;
-    min-height: 50px;
-    min-width: 60px;
+    padding: 0.75rem;
+    min-height: 60px;
+    width: 100%;
     border-radius: var(--radius-sm);
-    background: var(--bg-card);
+    background: rgba(0, 0, 0, 0.1);
 }
 
 .theme-preview-colors {
     display: flex;
-    gap: 0.25rem;
+    gap: 0.3rem;
     align-items: center;
+    justify-content: center;
 }
 
 .theme-preview-colors span {
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
     border-radius: 50%;
     display: block;
     font-size: 1.2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .theme-preview-auto {
@@ -2612,7 +2616,7 @@ body.debug-console-visible .main {
 }
 
 .theme-name {
-    font-size: 0.75rem;
+    font-size: 0.7rem;
     color: var(--text-secondary);
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -2976,6 +2980,86 @@ body.debug-console-visible .main {
     background: rgba(0, 255, 136, 0.05);
     border-bottom: 1px solid rgba(0, 255, 136, 0.1);
     flex-shrink: 0;
+    transition: all 0.3s ease;
+}
+
+/* Debug Console Theme: Matrix Green */
+.debug-console[data-debug-theme="matrix"] .debug-header {
+    background: rgba(0, 255, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 255, 0, 0.3);
+}
+
+.debug-console[data-debug-theme="matrix"] .debug-title {
+    color: #00ff00;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.debug-console[data-debug-theme="matrix"] .debug-content {
+    background: #000000;
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+}
+
+.debug-console[data-debug-theme="matrix"] .debug-btn {
+    border-color: rgba(0, 255, 0, 0.3);
+    color: #00ff00;
+}
+
+.debug-console[data-debug-theme="matrix"] .debug-btn:hover {
+    background: rgba(0, 255, 0, 0.1);
+    border-color: #00ff00;
+}
+
+.debug-console[data-debug-theme="matrix"] .debug-log {
+    color: #00ff00;
+}
+
+.debug-console[data-debug-theme="matrix"] .debug-log.error {
+    color: #ff0000;
+}
+
+.debug-console[data-debug-theme="matrix"] .debug-log.warn {
+    color: #ffff00;
+}
+
+/* Debug Console Theme: Deep Red Hacker */
+.debug-console[data-debug-theme="hacker"] .debug-header {
+    background: rgba(255, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(255, 0, 0, 0.3);
+}
+
+.debug-console[data-debug-theme="hacker"] .debug-title {
+    color: #ff0000;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+}
+
+.debug-console[data-debug-theme="hacker"] .debug-content {
+    background: #1a0000;
+    color: #ff4444;
+    font-family: 'Courier New', monospace;
+}
+
+.debug-console[data-debug-theme="hacker"] .debug-btn {
+    border-color: rgba(255, 0, 0, 0.3);
+    color: #ff0000;
+}
+
+.debug-console[data-debug-theme="hacker"] .debug-btn:hover {
+    background: rgba(255, 0, 0, 0.1);
+    border-color: #ff0000;
+}
+
+.debug-console[data-debug-theme="hacker"] .debug-log {
+    color: #ff6666;
+}
+
+.debug-console[data-debug-theme="hacker"] .debug-log.error {
+    color: #ff0000;
+    font-weight: bold;
+}
+
+.debug-console[data-debug-theme="hacker"] .debug-log.warn {
+    color: #ff8800;
 }
 
 .debug-header-left,
