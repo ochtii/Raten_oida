@@ -48,13 +48,45 @@ function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
         {
+            version: '1.0.5.0',
+            date: '2026-01-11',
+            message: 'Feature: Theme-Switcher mit 10 Themes',
+            details: 'Dark Mode durch umfassenden Theme-Switcher ersetzt: Auto (System), Hell, Dunkel, Metall, Rapid Wien, Gaylord (LGBTQ Rainbow animiert), Spritzkack (Braun/Kot), Spongebob (Gelb/Blau), 420 (Cannabis grün), Acid Special (psychedelisch mit extremen Animationen, Blur, Glitzer).',
+            files: ['js/views/settings.js', 'css/app.css', 'js/app.js', 'version.json', 'js/views/dev.js'],
+            stats: { additions: 503, deletions: 13 },
+            expanded: true
+        },
+        {
+            version: '1.0.4.5',
+            date: '2026-01-11',
+            message: 'Debug: Fallback-Versionen auf v1.3.3.7 geändert',
+            details: 'Erleichtert Erkennung von Fallback-Fällen bei Versionsnummern-Anzeige in Settings und Footer.',
+            files: ['js/views/settings.js', 'js/app.js'],
+            stats: { additions: 5, deletions: 5 }
+        },
+        {
+            version: '1.0.4.4',
+            date: '2026-01-11',
+            message: 'Auto-Version Update',
+            details: 'Automatische Versionsaktualisierung durch Auto-Versioning-System.',
+            files: ['version.json', 'js/views/dev.js', 'README.md'],
+            stats: { additions: 3, deletions: 3 }
+        },
+        {
+            version: '1.0.4.3',
+            date: '2026-01-11',
+            message: 'Bugfix: Toggle-Picker Layout korrigiert, Versions-Synchronisierung',
+            details: 'Toggle-Picker jetzt korrekt im flex-column Layout mit proper wrapping, Changelog auf aktuelle Version aktualisiert, Footer Fallback-Version korrigiert.',
+            files: ['js/views/settings.js', 'js/views/changelog.js', 'js/app.js', 'css/app.css'],
+            stats: { additions: 33, deletions: 14 }
+        },
+        {
             version: '1.0.4.2',
             date: '2026-01-11',
             message: 'UI: File-Balken am Badge-Rand + komplett unterschiedliche Toggle-Designs',
             details: 'File-Balken jetzt am unteren Rand der File-Badges mit modernem Card-Design. 4 deutlich verschiedene Toggle-Styles: iOS 14+ (Apple authentisch), Material Design 3 (Google mit Ripple), Neon Cyberpunk (ON/OFF Text + extremer Glow), Minimal Fluent (Microsoft mit Glassmorphism).',
             files: ['js/views/changelog.js', 'css/app.css', 'version.json', 'js/views/dev.js'],
-            stats: { additions: 155, deletions: 78 },
-            expanded: true
+            stats: { additions: 155, deletions: 78 }
         },
         {
             version: '1.0.4.1',
