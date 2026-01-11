@@ -39,22 +39,68 @@ export const devView = (store) => {
             <div class="dev-card dev-hero-card dev-cheat-card">
                 <h3>🎮 Cheats</h3>
                 <div class="dev-hero-actions">
-                    <!-- Wallet Controls -->
                     <div class="dev-cheat-group">
                         <span class="dev-cheat-label">💰 Schülling:</span>
-                        <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddWallet()">+1000</button>
-                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWallet()">-1000</button>
-                        <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddWalletMax()">+10k</button>
-                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWalletMax()">-10k</button>
+                        <div class="dev-split-btn">
+                            <button class="dev-split-btn-minus" onclick="window.devChangeWallet(-window.devCheatStep, this)">-</button>
+                            <button class="dev-split-btn-plus" onclick="window.devChangeWallet(window.devCheatStep, this)">+</button>
+                        </div>
+                        <select class="dev-cheat-step" onchange="window.devSetCheatStep(this.value)">
+                            <option value="1">1</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="1000" selected>1000</option>
+                        </select>
                     </div>
-                    <!-- Points Controls -->
                     <div class="dev-cheat-group">
                         <span class="dev-cheat-label">⭐ Punkte:</span>
-                        <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddPoints()">+100</button>
-                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePoints()">-100</button>
-                        <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddPointsMax()">+1000</button>
-                        <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePointsMax()">-1000</button>
+                        <div class="dev-split-btn">
+                            <button class="dev-split-btn-minus" onclick="window.devChangePoints(-window.devCheatStep, this)">-</button>
+                            <button class="dev-split-btn-plus" onclick="window.devChangePoints(window.devCheatStep, this)">+</button>
+                        </div>
+                        <select class="dev-cheat-step" onchange="window.devSetCheatStep(this.value)">
+                            <option value="1">1</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="50">50</option>
+                            <option value="100">100</option>
+                            <option value="1000" selected>1000</option>
+                        </select>
                     </div>
+                    // Cheat Step global
+                    window.devCheatStep = 1000;
+                    window.devSetCheatStep = (val) => {
+                        window.devCheatStep = parseInt(val, 10);
+                    };
+
+                    window.devChangeWallet = (amount, btn) => {
+                        if (window.app) {
+                            const state = window.app.store.state;
+                            state.wallet = Math.max(0, (state.wallet ?? 0) + amount);
+                            window.app.store.saveState();
+                            window.app.ui.showNotification(`💰 ${amount > 0 ? '+' : ''}${amount} Schülling`, amount > 0 ? 'success' : 'warning');
+                            window.app.router.render();
+                            devAnimateBtn(btn);
+                        }
+                    };
+
+                    window.devChangePoints = (amount, btn) => {
+                        if (window.app) {
+                            const state = window.app.store.state;
+                            state.points = Math.max(0, (state.points ?? 0) + amount);
+                            window.app.store.saveState();
+                            window.app.ui.showNotification(`⭐ ${amount > 0 ? '+' : ''}${amount} Punkte`, amount > 0 ? 'success' : 'warning');
+                            window.app.router.render();
+                            devAnimateBtn(btn);
+                        }
+                    };
+
+                    function devAnimateBtn(btn) {
+                        btn.classList.add('dev-split-btn-animate');
+                        setTimeout(() => btn.classList.remove('dev-split-btn-animate'), 180);
+                    }
                     <!-- Sonstige Cheats -->
                     <button class="dev-hero-btn dev-hero-btn-success" onclick="window.devMaxStreak()">
                         <span class="dev-hero-icon">🔥</span>
