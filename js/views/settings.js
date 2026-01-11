@@ -96,25 +96,25 @@ window.setFontSize = (size) => {
         btn.classList.toggle('active', btn.dataset.size === size);
     });
     
-    window.ui.showNotification(`Schriftgröße: ${size}`, 'success');
+    window.app.ui.showNotification(`Schriftgröße: ${size}`, 'success');
 };
 
 window.toggleHighContrast = (enabled) => {
     localStorage.setItem('highContrast', enabled);
     document.body.setAttribute('data-high-contrast', enabled);
-    window.ui.showNotification(`Hoher Kontrast: ${enabled ? 'Ein' : 'Aus'}`, 'success');
+    window.app.ui.showNotification(`Hoher Kontrast: ${enabled ? 'Ein' : 'Aus'}`, 'success');
 };
 
 window.toggleReducedMotion = (enabled) => {
     localStorage.setItem('reducedMotion', enabled);
     document.body.setAttribute('data-reduced-motion', enabled);
-    window.ui.showNotification(`Reduzierte Bewegung: ${enabled ? 'Ein' : 'Aus'}`, 'success');
+    window.app.ui.showNotification(`Reduzierte Bewegung: ${enabled ? 'Ein' : 'Aus'}`, 'success');
 };
 
 window.toggleScreenReader = (enabled) => {
     localStorage.setItem('screenReaderMode', enabled);
     document.body.setAttribute('data-screen-reader', enabled);
-    window.ui.showNotification(`Screen Reader Modus: ${enabled ? 'Ein' : 'Aus'}`, 'success');
+    window.app.ui.showNotification(`Screen Reader Modus: ${enabled ? 'Ein' : 'Aus'}`, 'success');
 };
 
 window.setColorBlindMode = (mode) => {
@@ -128,7 +128,7 @@ window.setColorBlindMode = (mode) => {
         'tritanopia': 'Tritanopie (Blau-Schwäche)'
     };
     
-    window.ui.showNotification(`Farbmodus: ${modes[mode]}`, 'success');
+    window.app.ui.showNotification(`Farbmodus: ${modes[mode]}`, 'success');
 };
 
 // === GAMEPLAY SETTINGS ===
@@ -313,11 +313,11 @@ window.setToggleStyle = (style) => {
     localStorage.setItem('toggleStyle', style);
     document.body.setAttribute('data-toggle-style', style);
     
-    document.querySelectorAll('.toggle-style-option').forEach(option => {
+    document.querySelectorAll('.toggle-option-modern').forEach(option => {
         option.classList.toggle('active', option.dataset.style === style);
     });
     
-    window.ui.showNotification(`Toggle-Style: ${style}`, 'success');
+    window.app.ui.showNotification(`Toggle-Style: ${style}`, 'success');
 };
 
 // Theme wechseln
@@ -340,7 +340,7 @@ window.setTheme = (theme) => {
         newValue: theme
     }));
     
-    window.ui.showNotification(`Theme: ${theme}`, 'success');
+    window.app.ui.showNotification(`Theme: ${theme}`, 'success');
 };
 
 export const settingsView = (store) => {
