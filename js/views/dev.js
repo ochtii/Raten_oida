@@ -214,8 +214,16 @@ window.devShowFireworks = (text, color) => {
         pointer-events: none;
         z-index: 9999;
         overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
     `;
     document.body.appendChild(container);
+
+    // Verhindere jegliches Scrolling während der Animation
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
 
     // Erstelle Text-Anzeige
     const textElement = document.createElement('div');
@@ -231,6 +239,8 @@ window.devShowFireworks = (text, color) => {
         text-shadow: 0 0 20px ${color}80;
         animation: devFireworksText 2s ease-out forwards;
         z-index: 10000;
+        pointer-events: none;
+        user-select: none;
     `;
     container.appendChild(textElement);
 
@@ -254,15 +264,18 @@ window.devShowFireworks = (text, color) => {
             animation: devFireworksParticle 2s ease-out ${delay}s forwards;
             --angle: ${angle}rad;
             --distance: ${distance}px;
+            pointer-events: none;
+            user-select: none;
         `;
         container.appendChild(particle);
     }
 
-    // Entferne Container nach Animation
+    // Entferne Container nach Animation und stelle ursprüngliches Scrolling wieder her
     setTimeout(() => {
         if (container.parentNode) {
             container.parentNode.removeChild(container);
         }
+        document.body.style.overflow = originalOverflow;
     }, 2500);
 };
 
@@ -326,6 +339,7 @@ window.devToggleFooterInfo = () => {
 window.updateFooterInfo = () => {
     const enabled = localStorage.getItem('footerInfoEnabled') !== 'false';
     let footer = document.getElementById('appFooterInfo');
+    const bottomNav = document.querySelector('.bottom-nav');
     
     if (enabled) {
         if (!footer) {
@@ -348,9 +362,17 @@ window.updateFooterInfo = () => {
             <span class="footer-date">Build: ${buildDate}</span>
         `;
         footer.style.display = 'flex';
+        // Bottom Navigation nach oben verschieben
+        if (bottomNav) {
+            bottomNav.classList.add('with-footer');
+        }
     } else {
         if (footer) {
             footer.style.display = 'none';
+        }
+        // Bottom Navigation zurück an ursprüngliche Position
+        if (bottomNav) {
+            bottomNav.classList.remove('with-footer');
         }
     }
 };
