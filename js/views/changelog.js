@@ -180,18 +180,38 @@ function renderChangelog(container, changes) {
                         <div class="details-files">
                             <h4>📁 Geänderte Dateien:</h4>
                             <ul class="file-list">
-                                ${change.files.map(file => `
+                                ${change.files.map((file, fileIdx) => {
+                                    // Simuliere Stats für einzelne Dateien (basierend auf Gesamt-Stats)
+                                    const fileAdditions = Math.round(change.stats.additions / change.files.length);
+                                    const fileDeletions = Math.round(change.stats.deletions / change.files.length);
+                                    const fileTotal = fileAdditions + fileDeletions;
+                                    const fileMaxBars = 10;
+                                    const fileAddBars = Math.round((fileAdditions / fileTotal) * fileMaxBars);
+                                    const fileDelBars = fileMaxBars - fileAddBars;
+                                    const fileVisualBar = '+'.repeat(fileAddBars) + '-'.repeat(fileDelBars);
+                                    
+                                    return `
                                     <li class="file-item">
                                         <span class="file-icon">${getFileIcon(file)}</span>
                                         <span class="file-name">${file}</span>
+                                        <span class="file-bar">${fileVisualBar}</span>
                                     </li>
-                                `).join('')}
+                                `}).join('')}
                             </ul>
                         </div>
 
                         <div class="details-visual">
                             <h4>📊 Änderungen:</h4>
-                            <div class="visual-bar-text">${visualBar}</div>
+                            <div class="visual-diagram">
+                                <div class="diagram-bar">
+                                    <div class="diagram-additions" style="width: ${additionPercent}%">
+                                        <span class="diagram-label">+${change.stats.additions}</span>
+                                    </div>
+                                    <div class="diagram-deletions" style="width: ${deletionPercent}%">
+                                        <span class="diagram-label">-${change.stats.deletions}</span>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="visual-stats">
                                 <span class="visual-add">+${change.stats.additions} Zeilen</span>
                                 <span class="visual-del">-${change.stats.deletions} Zeilen</span>

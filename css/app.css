@@ -3239,6 +3239,191 @@ body.debug-console-visible .main {
     text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
 }
 
+/* === MODERN SLIDERS === */
+.setting-item-slider {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: var(--spacing-md);
+}
+
+.setting-item-slider .setting-info {
+    width: 100%;
+    margin-bottom: var(--spacing-sm);
+}
+
+.slider-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+}
+
+.modern-slider {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.3);
+    outline: none;
+    -webkit-appearance: none;
+    transition: all var(--transition-fast);
+}
+
+.modern-slider::-webkit-slider-track {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, 
+        rgba(0, 255, 136, 0.2) 0%, 
+        rgba(0, 255, 136, 0.4) 50%, 
+        rgba(0, 255, 136, 0.2) 100%);
+}
+
+.modern-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all var(--transition-fast);
+}
+
+.modern-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.8), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.modern-slider::-webkit-slider-thumb:active {
+    transform: scale(1.1);
+}
+
+.modern-slider::-moz-range-track {
+    height: 8px;
+    border-radius: 4px;
+    background: linear-gradient(90deg, 
+        rgba(0, 255, 136, 0.2) 0%, 
+        rgba(0, 255, 136, 0.4) 50%, 
+        rgba(0, 255, 136, 0.2) 100%);
+}
+
+.modern-slider::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    cursor: pointer;
+    box-shadow: 0 0 12px rgba(0, 255, 136, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
+    border: none;
+    transition: all var(--transition-fast);
+}
+
+.modern-slider::-moz-range-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.8), 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.modern-slider::-moz-range-thumb:active {
+    transform: scale(1.1);
+}
+
+.slider-value {
+    min-width: 60px;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+    background: rgba(0, 255, 136, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+    animation: pulse-value 0.3s ease-out;
+}
+
+@keyframes pulse-value {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* === FILE BAR IN CHANGELOG === */
+.file-bar {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: var(--primary);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* === VISUAL DIAGRAM FOR CHANGELOG === */
+.visual-diagram {
+    margin-bottom: var(--spacing-sm);
+}
+
+.diagram-bar {
+    display: flex;
+    height: 40px;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 255, 136, 0.1);
+}
+
+.diagram-additions,
+.diagram-deletions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: width var(--transition-slow);
+    position: relative;
+    overflow: hidden;
+}
+
+.diagram-additions {
+    background: linear-gradient(135deg, var(--primary), rgba(0, 255, 136, 0.6));
+    border-right: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.diagram-deletions {
+    background: linear-gradient(135deg, var(--accent), rgba(255, 0, 110, 0.6));
+}
+
+.diagram-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    position: relative;
+}
+
+.diagram-additions::before,
+.diagram-deletions::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, 
+        transparent 25%, 
+        rgba(255, 255, 255, 0.1) 25%, 
+        rgba(255, 255, 255, 0.1) 50%, 
+        transparent 50%, 
+        transparent 75%, 
+        rgba(255, 255, 255, 0.1) 75%);
+    background-size: 20px 20px;
+    animation: move-stripes 1s linear infinite;
+}
+
+@keyframes move-stripes {
+    0% { background-position: 0 0; }
+    100% { background-position: 20px 20px; }
+}
+
+
     background: rgba(156, 39, 176, 0.03);
 }
 

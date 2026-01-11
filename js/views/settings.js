@@ -5,7 +5,16 @@
 export const settingsView = (store) => {
     const settings = store.getSettings();
     const wallet = store.getWallet();
-    const version = '2.0.0';
+    
+    // Version dynamisch laden
+    let version = '1.0.3.0'; // Fallback
+    fetch('./version.json')
+        .then(response => response.json())
+        .then(data => {
+            const versionElements = document.querySelectorAll('.settings-version-display');
+            versionElements.forEach(el => el.textContent = data.version);
+        })
+        .catch(() => {});
     
     // Bottom Nav Settings
     const bottomNavSettings = JSON.parse(localStorage.getItem('bottomNavSettings') || JSON.stringify({
@@ -75,22 +84,28 @@ export const settingsView = (store) => {
                             </label>
                         </div>
                         
-                        <div class="setting-item">
+                        <div class="setting-item setting-item-slider">
                             <div class="setting-info">
                                 <div class="setting-label">Transparenz</div>
-                                <div class="setting-desc">Deckkraft der Navigation: <strong id="opacityValue">${bottomNavSettings.opacity}%</strong></div>
+                                <div class="setting-desc">Deckkraft der Navigation</div>
                             </div>
-                            <input type="range" class="dev-slider" id="bottomNavOpacity" min="10" max="100" value="${bottomNavSettings.opacity}" 
-                                   oninput="window.settingsUpdateBottomNavOpacity(this.value)">
+                            <div class="slider-container">
+                                <input type="range" class="modern-slider" id="bottomNavOpacity" min="10" max="100" value="${bottomNavSettings.opacity}" 
+                                       oninput="window.settingsUpdateBottomNavOpacity(this.value)">
+                                <div class="slider-value" id="opacityValue">${bottomNavSettings.opacity}%</div>
+                            </div>
                         </div>
                         
-                        <div class="setting-item">
+                        <div class="setting-item setting-item-slider">
                             <div class="setting-info">
                                 <div class="setting-label">Höhe</div>
-                                <div class="setting-desc">Größe der Navigation: <strong id="sizeValue">${bottomNavSettings.size}%</strong></div>
+                                <div class="setting-desc">Größe der Navigation</div>
                             </div>
-                            <input type="range" class="dev-slider" id="bottomNavSize" min="60" max="150" value="${bottomNavSettings.size}" 
-                                   oninput="window.settingsUpdateBottomNavSize(this.value)">
+                            <div class="slider-container">
+                                <input type="range" class="modern-slider" id="bottomNavSize" min="60" max="150" value="${bottomNavSettings.size}" 
+                                       oninput="window.settingsUpdateBottomNavSize(this.value)">
+                                <div class="slider-value" id="sizeValue">${bottomNavSettings.size}%</div>
+                            </div>
                         </div>
                         
                         <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
@@ -151,15 +166,17 @@ export const settingsView = (store) => {
                             </label>
                         </div>
 
-                        <div class="setting-item">
+                        <div class="setting-item setting-item-slider">
                             <div class="setting-info">
                                 <div class="setting-label">Lautstärke</div>
                                 <div class="setting-desc">Stelle die Lautstärke ein</div>
                             </div>
-                            <input type="range" class="volume-slider" min="0" max="100" 
-                                value="${settings.volume}" 
-                                onchange="window.updateVolume(this.value)">
-                            <span class="volume-value">${settings.volume}%</span>
+                            <div class="slider-container">
+                                <input type="range" class="modern-slider" min="0" max="100" 
+                                    value="${settings.volume}" 
+                                    oninput="window.updateVolume(this.value)">
+                                <div class="slider-value" id="volumeValue">${settings.volume}%</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -301,13 +318,16 @@ export const settingsView = (store) => {
                             </select>
                         </div>
 
-                        <div class="setting-item">
+                        <div class="setting-item setting-item-slider">
                             <div class="setting-info">
                                 <div class="setting-label">Anzeigedauer</div>
-                                <div class="setting-desc">Dauer in Sekunden: <strong id="durationValue">${settings.notifications?.duration || 3}s</strong></div>
+                                <div class="setting-desc">Dauer in Sekunden</div>
                             </div>
-                            <input type="range" class="dev-slider" id="notificationDuration" min="1" max="10" value="${settings.notifications?.duration || 3}" 
-                                   oninput="window.settingsChangeNotificationDuration(this.value)">
+                            <div class="slider-container">
+                                <input type="range" class="modern-slider" id="notificationDuration" min="1" max="10" value="${settings.notifications?.duration || 3}" 
+                                       oninput="window.settingsChangeNotificationDuration(this.value)">
+                                <div class="slider-value" id="durationValue">${settings.notifications?.duration || 3}s</div>
+                            </div>
                         </div>
 
                         <div style="margin-top: var(--spacing-md);">
@@ -343,7 +363,7 @@ export const settingsView = (store) => {
                         <div class="info-list">
                             <div class="info-item">
                                 <span>Version:</span>
-                                <strong><a href="#changelog" data-route="changelog" class="version-link">${version}</a></strong>
+                                <strong><a href="#changelog" data-route="changelog" class="version-link settings-version-display">${version}</a></strong>
                             </div>
                             <div class="info-item">
                                 <span>Entwickler:</span>
