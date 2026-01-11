@@ -1,705 +1,144 @@
 /* ==========================================
-   SETTINGS VIEW
+   MODERN MOBILE SETTINGS VIEW
    ========================================== */
 
-// Toggle-Style wechseln
-window.setToggleStyle = (style) => {
-    localStorage.setItem('toggleStyle', style);
-    document.body.setAttribute('data-toggle-style', style);
+// Live-Suche für Einstellungen
+window.searchSettings = (query) => {
+    const searchTerm = query.toLowerCase().trim();
     
-    // Aktualisiere visuelle Auswahl
-    document.querySelectorAll('.toggle-style-option').forEach(option => {
-        option.classList.toggle('active', option.dataset.style === style);
-    });
-    
-    window.ui.showNotification('Toggle-Style geändert zu: ' + style, 'success');
-};
-
-// Theme wechseln
-window.setTheme = (theme) => {
-    // Im localStorage speichern
-    localStorage.setItem('appTheme', theme);
-    
-    // Auto-Theme prüft System-Preference
-    if (theme === 'auto') {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-    } else {
-        document.body.setAttribute('data-theme', theme);
+    // Erst ab 2 Buchstaben filtern
+    if (searchTerm.length < 2 && searchTerm.length > 0) {
+        return;
     }
     
-    // Aktualisiere visuelle Auswahl
-    document.querySelectorAll('.theme-option').forEach(option => {
-        option.classList.toggle('active', option.dataset.theme === theme);
-    });
+    const sections = document.querySelectorAll('.settings-section');
+    const settingItems = document.querySelectorAll('.setting-item-wrapper');
+    let visibleCount = 0;
     
-    // Synchronisiere mit anderen Tabs
-    window.dispatchEvent(new StorageEvent('storage', {
-        key: 'appTheme',
-        newValue: theme
-    }));
-    
-    window.ui.showNotification('Theme geändert zu: ' + theme, 'success');
-};
-
-// Theme-Synchronisierung zwischen Tabs
-window.addEventListener('storage', (e) => {
-    if (e.key === 'appTheme' && e.newValue) {
-        const theme = e.newValue;
-        if (theme === 'auto') {
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
-        } else {
-            document.body.setAttribute('data-theme', theme);
-        }
-        // UI aktualisieren
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.classList.toggle('active', option.dataset.theme === theme);
-        });
+    if (searchTerm.length === 0) {
+        // Alle anzeigen
+        sections.forEach(section => section.style.display = 'block');
+        settingItems.forEach(item => item.style.display = 'flex');
+        document.getElementById('searchResults')?.remove();
+        return;
     }
-});
-
-// Theme initialisieren beim App-Start - ENTFERNT, wird in app.js gemacht
-window.initTheme = () => {
-    const savedTheme = localStorage.getItem('appTheme') || 'dark';
     
-    if (savedTheme === 'auto') {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    // Durchsuche alle Einstellungen
+    settingItems.forEach(item => {
+        const label = item.querySelector('.setting-label')?.textContent.toLowerCase() || '';
+        const desc = item.querySelector('.setting-desc')?.textContent.toLowerCase() || '';
+        const section = item.closest('.settings-section');
         
-        // Listener für System-Theme-Änderungen
-        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-            if (localStorage.getItem('appTheme') === 'auto') {
-                document.body.setAttribute('data-theme', e.matches ? 'dark' : 'light');
-            }
-        });
-    } else {
-        document.body.setAttribute('data-theme', savedTheme);
-    }
-};
-
-export const settingsView = (store) => {
-    const settings = store.getSettings();
-    const wallet = store.getWallet();
-    
-    // Theme initialisieren
-    setTimeout(() => {
-        const savedTheme = localStorage.getItem('appTheme') || 'dark';
-        document.querySelectorAll('.theme-option').forEach(option => {
-            option.classList.toggle('active', option.dataset.theme === savedTheme);
-        });
-    }, 100);
-    
-    // Toggle-Style initialisieren
-    setTimeout(() => {
-        const savedStyle = localStorage.getItem('toggleStyle') || 'classic';
-        document.body.setAttribute('data-toggle-style', savedStyle);
-        document.querySelectorAll('.toggle-style-option').forEach(option => {
-            option.classList.toggle('active', option.dataset.style === savedStyle);
-        });
-    }, 100);
-    
-    // Version dynamisch laden
-    let version = '1.3.3.7'; // Fallback
-    fetch('./version.json')
-        .then(response => response.json())
-        .then(data => {
-            const versionElements = document.querySelectorAll('.settings-version-display');
-            versionElements.forEach(el => el.textContent = data.version);
-        })
-        .catch(() => {});
-    
-    // Bottom Nav Settings
-    const bottomNavSettings = JSON.parse(localStorage.getItem('bottomNavSettings') || JSON.stringify({
-        visible: true,
-        opacity: 95,
-        size: 100,
-        items: {
-            home: true,
-            games: true,
-            points: true,
-            stats: true,
-            settings: true,
-            dev: true
+        if (label.includes(searchTerm) || desc.includes(searchTerm)) {
+            item.style.display = 'flex';
+            section.style.display = 'block';
+            visibleCount++;
+        } else {
+            item.style.display = 'none';
         }
-    }));
-
-    return `
-        <div class="settings-view">
-            <h1 class="section-title">⚙️ Einstellungen</h1>
-
-            <div class="settings-grid">
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">🎨 Design</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
-                            <div class="setting-info">
-                                <div class="setting-label">Toggle-Style</div>
-                                <div class="setting-desc">Wähle deinen bevorzugten Toggle-Style</div>
-                            </div>
-                            <div class="toggle-style-picker">
-                                <div class="toggle-style-option" data-style="classic" onclick="window.setToggleStyle('classic')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-classic">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">Classic</span>
-                                </div>
-                                <div class="toggle-style-option" data-style="ios" onclick="window.setToggleStyle('ios')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-ios">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">iOS</span>
-                                </div>
-                                <div class="toggle-style-option" data-style="material" onclick="window.setToggleStyle('material')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-material">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">Material</span>
-                                </div>
-                                <div class="toggle-style-option" data-style="neon" onclick="window.setToggleStyle('neon')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-neon">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">Neon</span>
-                                </div>
-                                <div class="toggle-style-option" data-style="minimal" onclick="window.setToggleStyle('minimal')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-minimal">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">Minimal</span>
-                                </div>
-                                <div class="toggle-style-option" data-style="skeleton" onclick="window.setToggleStyle('skeleton')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-skeleton">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">Skeleton</span>
-                                </div>
-                                <div class="toggle-style-option" data-style="flip" onclick="window.setToggleStyle('flip')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-flip">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">Flip</span>
-                                </div>
-                                <div class="toggle-style-option" data-style="liquid" onclick="window.setToggleStyle('liquid')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-liquid">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">Liquid</span>
-                                </div>
-                                <div class="toggle-style-option" data-style="gear" onclick="window.setToggleStyle('gear')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-gear">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">Gear</span>
-                                </div>
-                                <div class="toggle-style-option" data-style="pulse" onclick="window.setToggleStyle('pulse')">
-                                    <div class="toggle-preview">
-                                        <label class="toggle toggle-pulse">
-                                            <input type="checkbox" checked disabled>
-                                            <span class="toggle-slider"></span>
-                                        </label>
-                                    </div>
-                                    <span class="toggle-style-name">Pulse</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
-                            <div class="setting-info">
-                                <div class="setting-label">App-Theme</div>
-                                <div class="setting-desc">Wähle dein bevorzugtes Farbschema</div>
-                            </div>
-                            <div class="theme-picker">
-                                <div class="theme-option" data-theme="auto" onclick="window.setTheme('auto')">
-                                    <div class="theme-preview theme-preview-auto">
-                                        <div class="theme-preview-colors">
-                                            <span>🌙</span><span>☀️</span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">Auto</span>
-                                </div>
-                                <div class="theme-option" data-theme="light" onclick="window.setTheme('light')">
-                                    <div class="theme-preview theme-preview-light">
-                                        <div class="theme-preview-colors">
-                                            <span style="background: #ffffff"></span>
-                                            <span style="background: #f0f0f0"></span>
-                                            <span style="background: #e0e0e0"></span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">Hell</span>
-                                </div>
-                                <div class="theme-option" data-theme="dark" onclick="window.setTheme('dark')">
-                                    <div class="theme-preview theme-preview-dark">
-                                        <div class="theme-preview-colors">
-                                            <span style="background: #0a0e27"></span>
-                                            <span style="background: #1a1033"></span>
-                                            <span style="background: #00ff88"></span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">Dunkel</span>
-                                </div>
-                                <div class="theme-option" data-theme="metal" onclick="window.setTheme('metal')">
-                                    <div class="theme-preview theme-preview-metal">
-                                        <div class="theme-preview-colors">
-                                            <span style="background: linear-gradient(135deg, #silver, #808080)"></span>
-                                            <span style="background: linear-gradient(135deg, #c0c0c0, #a0a0a0)"></span>
-                                            <span style="background: #4a4a4a"></span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">Metall</span>
-                                </div>
-                                <div class="theme-option" data-theme="rapid" onclick="window.setTheme('rapid')">
-                                    <div class="theme-preview theme-preview-rapid">
-                                        <div class="theme-preview-colors">
-                                            <span style="background: #00a64f"></span>
-                                            <span style="background: #ffffff"></span>
-                                            <span style="background: #00a64f"></span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">Rapid Wien</span>
-                                </div>
-                                <div class="theme-option" data-theme="gaylord" onclick="window.setTheme('gaylord')">
-                                    <div class="theme-preview theme-preview-gaylord">
-                                        <div class="theme-preview-colors rainbow-gradient">
-                                            <span style="background: linear-gradient(90deg, red, orange, yellow, green, blue, purple)"></span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">Gaylord</span>
-                                </div>
-                                <div class="theme-option" data-theme="spritzkack" onclick="window.setTheme('spritzkack')">
-                                    <div class="theme-preview theme-preview-spritzkack">
-                                        <div class="theme-preview-colors">
-                                            <span style="background: #5c4033"></span>
-                                            <span style="background: #8b6f47"></span>
-                                            <span style="background: #3d2817"></span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">Spritzkack</span>
-                                </div>
-                                <div class="theme-option" data-theme="spongebob" onclick="window.setTheme('spongebob')">
-                                    <div class="theme-preview theme-preview-spongebob">
-                                        <div class="theme-preview-colors">
-                                            <span style="background: #ffcc00"></span>
-                                            <span style="background: #00b8d4"></span>
-                                            <span style="background: #ff6f61"></span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">Spongebob</span>
-                                </div>
-                                <div class="theme-option" data-theme="420" onclick="window.setTheme('420')">
-                                    <div class="theme-preview theme-preview-420">
-                                        <div class="theme-preview-colors">
-                                            <span style="background: #228b22"></span>
-                                            <span style="background: #32cd32"></span>
-                                            <span style="background: #006400">🌿</span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">420</span>
-                                </div>
-                                <div class="theme-option" data-theme="acid" onclick="window.setTheme('acid')">
-                                    <div class="theme-preview theme-preview-acid">
-                                        <div class="theme-preview-colors acid-animated">
-                                            <span style="background: linear-gradient(45deg, #ff00ff, #00ffff, #ffff00)"></span>
-                                        </div>
-                                    </div>
-                                    <span class="theme-name">✨ Acid Special</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">Animationen</div>
-                                <div class="setting-desc">Aktiviere oder deaktiviere Animationen</div>
-                            </div>
-                            <label class="toggle">
-                                <input type="checkbox" ${settings.animations ? 'checked' : ''} 
-                                    onchange="window.toggleSetting('animations')">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">📱 Bottom Navigation</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">Navigation anzeigen</div>
-                                <div class="setting-desc">Bottom-Navigation ein- oder ausblenden</div>
-                            </div>
-                            <label class="toggle">
-                                <input type="checkbox" id="bottomNavVisible" ${bottomNavSettings.visible ? 'checked' : ''} 
-                                    onchange="window.settingsToggleBottomNav()">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                        
-                        <div class="setting-item setting-item-slider">
-                            <div class="setting-info">
-                                <div class="setting-label">Transparenz</div>
-                                <div class="setting-desc">Deckkraft der Navigation</div>
-                            </div>
-                            <div class="slider-container">
-                                <input type="range" class="modern-slider" id="bottomNavOpacity" min="10" max="100" value="${bottomNavSettings.opacity}" 
-                                       oninput="window.settingsUpdateBottomNavOpacity(this.value)">
-                                <div class="slider-value" id="opacityValue">${bottomNavSettings.opacity}%</div>
-                            </div>
-                        </div>
-                        
-                        <div class="setting-item setting-item-slider">
-                            <div class="setting-info">
-                                <div class="setting-label">Höhe</div>
-                                <div class="setting-desc">Größe der Navigation</div>
-                            </div>
-                            <div class="slider-container">
-                                <input type="range" class="modern-slider" id="bottomNavSize" min="60" max="150" value="${bottomNavSettings.size}" 
-                                       oninput="window.settingsUpdateBottomNavSize(this.value)">
-                                <div class="slider-value" id="sizeValue">${bottomNavSettings.size}%</div>
-                            </div>
-                        </div>
-                        
-                        <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
-                            <div class="setting-info" style="margin-bottom: var(--spacing-sm);">
-                                <div class="setting-label">Sichtbare Elemente</div>
-                                <div class="setting-desc">Wähle welche Tabs angezeigt werden</div>
-                            </div>
-                            <div class="bottom-nav-items" style="width: 100%;">
-                                <label class="nav-toggle">
-                                    <input type="checkbox" ${bottomNavSettings.items.home ? 'checked' : ''} onchange="window.settingsToggleNavItem('home')">
-                                    <span>🏠 Home</span>
-                                </label>
-                                <label class="nav-toggle">
-                                    <input type="checkbox" ${bottomNavSettings.items.games ? 'checked' : ''} onchange="window.settingsToggleNavItem('games')">
-                                    <span>🎮 Spiele</span>
-                                </label>
-                                <label class="nav-toggle">
-                                    <input type="checkbox" ${bottomNavSettings.items.points ? 'checked' : ''} onchange="window.settingsToggleNavItem('points')">
-                                    <span>⭐ Punkte</span>
-                                </label>
-                                <label class="nav-toggle">
-                                    <input type="checkbox" ${bottomNavSettings.items.stats ? 'checked' : ''} onchange="window.settingsToggleNavItem('stats')">
-                                    <span>📊 Stats</span>
-                                </label>
-                                <label class="nav-toggle">
-                                    <input type="checkbox" ${bottomNavSettings.items.settings ? 'checked' : ''} onchange="window.settingsToggleNavItem('settings')">
-                                    <span>⚙️ Settings</span>
-                                </label>
-                                <label class="nav-toggle">
-                                    <input type="checkbox" ${bottomNavSettings.items.dev ? 'checked' : ''} onchange="window.settingsToggleNavItem('dev')">
-                                    <span>🛠️ Dev</span>
-                                </label>
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: var(--spacing-md);">
-                            <button class="btn btn-secondary btn-sm" onclick="window.settingsResetBottomNav()">
-                                🔄 Zurücksetzen
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">🔊 Audio</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">Sound-Effekte</div>
-                                <div class="setting-desc">Spiele Sound-Effekte bei Aktionen</div>
-                            </div>
-                            <label class="toggle">
-                                <input type="checkbox" ${settings.soundEffects ? 'checked' : ''} 
-                                    onchange="window.toggleSetting('soundEffects')">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-
-                        <div class="setting-item setting-item-slider">
-                            <div class="setting-info">
-                                <div class="setting-label">Lautstärke</div>
-                                <div class="setting-desc">Stelle die Lautstärke ein</div>
-                            </div>
-                            <div class="slider-container">
-                                <input type="range" class="modern-slider" min="0" max="100" 
-                                    value="${settings.volume}" 
-                                    oninput="window.updateVolume(this.value)">
-                                <div class="slider-value" id="volumeValue">${settings.volume}%</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">🎮 Spiel</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">Schwierigkeitsgrad</div>
-                                <div class="setting-desc">Wähle den Schwierigkeitsgrad</div>
-                            </div>
-                            <select class="select" onchange="window.updateDifficulty(this.value)">
-                                <option value="easy" ${settings.difficulty === 'easy' ? 'selected' : ''}>
-                                    Einfach
-                                </option>
-                                <option value="medium" ${settings.difficulty === 'medium' ? 'selected' : ''}>
-                                    Mittel
-                                </option>
-                                <option value="hard" ${settings.difficulty === 'hard' ? 'selected' : ''}>
-                                    Schwer
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">Zeitlimit</div>
-                                <div class="setting-desc">Aktiviere Zeitlimit für Fragen</div>
-                            </div>
-                            <label class="toggle">
-                                <input type="checkbox" ${settings.timeLimit ? 'checked' : ''} 
-                                    onchange="window.toggleSetting('timeLimit')">
-                                <span class="toggle-slider"></span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">� Benachrichtigungen</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="setting-item-compact">
-                            <div class="setting-row">
-                                <div class="setting-label">Benachrichtigungen aktivieren</div>
-                                <label class="toggle">
-                                    <input type="checkbox" id="notificationsEnabled" ${settings.notifications?.enabled !== false ? 'checked' : ''} 
-                                        onchange="window.settingsToggleNotifications()">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                            </div>
-                            <div class="setting-desc">Zeige Toast-Benachrichtigungen an</div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">Erfolgsmeldungen</div>
-                                <div class="setting-desc">Zeige Erfolgs-Benachrichtigungen</div>
-                            </div>
-                            <div class="setting-controls">
-                                <label class="toggle">
-                                    <input type="checkbox" id="notificationsSuccess" ${settings.notifications?.types?.success !== false ? 'checked' : ''} 
-                                        onchange="window.settingsToggleNotificationType('success')">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                                <button class="btn btn-success btn-xs" onclick="window.settingsTestNotification('success')">
-                                    Test
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">Fehlermeldungen</div>
-                                <div class="setting-desc">Zeige Fehler-Benachrichtigungen</div>
-                            </div>
-                            <div class="setting-controls">
-                                <label class="toggle">
-                                    <input type="checkbox" id="notificationsError" ${settings.notifications?.types?.error !== false ? 'checked' : ''} 
-                                        onchange="window.settingsToggleNotificationType('error')">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                                <button class="btn btn-danger btn-xs" onclick="window.settingsTestNotification('error')">
-                                    Test
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">Warnungen</div>
-                                <div class="setting-desc">Zeige Warnungs-Benachrichtigungen</div>
-                            </div>
-                            <div class="setting-controls">
-                                <label class="toggle">
-                                    <input type="checkbox" id="notificationsWarning" ${settings.notifications?.types?.warning !== false ? 'checked' : ''} 
-                                        onchange="window.settingsToggleNotificationType('warning')">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                                <button class="btn btn-warning btn-xs" onclick="window.settingsTestNotification('warning')">
-                                    Test
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">LocalStorage Events</div>
-                                <div class="setting-desc">Zeige Benachrichtigungen bei localStorage Operationen</div>
-                            </div>
-                            <div class="setting-controls">
-                                <label class="toggle">
-                                    <input type="checkbox" id="notificationsLocalStorage" ${settings.notifications?.types?.localstorage !== false ? 'checked' : ''} 
-                                        onchange="window.settingsToggleNotificationType('localstorage')">
-                                    <span class="toggle-slider"></span>
-                                </label>
-                                <button class="btn btn-secondary btn-xs" onclick="window.settingsTestNotification('localstorage')">
-                                    Test
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="setting-item">
-                            <div class="setting-info">
-                                <div class="setting-label">Position</div>
-                                <div class="setting-desc">Wähle die Position der Benachrichtigungen</div>
-                            </div>
-                            <select class="select" id="notificationPosition" onchange="window.settingsChangeNotificationPosition(this.value)">
-                                <option value="top-right" ${settings.notifications?.position === 'top-right' ? 'selected' : ''}>Oben rechts</option>
-                                <option value="top-left" ${settings.notifications?.position === 'top-left' ? 'selected' : ''}>Oben links</option>
-                                <option value="bottom-right" ${settings.notifications?.position === 'bottom-right' || !settings.notifications?.position ? 'selected' : ''}>Unten rechts</option>
-                                <option value="bottom-left" ${settings.notifications?.position === 'bottom-left' ? 'selected' : ''}>Unten links</option>
-                                <option value="top-center" ${settings.notifications?.position === 'top-center' ? 'selected' : ''}>Oben zentriert</option>
-                                <option value="bottom-center" ${settings.notifications?.position === 'bottom-center' ? 'selected' : ''}>Unten zentriert</option>
-                            </select>
-                        </div>
-
-                        <div class="setting-item setting-item-slider">
-                            <div class="setting-info">
-                                <div class="setting-label">Anzeigedauer</div>
-                                <div class="setting-desc">Dauer in Sekunden</div>
-                            </div>
-                            <div class="slider-container">
-                                <input type="range" class="modern-slider" id="notificationDuration" min="1" max="10" value="${settings.notifications?.duration || 3}" 
-                                       oninput="window.settingsChangeNotificationDuration(this.value)">
-                                <div class="slider-value" id="durationValue">${settings.notifications?.duration || 3}s</div>
-                            </div>
-                        </div>
-
-                        <div style="margin-top: var(--spacing-md);">
-                            <button class="btn btn-primary btn-sm" onclick="window.settingsShowNotificationHistory()">
-                                📋 Benachrichtigungs-Historie
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">�💰 Wallet</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="wallet-display">
-                            <div class="wallet-amount">${wallet.toLocaleString('de-DE')}</div>
-                            <div class="wallet-currency">Schülling</div>
-                        </div>
-                        <div class="wallet-actions">
-                            <button class="btn btn-outline" onclick="window.resetWallet()">
-                                🔄 Wallet zurücksetzen
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h2 class="card-title">ℹ️ Info</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-list">
-                            <div class="info-item">
-                                <span>Version:</span>
-                                <strong><a href="#changelog" data-route="changelog" class="version-link settings-version-display">${version}</a></strong>
-                            </div>
-                            <div class="info-item">
-                                <span>Entwickler:</span>
-                                <strong>RATEN OIDA Team</strong>
-                            </div>
-                            <div class="info-item">
-                                <span>Letzte Aktualisierung:</span>
-                                <strong>${new Date().toLocaleDateString('de-DE')}</strong>
-                            </div>
-                        </div>
-                        <div style="margin-top: var(--spacing-md);">
-                            <a href="#changelog" data-route="changelog" class="btn btn-secondary btn-sm">
-                                📜 Changelog anzeigen
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card card-danger">
-                    <div class="card-header">
-                        <h2 class="card-title">⚠️ Gefahrenzone</h2>
-                    </div>
-                    <div class="card-body">
-                        <div class="danger-warning">
-                            Diese Aktionen können nicht rückgängig gemacht werden!
-                        </div>
-                        <div class="danger-actions">
-                            <button class="btn btn-danger" onclick="window.resetAll()">
-                                🗑️ Alle Daten löschen
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+    });
+    
+    // Verstecke leere Sections
+    sections.forEach(section => {
+        const visibleItems = section.querySelectorAll('.setting-item-wrapper[style*="display: flex"]');
+        if (visibleItems.length === 0) {
+            section.style.display = 'none';
+        }
+    });
+    
+    // Zeige Suchergebnis
+    let resultEl = document.getElementById('searchResults');
+    if (!resultEl) {
+        resultEl = document.createElement('div');
+        resultEl.id = 'searchResults';
+        resultEl.className = 'search-results-info';
+        document.querySelector('.settings-content')?.prepend(resultEl);
+    }
+    
+    resultEl.innerHTML = `
+        <span class="result-count">${visibleCount}</span> Ergebnis${visibleCount !== 1 ? 'se' : ''} 
+        für "<span class="result-query">${query}</span>"
     `;
 };
 
-// Settings functions - DIREKT in localStorage speichern
+// Navigiere zu Section
+window.navigateToSection = (sectionId) => {
+    // Entferne active von allen
+    document.querySelectorAll('.section-nav-item').forEach(item => {
+        item.classList.remove('active');
+    });
+    
+    // Setze active
+    document.querySelector(`[data-section="${sectionId}"]`)?.classList.add('active');
+    
+    // Verstecke alle Sections
+    document.querySelectorAll('.settings-section').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Zeige ausgewählte Section
+    document.getElementById(sectionId)?.style.display = 'block';
+    
+    // Scrolle zu Top
+    document.querySelector('.settings-content')?.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    // Speichere letzte Section
+    localStorage.setItem('lastSettingsSection', sectionId);
+};
+
+// Accessibility Functions
+window.setFontSize = (size) => {
+    localStorage.setItem('fontSize', size);
+    document.body.setAttribute('data-font-size', size);
+    
+    // Update active button
+    document.querySelectorAll('.font-size-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.size === size);
+    });
+    
+    window.ui.showNotification(`Schriftgröße: ${size}`, 'success');
+};
+
+window.toggleHighContrast = (enabled) => {
+    localStorage.setItem('highContrast', enabled);
+    document.body.setAttribute('data-high-contrast', enabled);
+    window.ui.showNotification(`Hoher Kontrast: ${enabled ? 'Ein' : 'Aus'}`, 'success');
+};
+
+window.toggleReducedMotion = (enabled) => {
+    localStorage.setItem('reducedMotion', enabled);
+    document.body.setAttribute('data-reduced-motion', enabled);
+    window.ui.showNotification(`Reduzierte Bewegung: ${enabled ? 'Ein' : 'Aus'}`, 'success');
+};
+
+window.toggleScreenReader = (enabled) => {
+    localStorage.setItem('screenReaderMode', enabled);
+    document.body.setAttribute('data-screen-reader', enabled);
+    window.ui.showNotification(`Screen Reader Modus: ${enabled ? 'Ein' : 'Aus'}`, 'success');
+};
+
+window.setColorBlindMode = (mode) => {
+    localStorage.setItem('colorBlindMode', mode);
+    document.body.setAttribute('data-colorblind', mode);
+    
+    const modes = {
+        'none': 'Normal',
+        'protanopia': 'Protanopie (Rot-Schwäche)',
+        'deuteranopia': 'Deuteranopie (Grün-Schwäche)',
+        'tritanopia': 'Tritanopie (Blau-Schwäche)'
+    };
+    
+    window.ui.showNotification(`Farbmodus: ${modes[mode]}`, 'success');
+};
+
+// === GAMEPLAY SETTINGS ===
 window.toggleSetting = (settingName) => {
     if (window.app && window.app.store) {
-        // Setting umschalten
         const currentValue = window.app.store.state.settings[settingName];
         window.app.store.state.settings[settingName] = !currentValue;
-        
-        // SOFORT in localStorage speichern
-        localStorage.setItem('raten_oida_v2', JSON.stringify(window.app.store.state));
-        
-        // UI aktualisieren
+        window.app.store.saveState();
         window.app.store.notify();
         
-        // Spezial-Handling für Animationen
         if (settingName === 'animations') {
             const animations = window.app.store.state.settings.animations;
             document.body.style.setProperty('--transition-fast', animations ? '0.2s' : '0s');
@@ -707,36 +146,26 @@ window.toggleSetting = (settingName) => {
             document.body.style.setProperty('--transition-slow', animations ? '0.5s' : '0s');
         }
 
-        window.app.ui.showNotification('✓ Gespeichert', 'success');
+        window.app.ui.showNotification('Gespeichert', 'success');
     }
 };
 
 window.updateVolume = (value) => {
     if (window.app && window.app.store) {
         window.app.store.state.settings.volume = parseInt(value);
-        
-        // SOFORT in localStorage speichern
         localStorage.setItem('raten_oida_v2', JSON.stringify(window.app.store.state));
-        
-        // Update volume display
-        const volumeValue = document.querySelector('.volume-value');
-        if (volumeValue) {
-            volumeValue.textContent = `${value}%`;
-        }
     }
 };
 
 window.updateDifficulty = (value) => {
     if (window.app && window.app.store) {
         window.app.store.state.settings.difficulty = value;
-        
-        // SOFORT in localStorage speichern
         localStorage.setItem('raten_oida_v2', JSON.stringify(window.app.store.state));
-        
         window.app.ui.showNotification(`Schwierigkeitsgrad: ${value}`, 'info');
     }
 };
 
+// === WALLET & DATA FUNCTIONS ===
 window.resetWallet = () => {
     if (window.app && window.app.ui) {
         window.app.ui.showModal(`
@@ -747,12 +176,8 @@ window.resetWallet = () => {
                     Dein Wallet wird auf 1000 Schülling zurückgesetzt.
                 </p>
                 <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button class="btn btn-outline" onclick="window.closeModal()">
-                        Abbrechen
-                    </button>
-                    <button class="btn btn-primary" onclick="window.confirmResetWallet()">
-                        Zurücksetzen
-                    </button>
+                    <button class="btn btn-outline" onclick="window.closeModal()">Abbrechen</button>
+                    <button class="btn btn-primary" onclick="window.confirmResetWallet()">Zurücksetzen</button>
                 </div>
             </div>
         `);
@@ -763,7 +188,6 @@ window.confirmResetWallet = () => {
     if (window.app && window.app.store) {
         window.app.store.state.wallet = 1000;
         window.app.store.saveState();
-
         window.closeModal();
         window.app.ui.showNotification('Wallet wurde zurückgesetzt', 'success');
     }
@@ -780,12 +204,8 @@ window.resetAll = () => {
                     Das beinhaltet Wallet, Punkte, Statistiken und Einstellungen.
                 </p>
                 <div style="display: flex; gap: 1rem; justify-content: center;">
-                    <button class="btn btn-outline" onclick="window.closeModal()">
-                        Abbrechen
-                    </button>
-                    <button class="btn btn-danger" onclick="window.confirmResetAll()">
-                        Alles löschen
-                    </button>
+                    <button class="btn btn-outline" onclick="window.closeModal()">Abbrechen</button>
+                    <button class="btn btn-danger" onclick="window.confirmResetAll()">Alles löschen</button>
                 </div>
             </div>
         `);
@@ -797,28 +217,23 @@ window.confirmResetAll = () => {
         localStorage.removeItem('raten_oida_v2');
         window.closeModal();
         window.app.ui.showNotification('Alle Daten wurden gelöscht', 'info');
-        
-        // Reload page after short delay
-        setTimeout(() => {
-            window.location.reload();
-        }, 1500);
+        setTimeout(() => window.location.reload(), 1500);
     }
 };
 
-// Bottom Navigation Settings Functions
+// === BOTTOM NAVIGATION SETTINGS ===
 window.settingsToggleBottomNav = () => {
     const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
-    settings.visible = document.getElementById('bottomNavVisible').checked;
+    settings.visible = event.target.checked;
     localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
     window.applyBottomNavSettings();
-    window.app.ui.showNotification(settings.visible ? '📱 Navigation aktiviert' : '📱 Navigation deaktiviert', 'info');
+    window.app.ui.showNotification(settings.visible ? 'Navigation aktiviert' : 'Navigation deaktiviert', 'info');
 };
 
 window.settingsUpdateBottomNavOpacity = (value) => {
     const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
     settings.opacity = parseInt(value);
     localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    document.getElementById('opacityValue').textContent = value + '%';
     window.applyBottomNavSettings();
 };
 
@@ -826,71 +241,19 @@ window.settingsUpdateBottomNavSize = (value) => {
     const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
     settings.size = parseInt(value);
     localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    document.getElementById('sizeValue').textContent = value + '%';
     window.applyBottomNavSettings();
-};
-
-window.settingsToggleNavItem = (item) => {
-    const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
-    if (!settings.items) settings.items = {};
-    
-    const checkbox = event.target;
-    settings.items[item] = checkbox.checked;
-    
-    localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
-    window.applyBottomNavSettings();
-    window.app.ui.showNotification(`${checkbox.checked ? '✅' : '❌'} ${item.toUpperCase()}`, 'info');
-};
-
-window.settingsResetBottomNav = () => {
-    const defaultSettings = {
-        visible: true,
-        opacity: 95,
-        size: 100,
-        items: {
-            home: true,
-            games: true,
-            points: true,
-            stats: true,
-            settings: true,
-            dev: false
-        }
-    };
-    localStorage.setItem('bottomNavSettings', JSON.stringify(defaultSettings));
-    window.applyBottomNavSettings();
-    window.app.ui.showNotification('🔄 Navigation zurückgesetzt', 'success');
-    window.app.router.render();
 };
 
 // === NOTIFICATION SETTINGS ===
-
 window.settingsToggleNotifications = () => {
     const settings = window.app.store.getSettings();
-    const enabled = document.getElementById('notificationsEnabled').checked;
+    const enabled = event.target.checked;
     
     if (!settings.notifications) settings.notifications = {};
     settings.notifications.enabled = enabled;
     
     window.app.store.saveSettings(settings);
-    window.app.ui.showNotification(`${enabled ? '✅' : '❌'} Benachrichtigungen ${enabled ? 'aktiviert' : 'deaktiviert'}`, 'info');
-};
-
-window.settingsToggleNotificationType = (type) => {
-    const settings = window.app.store.getSettings();
-    const enabled = event.target.checked;
-    
-    if (!settings.notifications) settings.notifications = {};
-    if (!settings.notifications.types) settings.notifications.types = {};
-    settings.notifications.types[type] = enabled;
-    
-    window.app.store.saveSettings(settings);
-    
-    // Spezielle Behandlung für localStorage Events
-    if (type === 'localstorage') {
-        window.app.ui.enableLocalStorageEvents(enabled);
-    }
-    
-    window.app.ui.showNotification(`${enabled ? '✅' : '❌'} ${type.toUpperCase()}-Benachrichtigungen ${enabled ? 'aktiviert' : 'deaktiviert'}`, 'info');
+    window.app.ui.showNotification(`Benachrichtigungen ${enabled ? 'aktiviert' : 'deaktiviert'}`, 'info');
 };
 
 window.settingsChangeNotificationPosition = (position) => {
@@ -900,7 +263,7 @@ window.settingsChangeNotificationPosition = (position) => {
     settings.notifications.position = position;
     
     window.app.store.saveSettings(settings);
-    window.app.ui.showNotification(`📍 Position: ${position.replace('-', ' ').toUpperCase()}`, 'info');
+    window.app.ui.showNotification(`Position: ${position.replace('-', ' ')}`, 'info');
 };
 
 window.settingsChangeNotificationDuration = (duration) => {
@@ -910,86 +273,537 @@ window.settingsChangeNotificationDuration = (duration) => {
     settings.notifications.duration = parseInt(duration);
     
     window.app.store.saveSettings(settings);
-    document.getElementById('durationValue').textContent = duration + 's';
-    window.app.ui.showNotification(`⏱️ Dauer: ${duration}s`, 'info');
+    window.app.ui.showNotification(`Dauer: ${duration}s`, 'info');
 };
 
 window.settingsShowNotificationHistory = () => {
     const history = JSON.parse(localStorage.getItem('notificationHistory') || '[]');
     
-    const typeIcons = {
-        success: '✅',
-        error: '❌',
-        warning: '⚠️',
-        info: 'ℹ️',
-        localstorage: '💾'
-    };
+    const typeIcons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+    const typeLabels = { success: 'Erfolg', error: 'Fehler', warning: 'Warnung', info: 'Info' };
     
-    const typeLabels = {
-        success: 'Erfolg',
-        error: 'Fehler',
-        warning: 'Warnung',
-        info: 'Info',
-        localstorage: 'LocalStorage'
-    };
-    
-    const modalContent = `
-        <div class="notification-history-container">
-            ${history.length === 0 ? 
-                '<div class="empty-state">📭 Keine Benachrichtigungen in der Historie</div>' :
-                `<div class="history-stats">
-                    <div class="stat-badge">📊 Gesamt: ${history.length}</div>
-                    <div class="stat-badge">📋 Angezeigt: ${Math.min(50, history.length)}</div>
-                </div>
-                <div class="notification-history-list">
-                    ${history.slice(-50).reverse().map((item, index) => {
-                        const date = new Date(item.timestamp);
-                        const timeStr = date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                        const dateStr = date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
-                        const icon = typeIcons[item.type] || '📢';
-                        const label = typeLabels[item.type] || item.type;
-                        
-                        return `
-                            <div class="history-item history-item-${item.type}">
-                                <div class="history-icon">${icon}</div>
-                                <div class="history-content">
-                                    <div class="history-header">
-                                        <span class="history-type-badge badge-${item.type}">${label}</span>
-                                    </div>
-                                    <div class="history-message">${item.message}</div>
-                                    <div class="history-footer">
-                                        <span class="history-date">${dateStr}</span>
-                                        <span class="history-time">${timeStr}</span>
-                                    </div>
-                                </div>
+    const modalContent = history.length === 0 ? 
+        '<div style="text-align:center;padding:2rem;">📭 Keine Benachrichtigungen in der Historie</div>' :
+        `<div style="max-height:400px;overflow-y:auto;">
+            ${history.slice(-50).reverse().map(item => {
+                const date = new Date(item.timestamp);
+                const timeStr = date.toLocaleTimeString('de-DE');
+                const icon = typeIcons[item.type] || '📢';
+                return `
+                    <div style="padding:0.75rem;margin-bottom:0.5rem;background:var(--bg-secondary);border-radius:8px;">
+                        <div style="display:flex;gap:0.5rem;align-items:center;">
+                            <span style="font-size:1.5rem;">${icon}</span>
+                            <div style="flex:1;">
+                                <div style="font-weight:600;">${item.message}</div>
+                                <div style="font-size:0.8rem;color:var(--text-secondary);">${timeStr}</div>
                             </div>
-                        `;
-                    }).join('')}
-                </div>`
-            }
-        </div>
-    `;
+                        </div>
+                    </div>
+                `;
+            }).join('')}
+        </div>`;
     
     window.app.ui.showModal('📋 Benachrichtigungs-Historie', modalContent, [
-        { label: '🗑️ Alle löschen', type: 'danger', action: 'clear', callback: () => {
-            if (confirm('Möchten Sie wirklich die gesamte Benachrichtigungs-Historie löschen?')) {
-                localStorage.removeItem('notificationHistory');
-                window.app.ui.showNotification('🗑️ Historie gelöscht', 'info');
-                window.settingsShowNotificationHistory();
-            }
-        }},
-        { label: '✕ Schließen', type: 'secondary', action: 'close' }
+        { label: 'Schließen', type: 'secondary', action: 'close' }
     ]);
 };
 
-window.settingsTestNotification = (type) => {
-    const messages = {
-        success: '✅ Test-Erfolgsmeldung',
-        error: '❌ Test-Fehlermeldung', 
-        warning: '⚠️ Test-Warnung',
-        info: 'ℹ️ Test-Info-Meldung',
-        localstorage: '💾 local storage event - Type: testen'
+// Toggle-Style wechseln
+window.setToggleStyle = (style) => {
+    localStorage.setItem('toggleStyle', style);
+    document.body.setAttribute('data-toggle-style', style);
+    
+    document.querySelectorAll('.toggle-style-option').forEach(option => {
+        option.classList.toggle('active', option.dataset.style === style);
+    });
+    
+    window.ui.showNotification(`Toggle-Style: ${style}`, 'success');
+};
+
+// Theme wechseln
+window.setTheme = (theme) => {
+    localStorage.setItem('appTheme', theme);
+    
+    if (theme === 'auto') {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        document.body.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+    } else {
+        document.body.setAttribute('data-theme', theme);
+    }
+    
+    document.querySelectorAll('.theme-option').forEach(option => {
+        option.classList.toggle('active', option.dataset.theme === theme);
+    });
+    
+    window.dispatchEvent(new StorageEvent('storage', {
+        key: 'appTheme',
+        newValue: theme
+    }));
+    
+    window.ui.showNotification(`Theme: ${theme}`, 'success');
+};
+
+export const settingsView = (store) => {
+    const settings = store.getSettings();
+    const wallet = store.getWallet();
+    
+    // Load accessibility settings
+    const fontSize = localStorage.getItem('fontSize') || 'normal';
+    const highContrast = localStorage.getItem('highContrast') === 'true';
+    const reducedMotion = localStorage.getItem('reducedMotion') === 'true';
+    const screenReader = localStorage.getItem('screenReaderMode') === 'true';
+    const colorBlindMode = localStorage.getItem('colorBlindMode') || 'none';
+    
+    // Bottom Nav Settings
+    const bottomNavSettings = JSON.parse(localStorage.getItem('bottomNavSettings') || JSON.stringify({
+        visible: true,
+        opacity: 95,
+        size: 100,
+        items: {
+            home: true,
+            games: true,
+            points: true,
+            stats: true,
+            settings: true,
+            dev: true
+        }
+    }));
+    
+    // Load notification settings
+    const notificationSettings = settings.notifications || {
+        enabled: true,
+        types: { success: true, error: true, warning: true, info: true },
+        position: 'bottom-right',
+        duration: 3
     };
     
-    window.app.ui.showNotification(messages[type], type);
+    return `
+        <div class="modern-settings-view">
+            <!-- Header mit Suche -->
+            <div class="modern-settings-header">
+                <h1 class="modern-settings-title">⚙️ Einstellungen</h1>
+                <div class="modern-search-container">
+                    <div class="search-icon">🔍</div>
+                    <input 
+                        type="search" 
+                        class="modern-search-input" 
+                        placeholder="Suche Einstellungen (min. 2 Zeichen)..."
+                        oninput="window.searchSettings(this.value)"
+                        autocomplete="off"
+                    >
+                    <div class="search-hint">Ab 2 Buchstaben wird gefiltert</div>
+                </div>
+            </div>
+            
+            <!-- Navigation Tabs -->
+            <div class="modern-section-nav">
+                <button class="section-nav-item active" data-section="appearance" onclick="window.navigateToSection('appearance')">
+                    <span class="nav-icon">🎨</span>
+                    <span class="nav-label">Darstellung</span>
+                </button>
+                <button class="section-nav-item" data-section="accessibility" onclick="window.navigateToSection('accessibility')">
+                    <span class="nav-icon">♿</span>
+                    <span class="nav-label">Barrierefrei</span>
+                </button>
+                <button class="section-nav-item" data-section="interface" onclick="window.navigateToSection('interface')">
+                    <span class="nav-icon">📱</span>
+                    <span class="nav-label">Interface</span>
+                </button>
+                <button class="section-nav-item" data-section="gameplay" onclick="window.navigateToSection('gameplay')">
+                    <span class="nav-icon">🎮</span>
+                    <span class="nav-label">Gameplay</span>
+                </button>
+                <button class="section-nav-item" data-section="notifications" onclick="window.navigateToSection('notifications')">
+                    <span class="nav-icon">🔔</span>
+                    <span class="nav-label">Mitteilungen</span>
+                </button>
+                <button class="section-nav-item" data-section="data" onclick="window.navigateToSection('data')">
+                    <span class="nav-icon">💾</span>
+                    <span class="nav-label">Daten</span>
+                </button>
+            </div>
+            
+            <!-- Content -->
+            <div class="settings-content">
+                
+                <!-- APPEARANCE SECTION -->
+                <div id="appearance" class="settings-section">
+                    <h2 class="section-header">🎨 Darstellung</h2>
+                    
+                    <!-- Theme Picker -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">App-Theme</div>
+                            <div class="setting-desc">Wähle dein bevorzugtes Farbschema</div>
+                        </div>
+                        <div class="theme-picker-modern">
+                            <div class="theme-option-modern" data-theme="auto" onclick="window.setTheme('auto')">
+                                <div class="theme-preview auto-preview">
+                                    <div class="auto-icon">🌓</div>
+                                </div>
+                                <span class="theme-name">Auto</span>
+                            </div>
+                            <div class="theme-option-modern" data-theme="light" onclick="window.setTheme('light')">
+                                <div class="theme-preview" style="background: linear-gradient(135deg, #fff 50%, #f5f5f5 50%);"></div>
+                                <span class="theme-name">Hell</span>
+                            </div>
+                            <div class="theme-option-modern" data-theme="dark" onclick="window.setTheme('dark')">
+                                <div class="theme-preview" style="background: linear-gradient(135deg, #0a0e27 50%, #00ff88 50%);"></div>
+                                <span class="theme-name">Dunkel</span>
+                            </div>
+                            <div class="theme-option-modern" data-theme="metal" onclick="window.setTheme('metal')">
+                                <div class="theme-preview" style="background: linear-gradient(135deg, #2a2a2a 0%, #c0c0c0 100%);"></div>
+                                <span class="theme-name">Metal</span>
+                            </div>
+                            <div class="theme-option-modern" data-theme="rapid" onclick="window.setTheme('rapid')">
+                                <div class="theme-preview" style="background: linear-gradient(135deg, #00a64f 50%, #fff 50%);"></div>
+                                <span class="theme-name">Rapid</span>
+                            </div>
+                            <div class="theme-option-modern" data-theme="gaylord" onclick="window.setTheme('gaylord')">
+                                <div class="theme-preview rainbow-preview"></div>
+                                <span class="theme-name">Rainbow</span>
+                            </div>
+                            <div class="theme-option-modern" data-theme="spritzkack" onclick="window.setTheme('spritzkack')">
+                                <div class="theme-preview" style="background: linear-gradient(135deg, #8b6f47 0%, #3d2817 100%);"></div>
+                                <span class="theme-name">Braun</span>
+                            </div>
+                            <div class="theme-option-modern" data-theme="spongebob" onclick="window.setTheme('spongebob')">
+                                <div class="theme-preview" style="background: linear-gradient(135deg, #ffcc00 50%, #00b8d4 50%);"></div>
+                                <span class="theme-name">Spongebob</span>
+                            </div>
+                            <div class="theme-option-modern" data-theme="420" onclick="window.setTheme('420')">
+                                <div class="theme-preview" style="background: linear-gradient(135deg, #32cd32 0%, #228b22 100%);"></div>
+                                <span class="theme-name">420</span>
+                            </div>
+                            <div class="theme-option-modern" data-theme="acid" onclick="window.setTheme('acid')">
+                                <div class="theme-preview acid-preview"></div>
+                                <span class="theme-name">Acid</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Toggle Style -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">Toggle-Design</div>
+                            <div class="setting-desc">Stil der Schalter-Elemente</div>
+                        </div>
+                        <div class="toggle-grid-modern">
+                            ${['classic', 'ios', 'material', 'neon', 'minimal', 'skeleton', 'flip', 'liquid', 'gear', 'pulse'].map(style => `
+                                <div class="toggle-option-modern" data-style="${style}" onclick="window.setToggleStyle('${style}')">
+                                    <div class="toggle-preview-modern">
+                                        <label class="toggle toggle-${style}">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-name">${style.charAt(0).toUpperCase() + style.slice(1)}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ACCESSIBILITY SECTION -->
+                <div id="accessibility" class="settings-section" style="display: none;">
+                    <h2 class="section-header">♿ Barrierefreiheit</h2>
+                    
+                    <!-- Schriftgröße -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">Schriftgröße</div>
+                            <div class="setting-desc">Passe die Textgröße an deine Bedürfnisse an</div>
+                        </div>
+                        <div class="font-size-controls">
+                            <button class="font-size-btn ${fontSize === 'small' ? 'active' : ''}" data-size="small" onclick="window.setFontSize('small')">
+                                <span class="size-icon">A</span>
+                                <span class="size-label">Klein</span>
+                            </button>
+                            <button class="font-size-btn ${fontSize === 'normal' ? 'active' : ''}" data-size="normal" onclick="window.setFontSize('normal')">
+                                <span class="size-icon" style="font-size: 1.2em;">A</span>
+                                <span class="size-label">Normal</span>
+                            </button>
+                            <button class="font-size-btn ${fontSize === 'large' ? 'active' : ''}" data-size="large" onclick="window.setFontSize('large')">
+                                <span class="size-icon" style="font-size: 1.4em;">A</span>
+                                <span class="size-label">Groß</span>
+                            </button>
+                            <button class="font-size-btn ${fontSize === 'xlarge' ? 'active' : ''}" data-size="xlarge" onclick="window.setFontSize('xlarge')">
+                                <span class="size-icon" style="font-size: 1.6em;">A</span>
+                                <span class="size-label">Sehr Groß</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- Hoher Kontrast -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-inline">
+                            <div class="setting-info">
+                                <div class="setting-label">🔆 Hoher Kontrast</div>
+                                <div class="setting-desc">Erhöht den Kontrast für bessere Lesbarkeit</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" ${highContrast ? 'checked' : ''} onchange="window.toggleHighContrast(this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Reduzierte Bewegung -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-inline">
+                            <div class="setting-info">
+                                <div class="setting-label">🎭 Reduzierte Bewegung</div>
+                                <div class="setting-desc">Minimiert Animationen und Bewegungen</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" ${reducedMotion ? 'checked' : ''} onchange="window.toggleReducedMotion(this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Screen Reader -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-inline">
+                            <div class="setting-info">
+                                <div class="setting-label">🔊 Screen Reader Modus</div>
+                                <div class="setting-desc">Optimiert für Bildschirmlesegeräte</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" ${screenReader ? 'checked' : ''} onchange="window.toggleScreenReader(this.checked)">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Farbenblindheit -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">🎨 Farbanpassung</div>
+                            <div class="setting-desc">Anpassungen für Farbenblindheit</div>
+                        </div>
+                        <select class="modern-select" onchange="window.setColorBlindMode(this.value)">
+                            <option value="none" ${colorBlindMode === 'none' ? 'selected' : ''}>Keine Anpassung</option>
+                            <option value="protanopia" ${colorBlindMode === 'protanopia' ? 'selected' : ''}>Protanopie (Rot-Schwäche)</option>
+                            <option value="deuteranopia" ${colorBlindMode === 'deuteranopia' ? 'selected' : ''}>Deuteranopie (Grün-Schwäche)</option>
+                            <option value="tritanopia" ${colorBlindMode === 'tritanopia' ? 'selected' : ''}>Tritanopie (Blau-Schwäche)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- INTERFACE SECTION -->
+                <div id="interface" class="settings-section" style="display: none;">
+                    <h2 class="section-header">📱 Interface</h2>
+                    
+                    <!-- Bottom Nav -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-inline">
+                            <div class="setting-info">
+                                <div class="setting-label">📊 Navigation anzeigen</div>
+                                <div class="setting-desc">Untere Navigationsleiste</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" ${bottomNavSettings.visible ? 'checked' : ''} onchange="window.settingsToggleBottomNav()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">Transparenz</div>
+                            <div class="setting-desc">Navigation Deckkraft: <span id="navOpacityValue">${bottomNavSettings.opacity}%</span></div>
+                        </div>
+                        <input type="range" class="modern-slider" min="50" max="100" value="${bottomNavSettings.opacity}" 
+                            oninput="window.settingsUpdateBottomNavOpacity(this.value); document.getElementById('navOpacityValue').textContent = this.value + '%'">
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">Größe</div>
+                            <div class="setting-desc">Navigation Größe: <span id="navSizeValue">${bottomNavSettings.size}%</span></div>
+                        </div>
+                        <input type="range" class="modern-slider" min="80" max="120" value="${bottomNavSettings.size}" 
+                            oninput="window.settingsUpdateBottomNavSize(this.value); document.getElementById('navSizeValue').textContent = this.value + '%'">
+                    </div>
+                </div>
+                
+                <!-- GAMEPLAY SECTION -->
+                <div id="gameplay" class="settings-section" style="display: none;">
+                    <h2 class="section-header">🎮 Gameplay</h2>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">Schwierigkeitsgrad</div>
+                            <div class="setting-desc">Wähle den Spielschwierigkeitsgrad</div>
+                        </div>
+                        <select class="modern-select" onchange="window.updateDifficulty(this.value)">
+                            <option value="easy" ${settings.difficulty === 'easy' ? 'selected' : ''}>😊 Einfach</option>
+                            <option value="medium" ${settings.difficulty === 'medium' ? 'selected' : ''}>😐 Mittel</option>
+                            <option value="hard" ${settings.difficulty === 'hard' ? 'selected' : ''}>😤 Schwer</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-inline">
+                            <div class="setting-info">
+                                <div class="setting-label">⏱️ Zeitlimit</div>
+                                <div class="setting-desc">Aktiviere Zeitlimit für Fragen</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" ${settings.timeLimit ? 'checked' : ''} onchange="window.toggleSetting('timeLimit')">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-inline">
+                            <div class="setting-info">
+                                <div class="setting-label">🔊 Sound-Effekte</div>
+                                <div class="setting-desc">Spiele Sound-Effekte bei Aktionen</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" ${settings.soundEffects ? 'checked' : ''} onchange="window.toggleSetting('soundEffects')">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">Lautstärke</div>
+                            <div class="setting-desc">Stelle die Lautstärke ein: <span id="volumeValue">${settings.volume}%</span></div>
+                        </div>
+                        <input type="range" class="modern-slider" min="0" max="100" value="${settings.volume}" 
+                            oninput="window.updateVolume(this.value); document.getElementById('volumeValue').textContent = this.value + '%'">
+                    </div>
+                </div>
+                
+                <!-- NOTIFICATIONS SECTION -->
+                <div id="notifications" class="settings-section" style="display: none;">
+                    <h2 class="section-header">🔔 Mitteilungen</h2>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-inline">
+                            <div class="setting-info">
+                                <div class="setting-label">🔔 Benachrichtigungen</div>
+                                <div class="setting-desc">Aktiviere Benachrichtigungen</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" ${notificationSettings.enabled ? 'checked' : ''} onchange="window.settingsToggleNotifications()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">Position</div>
+                            <div class="setting-desc">Wo sollen Benachrichtigungen erscheinen?</div>
+                        </div>
+                        <select class="modern-select" onchange="window.settingsChangeNotificationPosition(this.value)">
+                            <option value="top-right" ${notificationSettings.position === 'top-right' ? 'selected' : ''}>↗️ Oben Rechts</option>
+                            <option value="top-left" ${notificationSettings.position === 'top-left' ? 'selected' : ''}>↖️ Oben Links</option>
+                            <option value="top-center" ${notificationSettings.position === 'top-center' ? 'selected' : ''}>⬆️ Oben Mitte</option>
+                            <option value="bottom-right" ${notificationSettings.position === 'bottom-right' ? 'selected' : ''}>↘️ Unten Rechts</option>
+                            <option value="bottom-left" ${notificationSettings.position === 'bottom-left' ? 'selected' : ''}>↙️ Unten Links</option>
+                            <option value="bottom-center" ${notificationSettings.position === 'bottom-center' ? 'selected' : ''}>⬇️ Unten Mitte</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">Anzeigedauer</div>
+                            <div class="setting-desc">${notificationSettings.duration} Sekunden</div>
+                        </div>
+                        <input type="range" class="modern-slider" min="2" max="10" value="${notificationSettings.duration}" 
+                            oninput="this.previousElementSibling.querySelector('.setting-desc').textContent = this.value + ' Sekunden'; window.settingsChangeNotificationDuration(this.value)">
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <button class="btn-modern btn-primary" onclick="window.settingsShowNotificationHistory()">
+                            📜 Benachrichtigungs-Historie
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- DATA SECTION -->
+                <div id="data" class="settings-section" style="display: none;">
+                    <h2 class="section-header">💾 Daten & Speicher</h2>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">💰 Aktuelles Guthaben</div>
+                            <div class="setting-desc">${wallet} Credits</div>
+                        </div>
+                        <button class="btn-modern btn-danger" onclick="window.resetWallet()">
+                            🗑️ Guthaben zurücksetzen
+                        </button>
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">⚠️ Alle Daten löschen</div>
+                            <div class="setting-desc">Setzt alle Einstellungen und Fortschritt zurück</div>
+                        </div>
+                        <button class="btn-modern btn-danger" onclick="window.resetAll()">
+                            💣 Alles zurücksetzen
+                        </button>
+                    </div>
+                    
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">ℹ️ App-Version</div>
+                            <div class="setting-desc settings-version-display">1.3.3.7</div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    `;
 };
+
+// Initialisiere beim Laden
+setTimeout(() => {
+    // Theme initialisieren
+    const savedTheme = localStorage.getItem('appTheme') || 'dark';
+    document.querySelectorAll('.theme-option-modern').forEach(option => {
+        option.classList.toggle('active', option.dataset.theme === savedTheme);
+    });
+    
+    // Toggle Style initialisieren
+    const savedStyle = localStorage.getItem('toggleStyle') || 'classic';
+    document.body.setAttribute('data-toggle-style', savedStyle);
+    document.querySelectorAll('.toggle-option-modern').forEach(option => {
+        option.classList.toggle('active', option.dataset.style === savedStyle);
+    });
+    
+    // Accessibility initialisieren
+    const fontSize = localStorage.getItem('fontSize') || 'normal';
+    const highContrast = localStorage.getItem('highContrast') === 'true';
+    const reducedMotion = localStorage.getItem('reducedMotion') === 'true';
+    const screenReader = localStorage.getItem('screenReaderMode') === 'true';
+    const colorBlindMode = localStorage.getItem('colorBlindMode') || 'none';
+    
+    document.body.setAttribute('data-font-size', fontSize);
+    document.body.setAttribute('data-high-contrast', highContrast);
+    document.body.setAttribute('data-reduced-motion', reducedMotion);
+    document.body.setAttribute('data-screen-reader', screenReader);
+    document.body.setAttribute('data-colorblind', colorBlindMode);
+    
+    // Letzte Section wiederherstellen
+    const lastSection = localStorage.getItem('lastSettingsSection') || 'appearance';
+    window.navigateToSection(lastSection);
+    
+    // Version laden
+    fetch('./version.json')
+        .then(response => response.json())
+        .then(data => {
+            document.querySelectorAll('.settings-version-display').forEach(el => {
+                el.textContent = data.version;
+            });
+        })
+        .catch(() => {});
+}, 200);
