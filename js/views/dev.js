@@ -81,7 +81,8 @@ export const devView = (store) => {
                 <h3>🎛️ Toggles</h3>
                 <div class="toggle-grid">
                     <div class="toggle-compact" id="toggleCacheBuster" onclick="window.devToggleCacheBuster()">
-                        <span class="toggle-compact-label">${cacheBusterEnabled ? '🔄' : '⏸️'} Cache</span>
+                        <span class="toggle-compact-label">${cacheBusterEnabled ? '🔄' : '⏸️'} Chebuster</span>
+                        <button class="toggle-info-btn" onclick="event.stopPropagation(); window.devShowCacheBusterInfo()" title="Info">ℹ️</button>
                         <div class="toggle-switch ${cacheBusterEnabled ? 'on' : 'off'}"></div>
                     </div>
                     
@@ -563,5 +564,49 @@ window.devWinAll = () => {
             input.addEventListener('change', validateInput);
             validateInput(); // Initial check
         }, 100);
+    }
+};
+
+window.devShowCacheBusterInfo = () => {
+    if (window.app) {
+        const content = `
+            <div class="dev-info-content">
+                <h4>🔄 Chebuster - Cache-Busting System</h4>
+                <p>Der Chebuster verhindert Browser-Caching-Probleme während der Entwicklung:</p>
+
+                <div class="dev-info-section">
+                    <h5>🚀 Funktionen:</h5>
+                    <ul>
+                        <li><strong>Cache-Busting:</strong> Fügt Timestamp zu CSS/JS-URLs hinzu</li>
+                        <li><strong>Auto-Clear:</strong> Löscht Browser-Caches bei jedem Reload</li>
+                        <li><strong>Service Worker:</strong> Umgehung von Cache-Strategien</li>
+                        <li><strong>Versionierung:</strong> Erzwingt frisches Laden von Assets</li>
+                    </ul>
+                </div>
+
+                <div class="dev-info-section">
+                    <h5>⚙️ Technische Details:</h5>
+                    <ul>
+                        <li><strong>Query-Parameter:</strong> <code>?v=${Date.now()}</code></li>
+                        <li><strong>Cache-API:</strong> Automatische Löschung aller Caches</li>
+                        <li><strong>Meta-Tags:</strong> HTTP Cache-Control Header</li>
+                        <li><strong>Storage:</strong> localStorage-Schlüssel: 'cacheBusterEnabled'</li>
+                    </ul>
+                </div>
+
+                <div class="dev-info-section">
+                    <h5>💡 Empfehlung:</h5>
+                    <p>Während der Entwicklung aktiviert lassen für sofortige Änderungsvorschau. Im Produktivbetrieb kann es deaktiviert werden.</p>
+                </div>
+            </div>
+        `;
+
+        window.app.ui.showModal('ℹ️ Chebuster Info', content, [
+            {
+                label: 'Verstanden',
+                type: 'primary',
+                action: 'ok'
+            }
+        ]);
     }
 };

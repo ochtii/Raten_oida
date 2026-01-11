@@ -59,6 +59,11 @@ class App {
             // Store Updates überwachen
             this.store.subscribe(() => this.onStoreUpdate());
             
+            // Footer-Info bei jedem Reload aktualisieren
+            if (typeof window.updateFooterInfo === 'function') {
+                window.updateFooterInfo();
+            }
+            
             console.log('✅ App erfolgreich geladen');
         } catch (error) {
             console.error('❌ Fehler beim Laden der App:', error);

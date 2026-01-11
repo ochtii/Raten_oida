@@ -2418,6 +2418,74 @@ body::before {
     background: linear-gradient(135deg, rgba(0, 255, 136, 0.05), rgba(0, 240, 255, 0.05));
 }
 
+/* === DEV TOOLS ENHANCEMENTS === */
+.toggle-compact {
+    position: relative;
+}
+
+.toggle-info-btn {
+    position: absolute;
+    right: 50px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 1px solid rgba(0, 255, 136, 0.3);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    z-index: 2;
+}
+
+.toggle-info-btn:hover {
+    background: rgba(0, 255, 136, 0.1);
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.dev-info-content {
+    line-height: 1.6;
+}
+
+.dev-info-content h4 {
+    color: var(--primary);
+    margin-bottom: var(--spacing-md);
+    font-size: 1.25rem;
+}
+
+.dev-info-section {
+    margin-bottom: var(--spacing-lg);
+}
+
+.dev-info-section h5 {
+    color: var(--secondary);
+    margin-bottom: var(--spacing-sm);
+    font-size: 1rem;
+}
+
+.dev-info-content ul {
+    margin-left: var(--spacing-md);
+}
+
+.dev-info-content li {
+    margin-bottom: var(--spacing-xs);
+}
+
+.dev-info-content code {
+    background: rgba(0, 255, 136, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+}
+
 .modal-header h2 {
     margin: 0;
     color: var(--primary);
