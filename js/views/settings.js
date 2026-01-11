@@ -630,7 +630,8 @@ window.settingsShowNotificationHistory = () => {
             }
         }},
         { label: '✕ Schließen', type: 'secondary', action: 'close' }
-window.settingsTestNotification = (type) => {
+    ]);
+};
     const messages = {
         success: '✅ Test-Erfolgsmeldung',
         error: '❌ Test-Fehlermeldung', 
