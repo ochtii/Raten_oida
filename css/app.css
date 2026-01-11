@@ -7,8 +7,8 @@
     margin-right: 0.7em;
 }
 .dev-split-btn button {
-    width: 38px;
-    height: 2.1em;
+    width: 48px;
+    height: 2.4em;
     font-size: 1.1em;
     font-weight: bold;
     border: none;
@@ -19,13 +19,13 @@
     transition: background 0.18s, transform 0.18s;
 }
 .dev-split-btn-minus {
-    background: #2a1a1a;
-    color: #ff3b3b;
+    background: #ff0033;
+    color: #fff;
     border-right: 1px solid #333;
 }
 .dev-split-btn-plus {
-    background: #1a2a1a;
-    color: #00ff88;
+    background: #00ff88;
+    color: #000;
 }
 .dev-split-btn-animate {
     transform: scale(0.93);
