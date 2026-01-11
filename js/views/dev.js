@@ -1114,32 +1114,3 @@ window.devShowCacheBusterInfo = () => {
         action: 'close'
     }]);
 };
-                    </ul>
-                </div>
-
-                <div class="dev-info-section">
-                    <h5>⚙️ Technische Details:</h5>
-                    <ul>
-                        <li><strong>Query-Parameter:</strong> <code>?v=${Date.now()}</code></li>
-                        <li><strong>Cache-API:</strong> Automatische Löschung aller Caches</li>
-                        <li><strong>Meta-Tags:</strong> HTTP Cache-Control Header</li>
-                        <li><strong>Storage:</strong> localStorage-Schlüssel: 'cacheBusterEnabled'</li>
-                    </ul>
-                </div>
-
-                <div class="dev-info-section">
-                    <h5>💡 Empfehlung:</h5>
-                    <p>Während der Entwicklung aktiviert lassen für sofortige Änderungsvorschau. Im Produktivbetrieb kann es deaktiviert werden.</p>
-                </div>
-            </div>
-        `;
-
-        window.app.ui.showModal('❓ Cachebuster Info', content, [
-            {
-                label: 'Verstanden',
-                type: 'primary',
-                action: 'ok'
-            }
-        ]);
-    }
-};
