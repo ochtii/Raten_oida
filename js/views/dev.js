@@ -177,7 +177,8 @@ window.devChangeWallet = (amount, btn) => {
         const state = window.app.store.state;
         state.wallet = Math.max(0, (state.wallet ?? 0) + amount);
         window.app.store.saveState();
-        window.app.ui.showNotification(`💰 ${amount > 0 ? '+' : ''}${amount} Schülling`, amount > 0 ? 'success' : 'warning');
+        // Feuerwerks-Animation anstatt Notification
+        devShowFireworks(`💰 ${amount > 0 ? '+' : ''}${amount}`, amount > 0 ? '#00ff88' : '#ff0033');
         window.app.router.render();
         devAnimateBtn(btn);
     }
@@ -188,7 +189,8 @@ window.devChangePoints = (amount, btn) => {
         const state = window.app.store.state;
         state.points = Math.max(0, (state.points ?? 0) + amount);
         window.app.store.saveState();
-        window.app.ui.showNotification(`⭐ ${amount > 0 ? '+' : ''}${amount} Punkte`, amount > 0 ? 'success' : 'warning');
+        // Feuerwerks-Animation anstatt Notification
+        devShowFireworks(`⭐ ${amount > 0 ? '+' : ''}${amount}`, amount > 0 ? '#00f0ff' : '#ff6400');
         window.app.router.render();
         devAnimateBtn(btn);
     }
@@ -198,6 +200,71 @@ function devAnimateBtn(btn) {
     btn.classList.add('dev-split-btn-animate');
     setTimeout(() => btn.classList.remove('dev-split-btn-animate'), 180);
 }
+
+window.devShowFireworks = (text, color) => {
+    // Erstelle Container für Feuerwerk
+    const container = document.createElement('div');
+    container.className = 'dev-fireworks-container';
+    container.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        pointer-events: none;
+        z-index: 9999;
+        overflow: hidden;
+    `;
+    document.body.appendChild(container);
+
+    // Erstelle Text-Anzeige
+    const textElement = document.createElement('div');
+    textElement.textContent = text;
+    textElement.style.cssText = `
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 2rem;
+        font-weight: bold;
+        color: ${color};
+        text-shadow: 0 0 20px ${color}80;
+        animation: devFireworksText 2s ease-out forwards;
+        z-index: 10000;
+    `;
+    container.appendChild(textElement);
+
+    // Erstelle Partikel
+    const particleCount = 30;
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        const angle = (Math.PI * 2 * i) / particleCount;
+        const distance = 100 + Math.random() * 100;
+        const delay = Math.random() * 0.5;
+
+        particle.style.cssText = `
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            background: ${color};
+            border-radius: 50%;
+            box-shadow: 0 0 10px ${color}80;
+            animation: devFireworksParticle 2s ease-out ${delay}s forwards;
+            --angle: ${angle}rad;
+            --distance: ${distance}px;
+        `;
+        container.appendChild(particle);
+    }
+
+    // Entferne Container nach Animation
+    setTimeout(() => {
+        if (container.parentNode) {
+            container.parentNode.removeChild(container);
+        }
+    }, 2500);
+};
 
 // Developer Functions
 window.toggleDebugConsole = () => {
@@ -265,7 +332,13 @@ window.updateFooterInfo = () => {
             footer = document.createElement('div');
             footer.id = 'appFooterInfo';
             footer.className = 'app-footer-info';
-            document.body.appendChild(footer);
+            // Footer zu #app hinzufügen statt zu body
+            const app = document.getElementById('app');
+            if (app) {
+                app.appendChild(footer);
+            } else {
+                document.body.appendChild(footer);
+            }
         }
         const version = '2.0.0';
         const buildDate = new Date('2026-01-10T12:17:00Z').toLocaleString('de-DE');

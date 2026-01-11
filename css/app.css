@@ -2143,7 +2143,7 @@ body::before {
 /* === APP FOOTER INFO === */
 .app-footer-info {
     position: fixed;
-    bottom: var(--bottom-nav-height);
+    bottom: 0;
     left: 0;
     right: 0;
     display: flex;
@@ -2488,6 +2488,51 @@ body::before {
     border-radius: 3px;
     font-family: 'Courier New', monospace;
     font-size: 0.9em;
+}
+
+/* === DEV FIREWORKS ANIMATION === */
+@keyframes devFireworksText {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+        text-shadow: 0 0 20px currentColor;
+    }
+    20% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1.2);
+        text-shadow: 0 0 30px currentColor;
+    }
+    80% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+        text-shadow: 0 0 20px currentColor;
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+        text-shadow: 0 0 10px currentColor;
+    }
+}
+
+@keyframes devFireworksParticle {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: translate(
+            calc(-50% + cos(var(--angle)) * var(--distance)),
+            calc(-50% + sin(var(--angle)) * var(--distance))
+        ) scale(0.8);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(
+            calc(-50% + cos(var(--angle)) * calc(var(--distance) * 1.5)),
+            calc(-50% + sin(var(--angle)) * calc(var(--distance) * 1.5))
+        ) scale(0);
+    }
 }
 
 .modal-header h2 {
