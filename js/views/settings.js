@@ -2,9 +2,31 @@
    SETTINGS VIEW
    ========================================== */
 
+// Toggle-Style wechseln
+window.setToggleStyle = (style) => {
+    localStorage.setItem('toggleStyle', style);
+    document.body.setAttribute('data-toggle-style', style);
+    
+    // Aktualisiere visuelle Auswahl
+    document.querySelectorAll('.toggle-style-option').forEach(option => {
+        option.classList.toggle('active', option.dataset.style === style);
+    });
+    
+    window.ui.showNotification('Toggle-Style geändert zu: ' + style, 'success');
+};
+
 export const settingsView = (store) => {
     const settings = store.getSettings();
     const wallet = store.getWallet();
+    
+    // Toggle-Style initialisieren
+    setTimeout(() => {
+        const savedStyle = localStorage.getItem('toggleStyle') || 'classic';
+        document.body.setAttribute('data-toggle-style', savedStyle);
+        document.querySelectorAll('.toggle-style-option').forEach(option => {
+            option.classList.toggle('active', option.dataset.style === savedStyle);
+        });
+    }, 100);
     
     // Version dynamisch laden
     let version = '1.0.3.0'; // Fallback
@@ -41,6 +63,60 @@ export const settingsView = (store) => {
                         <h2 class="card-title">🎨 Design</h2>
                     </div>
                     <div class="card-body">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Toggle-Style</div>
+                                <div class="setting-desc">Wähle deinen bevorzugten Toggle-Style</div>
+                            </div>
+                            <div class="toggle-style-picker">
+                                <div class="toggle-style-option" data-style="classic" onclick="window.setToggleStyle('classic')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-classic">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">Classic</span>
+                                </div>
+                                <div class="toggle-style-option" data-style="ios" onclick="window.setToggleStyle('ios')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-ios">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">iOS</span>
+                                </div>
+                                <div class="toggle-style-option" data-style="material" onclick="window.setToggleStyle('material')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-material">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">Material</span>
+                                </div>
+                                <div class="toggle-style-option" data-style="neon" onclick="window.setToggleStyle('neon')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-neon">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">Neon</span>
+                                </div>
+                                <div class="toggle-style-option" data-style="minimal" onclick="window.setToggleStyle('minimal')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-minimal">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">Minimal</span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="setting-item">
                             <div class="setting-info">
                                 <div class="setting-label">Dark Mode</div>
