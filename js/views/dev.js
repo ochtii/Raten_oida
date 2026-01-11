@@ -9,7 +9,7 @@ export const devView = (store) => {
     const footerInfoEnabled = localStorage.getItem('footerInfoEnabled') !== 'false';
     
     // Version Info
-    const version = '2.0.0';
+    const version = '1.0.0.1';
     const buildDate = '2026-01-10T12:17:00Z';
     
     return `
