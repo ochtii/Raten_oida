@@ -6,10 +6,10 @@ export const devView = (store) => {
     const state = store.state;
     const savedData = localStorage.getItem('raten_oida_v2');
     const cacheBusterEnabled = localStorage.getItem('cacheBusterEnabled') !== 'false';
-    const footerInfoEnabled = localStorage.getItem('footerInfoEnabled') !== 'false';
-    
+    const footerInfoEnabled = localStorage.getItem('footerInfoEnabled') !== 'false';    const autoReloadEnabled = localStorage.getItem('autoReloadEnabled') === 'true';
+    const autoReloadInterval = parseInt(localStorage.getItem('autoReloadInterval') || '5');    
     // Version Info
-    const version = '1.0.7.2';
+    const version = '1.0.7.3';
     const buildDate = '2026-01-10T12:17:00Z';
     
     return `
@@ -105,7 +105,38 @@ export const devView = (store) => {
                         <span class="toggle-compact-label">📋 Footer</span>
                         <div class="toggle-switch ${footerInfoEnabled ? 'on' : 'off'}"></div>
                     </div>
+                    
+                    <div class="toggle-compact" id="toggleAutoReload" onclick="window.devToggleAutoReload()">
+                        <span class="toggle-compact-label">${autoReloadEnabled ? '🔄' : '⏸️'} Auto Reload</span>
+                        <button type="button" class="toggle-info-btn" onclick="event.stopPropagation(); window.devShowAutoReloadInfo()" title="Info">❓</button>
+                        <div class="toggle-switch ${autoReloadEnabled ? 'on' : 'off'}"></div>
+                    </div>
                 </div>
+                
+                ${autoReloadEnabled ? `
+                <div class="auto-reload-settings">
+                    <div class="auto-reload-setting-item">
+                        <label for="autoReloadIntervalSlider">
+                            <span class="setting-label">⏱️ Intervall:</span>
+                            <span class="setting-value" id="autoReloadIntervalValue">${autoReloadInterval}s</span>
+                        </label>
+                        <input 
+                            type="range" 
+                            id="autoReloadIntervalSlider" 
+                            class="modern-slider" 
+                            min="1" 
+                            max="600" 
+                            value="${autoReloadInterval}"
+                            oninput="window.devUpdateAutoReloadInterval(this.value)"
+                        >
+                        <div class="interval-hints">
+                            <span>1s</span>
+                            <span>60s</span>
+                            <span>600s</span>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
             </div>
             
             <!-- Quick Stats -->
@@ -338,6 +369,301 @@ window.devToggleCacheBusterType = (type) => {
             toggleSwitch.className = `toggle-switch ${newState ? 'on' : 'off'}`;
         }
     }, 50);
+};
+
+// Auto Reload Functions
+window.devToggleAutoReload = () => {
+    const currentState = localStorage.getItem('autoReloadEnabled') === 'true';
+    const newState = !currentState;
+    localStorage.setItem('autoReloadEnabled', newState.toString());
+    
+    if (newState) {
+        window.startAutoReload();
+    } else {
+        window.stopAutoReload();
+    }
+    
+    if (window.app && window.app.ui) {
+        window.app.ui.showNotification(
+            `🔄 Auto Reload ${newState ? 'aktiviert' : 'deaktiviert'}`,
+            'info'
+        );
+    }
+    
+    // View neu rendern für Intervall-Einstellungen
+    if (window.app && window.app.router) {
+        window.app.router.render();
+    }
+};
+
+window.devUpdateAutoReloadInterval = (value) => {
+    localStorage.setItem('autoReloadInterval', value);
+    document.getElementById('autoReloadIntervalValue').textContent = `${value}s`;
+    
+    // Restart auto reload mit neuem Intervall
+    if (localStorage.getItem('autoReloadEnabled') === 'true') {
+        window.stopAutoReload();
+        window.startAutoReload();
+    }
+};
+
+window.startAutoReload = () => {
+    if (window.autoReloadTimer) return;
+    
+    const interval = parseInt(localStorage.getItem('autoReloadInterval') || '5') * 1000;
+    let countdown = interval / 1000;
+    
+    // Hole aktuelle Version und Hashes
+    window.autoReloadState = {
+        version: document.querySelector('meta[name="app-version"]')?.content || '1.0.7.2',
+        cssHash: '',
+        jsHash: '',
+        lastCheck: Date.now()
+    };
+    
+    // Berechne CSS Hash
+    fetch('/css/app.css').then(r => r.text()).then(text => {
+        window.autoReloadState.cssHash = window.simpleHash(text);
+    });
+    
+    // Berechne JS Hash (app.js)
+    fetch('/js/app.js').then(r => r.text()).then(text => {
+        window.autoReloadState.jsHash = window.simpleHash(text);
+    });
+    
+    // Banner anzeigen
+    window.showAutoReloadBanner();
+    
+    // Countdown Timer
+    window.autoReloadCountdown = setInterval(() => {
+        countdown--;
+        const banner = document.getElementById('auto-reload-banner');
+        if (banner) {
+            const timerEl = banner.querySelector('.auto-reload-timer');
+            if (timerEl) {
+                timerEl.textContent = `${countdown}s`;
+            }
+        }
+        
+        if (countdown <= 0) {
+            countdown = interval / 1000;
+        }
+    }, 1000);
+    
+    // Haupttimer - prüft auf Änderungen
+    window.autoReloadTimer = setInterval(async () => {
+        const hasChanges = await window.checkForChanges();
+        
+        if (hasChanges) {
+            window.app.ui.showNotification('🔄 Änderungen erkannt - Seite wird neu geladen...', 'info');
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        }
+        
+        // Reset countdown
+        countdown = interval / 1000;
+    }, interval);
+};
+
+window.stopAutoReload = () => {
+    if (window.autoReloadTimer) {
+        clearInterval(window.autoReloadTimer);
+        window.autoReloadTimer = null;
+    }
+    
+    if (window.autoReloadCountdown) {
+        clearInterval(window.autoReloadCountdown);
+        window.autoReloadCountdown = null;
+    }
+    
+    window.hideAutoReloadBanner();
+};
+
+window.checkForChanges = async () => {
+    if (!window.autoReloadState) return false;
+    
+    try {
+        // Prüfe Version
+        const versionResp = await fetch('/version.json?_=' + Date.now());
+        const versionData = await versionResp.json();
+        
+        if (versionData.version !== window.autoReloadState.version) {
+            console.log('🔄 Version changed:', window.autoReloadState.version, '->', versionData.version);
+            return true;
+        }
+        
+        // Prüfe CSS Hash
+        const cssResp = await fetch('/css/app.css?_=' + Date.now());
+        const cssText = await cssResp.text();
+        const cssHash = window.simpleHash(cssText);
+        
+        if (cssHash !== window.autoReloadState.cssHash && window.autoReloadState.cssHash !== '') {
+            console.log('🔄 CSS changed');
+            return true;
+        }
+        
+        // Prüfe JS Hash
+        const jsResp = await fetch('/js/app.js?_=' + Date.now());
+        const jsText = await jsResp.text();
+        const jsHash = window.simpleHash(jsText);
+        
+        if (jsHash !== window.autoReloadState.jsHash && window.autoReloadState.jsHash !== '') {
+            console.log('🔄 JS changed');
+            return true;
+        }
+        
+        return false;
+    } catch (error) {
+        console.error('Error checking for changes:', error);
+        return false;
+    }
+};
+
+window.simpleHash = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+        const char = str.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash;
+    }
+    return hash.toString(36);
+};
+
+window.showAutoReloadBanner = () => {
+    const existing = document.getElementById('auto-reload-banner');
+    if (existing) return;
+    
+    const interval = parseInt(localStorage.getItem('autoReloadInterval') || '5');
+    
+    const banner = document.createElement('div');
+    banner.id = 'auto-reload-banner';
+    banner.className = 'auto-reload-banner';
+    banner.innerHTML = `
+        <div class="auto-reload-content">
+            <div class="auto-reload-icon">🔄</div>
+            <div class="auto-reload-info">
+                <div class="auto-reload-title">Auto Reload Aktiv</div>
+                <div class="auto-reload-details">
+                    <span class="auto-reload-interval">Intervall: ${interval}s</span>
+                    <span class="auto-reload-separator">|</span>
+                    <span class="auto-reload-timer">${interval}s</span>
+                    <span class="auto-reload-separator">|</span>
+                    <span class="auto-reload-status">Warte auf Änderungen...</span>
+                </div>
+            </div>
+            <button class="auto-reload-close" onclick="window.devToggleAutoReload()" title="Deaktivieren">✕</button>
+        </div>
+    `;
+    
+    document.body.insertBefore(banner, document.body.firstChild);
+};
+
+window.hideAutoReloadBanner = () => {
+    const banner = document.getElementById('auto-reload-banner');
+    if (banner) {
+        banner.style.animation = 'slideOutTop 0.3s ease-out';
+        setTimeout(() => banner.remove(), 300);
+    }
+};
+
+window.devShowAutoReloadInfo = () => {
+    if (!window.app) return;
+    
+    const content = `
+        <div class="dev-info-content">
+            <h4>🔄 Auto Reload - Automatisches Neu-Laden</h4>
+            <p>Lädt die Anwendung automatisch neu, wenn Änderungen erkannt werden.</p>
+
+            <div class="dev-info-section">
+                <h5>🚀 Funktionen:</h5>
+                <ul>
+                    <li><strong>Automatische Erkennung:</strong> Prüft auf Änderungen an Version, CSS und JS</li>
+                    <li><strong>Einstellbares Intervall:</strong> 1-600 Sekunden Prüf-Intervall</li>
+                    <li><strong>Live Countdown:</strong> Zeigt verbleibende Zeit bis zum nächsten Check</li>
+                    <li><strong>Intelligente Hashes:</strong> Erkennt Dateiänderungen durch Hash-Vergleich</li>
+                    <li><strong>Banner-Anzeige:</strong> Visuelles Feedback im Header</li>
+                </ul>
+            </div>
+
+            <div class="dev-info-section">
+                <h5>🎯 Verwendung:</h5>
+                <ul>
+                    <li><strong>Aktivieren:</strong> Toggle anklicken zum Starten</li>
+                    <li><strong>Intervall:</strong> Slider für Prüf-Intervall (1-600s)</li>
+                    <li><strong>Manueller Modus:</strong> Bleibt aktiv bis manuell deaktiviert</li>
+                    <li><strong>Live Timer:</strong> Banner zeigt Countdown bis zum nächsten Check</li>
+                </ul>
+            </div>
+
+            <div class="dev-info-section">
+                <h5>⚡ Erkannte Änderungen:</h5>
+                <ul>
+                    <li><strong>Version:</strong> Prüft version.json auf neue Versionsnummer</li>
+                    <li><strong>CSS:</strong> Hash-Vergleich von app.css</li>
+                    <li><strong>JavaScript:</strong> Hash-Vergleich von app.js</li>
+                    <li><strong>Bei Änderung:</strong> Automatischer Reload nach 1 Sekunde</li>
+                </ul>
+            </div>
+
+            <div class="dev-info-section">
+                <h5>⚠️ Wichtig:</h5>
+                <ul>
+                    <li>Nur für Entwicklung gedacht!</li>
+                    <li>Niemals in Production verwenden!</li>
+                    <li>Erhöhter Netzwerk-Traffic durch ständige Prüfungen</li>
+                    <li>Kurze Intervalle (< 5s) können Performance beeinträchtigen</li>
+                </ul>
+            </div>
+        </div>
+        
+        <style>
+            .dev-info-content { 
+                padding: 1rem; 
+                max-width: 600px;
+            }
+            .dev-info-content h4 {
+                margin-top: 0;
+                color: var(--primary);
+                font-size: 1.3rem;
+            }
+            .dev-info-content h5 {
+                color: var(--secondary);
+                margin: 1.5rem 0 0.75rem 0;
+                font-size: 1.1rem;
+            }
+            .dev-info-content p {
+                color: var(--text-secondary);
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+            .dev-info-content ul {
+                margin: 0.5rem 0;
+                padding-left: 1.5rem;
+            }
+            .dev-info-content li {
+                margin: 0.5rem 0;
+                line-height: 1.5;
+                color: var(--text-secondary);
+            }
+            .dev-info-content li strong {
+                color: var(--text-primary);
+            }
+            .dev-info-section {
+                background: rgba(255, 255, 255, 0.02);
+                padding: 1rem;
+                border-radius: var(--radius-md);
+                margin: 1rem 0;
+                border: 1px solid rgba(0, 255, 136, 0.1);
+            }
+        </style>
+    `;
+
+    window.app.ui.showModal('Auto Reload Info', content, [{
+        label: 'Schließen',
+        type: 'primary',
+        action: 'close'
+    }]);
 };
 
 window.devToggleFooterInfo = () => {

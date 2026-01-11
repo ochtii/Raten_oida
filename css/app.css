@@ -5502,3 +5502,178 @@ body:has(.cachebuster-banner:not(.cachebuster-banner-minimized)) {
     opacity: 1;
     transform: translateY(-1px);
 }
+
+/* Auto Reload Settings */
+.auto-reload-settings {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: rgba(0, 255, 136, 0.05);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.auto-reload-setting-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.auto-reload-setting-item label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.auto-reload-setting-item .setting-label {
+    font-weight: 600;
+}
+
+.auto-reload-setting-item .setting-value {
+    color: var(--primary);
+    font-weight: 700;
+    font-family: 'Courier New', monospace;
+}
+
+.interval-hints {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin-top: 0.25rem;
+}
+
+/* Auto Reload Banner */
+.auto-reload-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 10000;
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    border-bottom: 2px solid var(--secondary);
+    box-shadow: 0 4px 20px rgba(255, 128, 0, 0.3);
+    animation: slideInTop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.auto-reload-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0.75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.auto-reload-icon {
+    font-size: 1.5rem;
+    animation: rotate 2s linear infinite;
+    flex-shrink: 0;
+}
+
+.auto-reload-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.auto-reload-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.auto-reload-details {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-family: 'Courier New', monospace;
+}
+
+.auto-reload-interval {
+    color: var(--text-secondary);
+}
+
+.auto-reload-timer {
+    color: var(--secondary);
+    font-weight: 700;
+    font-size: 1.1em;
+}
+
+.auto-reload-status {
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+.auto-reload-separator {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+.auto-reload-close {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+}
+
+.auto-reload-close:hover {
+    background: rgba(255, 68, 68, 0.2);
+    border-color: var(--accent);
+    color: var(--accent);
+    transform: rotate(90deg);
+}
+
+/* Mobile Optimierung */
+@media (max-width: 768px) {
+    .auto-reload-content {
+        padding: 0.5rem 1rem;
+        gap: 0.75rem;
+    }
+    
+    .auto-reload-icon {
+        font-size: 1.2rem;
+    }
+    
+    .auto-reload-title {
+        font-size: 0.85rem;
+    }
+    
+    .auto-reload-details {
+        font-size: 0.7rem;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .auto-reload-close {
+        width: 28px;
+        height: 28px;
+        font-size: 1rem;
+    }
+}
+
+/* Adjust main content when auto-reload banner is visible */
+body:has(.auto-reload-banner) {
+    padding-top: 60px;
+}
+
+@media (max-width: 768px) {
+    body:has(.auto-reload-banner) {
+        padding-top: 50px;
+    }
+}
