@@ -453,11 +453,12 @@ body::before {
     z-index: 1000;
     box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.2);
     padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
-    transition: bottom 0.3s ease;
+    transition: bottom 0.2s ease-in-out;
 }
 
 .bottom-nav.with-footer {
     bottom: 32px; /* Höhe des Footers */
+}
 }
     justify-content: space-evenly;
     align-items: center;

@@ -221,10 +221,6 @@ window.devShowFireworks = (text, color) => {
     `;
     document.body.appendChild(container);
 
-    // Verhindere jegliches Scrolling während der Animation
-    const originalOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-
     // Erstelle Text-Anzeige
     const textElement = document.createElement('div');
     textElement.textContent = text;
@@ -270,12 +266,11 @@ window.devShowFireworks = (text, color) => {
         container.appendChild(particle);
     }
 
-    // Entferne Container nach Animation und stelle ursprüngliches Scrolling wieder her
+    // Entferne Container nach Animation
     setTimeout(() => {
         if (container.parentNode) {
             container.parentNode.removeChild(container);
         }
-        document.body.style.overflow = originalOverflow;
     }, 2500);
 };
 
