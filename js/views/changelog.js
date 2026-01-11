@@ -47,7 +47,15 @@ window.loadChangelog = async () => {
 function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
-                        {
+                                {
+            version: '1.0.8.3',
+            date: '2026-01-11',
+            message: 'fix: Auto Reload standardmäßig deaktiviert + Cleanup bei Seitenladung',
+            details: 'fix: Auto Reload standardmäßig deaktiviert + Cleanup bei Seitenladung',
+            files: [],
+            stats: { additions: 0, deletions: 0 }
+        },
+        {
             version: '1.0.8.2',
             date: '2026-01-11',
             message: 'fix: Changelog Syntax-Fehler behoben - mehrzeilige Strings in Template Literals',
