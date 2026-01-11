@@ -609,22 +609,56 @@ window.settingsChangeNotificationDuration = (duration) => {
 window.settingsShowNotificationHistory = () => {
     const history = JSON.parse(localStorage.getItem('notificationHistory') || '[]');
     
+    const typeIcons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        info: 'ℹ️',
+        localstorage: '💾'
+    };
+    
+    const typeLabels = {
+        success: 'Erfolg',
+        error: 'Fehler',
+        warning: 'Warnung',
+        info: 'Info',
+        localstorage: 'LocalStorage'
+    };
+    
     const modalContent = `
-        <div class="notification-history-modal">
-            <div class="modal-body">
-                ${history.length === 0 ? 
-                    '<div class="empty-state">📭 Keine Benachrichtigungen in der Historie</div>' :
-                    `<div class="notification-list">
-                        ${history.slice(-50).reverse().map((item, index) => `
-                            <div class="notification-item notification-${item.type}">
-                                <div class="notification-time">${new Date(item.timestamp).toLocaleString('de-DE')}</div>
-                                <div class="notification-message">${item.message}</div>
-                                <div class="notification-type">${item.type.toUpperCase()}</div>
+        <div class="notification-history-container">
+            ${history.length === 0 ? 
+                '<div class="empty-state">📭 Keine Benachrichtigungen in der Historie</div>' :
+                `<div class="history-stats">
+                    <div class="stat-badge">📊 Gesamt: ${history.length}</div>
+                    <div class="stat-badge">📋 Angezeigt: ${Math.min(50, history.length)}</div>
+                </div>
+                <div class="notification-history-list">
+                    ${history.slice(-50).reverse().map((item, index) => {
+                        const date = new Date(item.timestamp);
+                        const timeStr = date.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                        const dateStr = date.toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' });
+                        const icon = typeIcons[item.type] || '📢';
+                        const label = typeLabels[item.type] || item.type;
+                        
+                        return `
+                            <div class="history-item history-item-${item.type}">
+                                <div class="history-icon">${icon}</div>
+                                <div class="history-content">
+                                    <div class="history-header">
+                                        <span class="history-type-badge badge-${item.type}">${label}</span>
+                                        <span class="history-datetime">
+                                            <span class="history-date">${dateStr}</span>
+                                            <span class="history-time">${timeStr}</span>
+                                        </span>
+                                    </div>
+                                    <div class="history-message">${item.message}</div>
+                                </div>
                             </div>
-                        `).join('')}
-                    </div>`
-                }
-            </div>
+                        `;
+                    }).join('')}
+                </div>`
+            }
         </div>
     `;
     
@@ -633,6 +667,7 @@ window.settingsShowNotificationHistory = () => {
             if (confirm('Möchten Sie wirklich die gesamte Benachrichtigungs-Historie löschen?')) {
                 localStorage.removeItem('notificationHistory');
                 window.app.ui.showNotification('🗑️ Historie gelöscht', 'info');
+                window.settingsShowNotificationHistory();
             }
         }},
         { label: '✕ Schließen', type: 'secondary', action: 'close' }
