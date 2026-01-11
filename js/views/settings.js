@@ -29,7 +29,7 @@ export const settingsView = (store) => {
     }, 100);
     
     // Version dynamisch laden
-    let version = '1.0.3.0'; // Fallback
+    let version = '1.3.3.7'; // Fallback
     fetch('./version.json')
         .then(response => response.json())
         .then(data => {

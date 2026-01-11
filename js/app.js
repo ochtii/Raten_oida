@@ -176,7 +176,7 @@ window.updateFooterInfo = () => {
                 // Fallback: Nur Datum, Version wird nachgeladen
                 const buildDate = new Date().toLocaleString('de-DE');
                 footer.innerHTML = `
-                    <a href="#changelog" data-route="changelog" class="footer-version">v1.0.4.2</a>
+                    <a href="#changelog" data-route="changelog" class="footer-version">v1.3.3.7</a>
                     <span class="footer-separator">|</span>
                     <span class="footer-date">Build: ${buildDate}</span>
                 `;
