@@ -185,6 +185,51 @@ export const settingsView = (store) => {
                                     </div>
                                     <span class="toggle-style-name">Minimal</span>
                                 </div>
+                                <div class="toggle-style-option" data-style="skeleton" onclick="window.setToggleStyle('skeleton')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-skeleton">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">Skeleton</span>
+                                </div>
+                                <div class="toggle-style-option" data-style="flip" onclick="window.setToggleStyle('flip')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-flip">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">Flip</span>
+                                </div>
+                                <div class="toggle-style-option" data-style="liquid" onclick="window.setToggleStyle('liquid')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-liquid">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">Liquid</span>
+                                </div>
+                                <div class="toggle-style-option" data-style="gear" onclick="window.setToggleStyle('gear')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-gear">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">Gear</span>
+                                </div>
+                                <div class="toggle-style-option" data-style="pulse" onclick="window.setToggleStyle('pulse')">
+                                    <div class="toggle-preview">
+                                        <label class="toggle toggle-pulse">
+                                            <input type="checkbox" checked disabled>
+                                            <span class="toggle-slider"></span>
+                                        </label>
+                                    </div>
+                                    <span class="toggle-style-name">Pulse</span>
+                                </div>
                             </div>
                         </div>
 

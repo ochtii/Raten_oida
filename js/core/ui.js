@@ -48,7 +48,16 @@ export class UI {
         
         const notification = document.createElement('div');
         notification.className = `notification notification-${type}`;
-        notification.textContent = message;
+        
+        // Erstelle strukturierte Benachrichtigung
+        const typeLabel = type.charAt(0).toUpperCase() + type.slice(1);
+        const typeIcons = { success: '✓', error: '✖', warning: '⚠', info: 'ℹ' };
+        const icon = typeIcons[type] || 'ℹ';
+        
+        notification.innerHTML = `
+            <div style="font-weight: bold; margin-bottom: 4px;">Typ: ${typeLabel} ${icon}</div>
+            <div style="font-size: 0.9em; opacity: 0.9;">[${type}] - ${message}</div>
+        `;
         
         // Bestimme Position
         const position = notifications.position || 'bottom-right';

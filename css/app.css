@@ -2468,6 +2468,283 @@ body.debug-console-visible .main {
     box-shadow: 0 2px 6px rgba(0, 255, 136, 0.3), 0 0 8px rgba(0, 255, 136, 0.2);
 }
 
+/* === TOGGLE STYLE: Skeleton (Morphing Shape) === */
+[data-toggle-style="skeleton"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse),
+.toggle-skeleton {
+    width: 70px;
+    height: 35px;
+}
+
+[data-toggle-style="skeleton"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse) .toggle-slider,
+.toggle-skeleton .toggle-slider {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 2px solid #444;
+    border-radius: 17px;
+    position: relative;
+    overflow: hidden;
+}
+
+[data-toggle-style="skeleton"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse) .toggle-slider:before,
+.toggle-skeleton .toggle-slider:before {
+    content: "";
+    position: absolute;
+    height: 27px;
+    width: 27px;
+    left: 2px;
+    bottom: 2px;
+    background: #fff;
+    border-radius: 50%;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+[data-toggle-style="skeleton"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse) input:checked + .toggle-slider,
+.toggle-skeleton input:checked + .toggle-slider {
+    background: linear-gradient(135deg, var(--primary) 0%, #00aa55 100%);
+    border-color: var(--primary);
+    animation: skeleton-morph 0.6s ease-out;
+}
+
+[data-toggle-style="skeleton"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse) input:checked + .toggle-slider:before,
+.toggle-skeleton input:checked + .toggle-slider:before {
+    transform: translateX(35px) rotate(360deg) scale(1.1);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.8);
+}
+
+@keyframes skeleton-morph {
+    0%, 100% { border-radius: 17px; }
+    50% { border-radius: 8px; }
+}
+
+/* === TOGGLE STYLE: Flip (3D Card Flip) === */
+[data-toggle-style="flip"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse),
+.toggle-flip {
+    width: 60px;
+    height: 60px;
+    perspective: 1000px;
+}
+
+[data-toggle-style="flip"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse) .toggle-slider,
+.toggle-flip .toggle-slider {
+    background: transparent;
+    border: none;
+    transform-style: preserve-3d;
+    transition: transform 0.6s;
+    position: relative;
+}
+
+[data-toggle-style="flip"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse) .toggle-slider:before,
+.toggle-flip .toggle-slider:before {
+    content: "✖";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, #ff4444, #cc0000);
+    border-radius: 8px;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(255, 68, 68, 0.4);
+}
+
+[data-toggle-style="flip"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse) .toggle-slider:after,
+.toggle-flip .toggle-slider:after {
+    content: "✓";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--primary), #00aa55);
+    border-radius: 8px;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: white;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
+}
+
+[data-toggle-style="flip"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-liquid):not(.toggle-gear):not(.toggle-pulse) input:checked + .toggle-slider,
+.toggle-flip input:checked + .toggle-slider {
+    transform: rotateY(180deg);
+}
+
+/* === TOGGLE STYLE: Liquid (Blob Morphing) === */
+[data-toggle-style="liquid"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-gear):not(.toggle-pulse),
+.toggle-liquid {
+    width: 80px;
+    height: 40px;
+}
+
+[data-toggle-style="liquid"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-gear):not(.toggle-pulse) .toggle-slider,
+.toggle-liquid .toggle-slider {
+    background: #1a1a2e;
+    border: 3px solid #444;
+    border-radius: 40px;
+    position: relative;
+    overflow: visible;
+}
+
+[data-toggle-style="liquid"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-gear):not(.toggle-pulse) .toggle-slider:before,
+.toggle-liquid .toggle-slider:before {
+    content: "";
+    position: absolute;
+    height: 34px;
+    width: 34px;
+    left: 0;
+    bottom: 0;
+    background: radial-gradient(circle, #888 0%, #555 100%);
+    border-radius: 50%;
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    filter: blur(2px);
+    animation: liquid-wobble 2s infinite;
+}
+
+[data-toggle-style="liquid"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-gear):not(.toggle-pulse) input:checked + .toggle-slider,
+.toggle-liquid input:checked + .toggle-slider {
+    background: #0f3443;
+    border-color: var(--primary);
+    box-shadow: inset 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+[data-toggle-style="liquid"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-gear):not(.toggle-pulse) input:checked + .toggle-slider:before,
+.toggle-liquid input:checked + .toggle-slider:before {
+    transform: translateX(40px);
+    background: radial-gradient(circle, var(--primary) 0%, #00aa55 100%);
+    filter: blur(1px);
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.8);
+}
+
+@keyframes liquid-wobble {
+    0%, 100% { border-radius: 50%; }
+    25% { border-radius: 45% 55% 50% 50%; }
+    50% { border-radius: 50% 50% 45% 55%; }
+    75% { border-radius: 55% 45% 55% 45%; }
+}
+
+/* === TOGGLE STYLE: Gear (Mechanical) === */
+[data-toggle-style="gear"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-pulse),
+.toggle-gear {
+    width: 65px;
+    height: 35px;
+}
+
+[data-toggle-style="gear"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-pulse) .toggle-slider,
+.toggle-gear .toggle-slider {
+    background: linear-gradient(180deg, #3a3a3a 0%, #2a2a2a 100%);
+    border: 2px solid #555;
+    border-radius: 5px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
+}
+
+[data-toggle-style="gear"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-pulse) .toggle-slider:before,
+.toggle-gear .toggle-slider:before {
+    content: "⚙";
+    position: absolute;
+    height: 28px;
+    width: 28px;
+    left: 2px;
+    bottom: 1px;
+    background: linear-gradient(135deg, #ddd, #aaa);
+    border-radius: 4px;
+    transition: all 0.4s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4), inset 0 1px 2px rgba(255,255,255,0.3);
+}
+
+[data-toggle-style="gear"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-pulse) input:checked + .toggle-slider,
+.toggle-gear input:checked + .toggle-slider {
+    background: linear-gradient(180deg, #1a4d2e 0%, #0f3a1f 100%);
+    border-color: var(--primary);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5), 0 0 15px rgba(0, 255, 136, 0.3);
+}
+
+[data-toggle-style="gear"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-pulse) input:checked + .toggle-slider:before,
+.toggle-gear input:checked + .toggle-slider:before {
+    transform: translateX(30px) rotate(180deg);
+    background: linear-gradient(135deg, var(--primary), #00cc6f);
+    color: #000;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.6), inset 0 1px 2px rgba(255,255,255,0.3);
+}
+
+/* === TOGGLE STYLE: Pulse (Heartbeat) === */
+[data-toggle-style="pulse"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear),
+.toggle-pulse {
+    width: 70px;
+    height: 35px;
+}
+
+[data-toggle-style="pulse"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear) .toggle-slider,
+.toggle-pulse .toggle-slider {
+    background: rgba(100, 100, 100, 0.2);
+    border: 2px dashed #666;
+    border-radius: 20px;
+}
+
+[data-toggle-style="pulse"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear) .toggle-slider:before,
+.toggle-pulse .toggle-slider:before {
+    content: "❤";
+    position: absolute;
+    height: 28px;
+    width: 28px;
+    left: 2px;
+    bottom: 1px;
+    background: linear-gradient(135deg, #888, #555);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #ff4444;
+    filter: grayscale(100%);
+}
+
+[data-toggle-style="pulse"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear) input:checked + .toggle-slider,
+.toggle-pulse input:checked + .toggle-slider {
+    background: rgba(0, 255, 136, 0.2);
+    border: 2px solid var(--primary);
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+}
+
+[data-toggle-style="pulse"] .toggle:not(.toggle-classic):not(.toggle-ios):not(.toggle-material):not(.toggle-neon):not(.toggle-minimal):not(.toggle-skeleton):not(.toggle-flip):not(.toggle-liquid):not(.toggle-gear) input:checked + .toggle-slider:before,
+.toggle-pulse input:checked + .toggle-slider:before {
+    transform: translateX(35px);
+    background: linear-gradient(135deg, var(--primary), #ff4488);
+    color: #fff;
+    filter: grayscale(0%);
+    animation: heartbeat 1.2s infinite;
+    box-shadow: 0 0 30px rgba(255, 68, 136, 0.8);
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: translateX(35px) scale(1); }
+    10%, 30% { transform: translateX(35px) scale(1.1); }
+    20%, 40% { transform: translateX(35px) scale(1); }
+}
+
+    box-shadow: 0 0 30px rgba(255, 68, 136, 0.8);
+}
+
+@keyframes heartbeat {
+    0%, 100% { transform: translateX(35px) scale(1); }
+    10%, 30% { transform: translateX(35px) scale(1.1); }
+    20%, 40% { transform: translateX(35px) scale(1); }
+}
+
 /* === TOGGLE STYLE PICKER === */
 .toggle-style-picker {
     display: grid;
