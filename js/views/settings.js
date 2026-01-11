@@ -222,9 +222,9 @@ window.confirmResetAll = () => {
 };
 
 // === BOTTOM NAVIGATION SETTINGS ===
-window.settingsToggleBottomNav = () => {
+window.settingsToggleBottomNav = (checkbox) => {
     const settings = JSON.parse(localStorage.getItem('bottomNavSettings') || '{}');
-    settings.visible = event.target.checked;
+    settings.visible = checkbox.checked;
     localStorage.setItem('bottomNavSettings', JSON.stringify(settings));
     window.applyBottomNavSettings();
     window.app.ui.showNotification(settings.visible ? 'Navigation aktiviert' : 'Navigation deaktiviert', 'info');
@@ -245,9 +245,9 @@ window.settingsUpdateBottomNavSize = (value) => {
 };
 
 // === NOTIFICATION SETTINGS ===
-window.settingsToggleNotifications = () => {
+window.settingsToggleNotifications = (checkbox) => {
     const settings = window.app.store.getSettings();
-    const enabled = event.target.checked;
+    const enabled = checkbox.checked;
     
     if (!settings.notifications) settings.notifications = {};
     settings.notifications.enabled = enabled;
@@ -603,7 +603,7 @@ export const settingsView = (store) => {
                                 <div class="setting-desc">Untere Navigationsleiste</div>
                             </div>
                             <label class="toggle">
-                                <input type="checkbox" ${bottomNavSettings.visible ? 'checked' : ''} onchange="window.settingsToggleBottomNav()">
+                                <input type="checkbox" ${bottomNavSettings.visible ? 'checked' : ''} onchange="window.settingsToggleBottomNav(this)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
@@ -691,7 +691,7 @@ export const settingsView = (store) => {
                                 <div class="setting-desc">Aktiviere Benachrichtigungen</div>
                             </div>
                             <label class="toggle">
-                                <input type="checkbox" ${notificationSettings.enabled ? 'checked' : ''} onchange="window.settingsToggleNotifications()">
+                                <input type="checkbox" ${notificationSettings.enabled ? 'checked' : ''} onchange="window.settingsToggleNotifications(this)">
                                 <span class="toggle-slider"></span>
                             </label>
                         </div>
