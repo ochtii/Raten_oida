@@ -9,7 +9,7 @@ export const devView = (store) => {
     const footerInfoEnabled = localStorage.getItem('footerInfoEnabled') !== 'false';
     
     // Version Info
-    const version = '1.0.6.1';
+    const version = '1.0.7.0';
     const buildDate = '2026-01-10T12:17:00Z';
     
     return `
@@ -87,7 +87,6 @@ export const devView = (store) => {
                     </div>
                     
                     ${cacheBusterEnabled ? `
-                    <!-- Granular Cachebuster Controls -->
                     <div class="toggle-compact granular-toggle" id="toggleCacheBusterHTML" onclick="window.devToggleCacheBusterType('html')">
                         <span class="toggle-compact-label">📄 HTML</span>
                         <div class="toggle-switch ${localStorage.getItem('cacheBusterHTML') !== 'false' ? 'on' : 'off'}"></div>

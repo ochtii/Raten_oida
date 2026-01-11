@@ -47,7 +47,23 @@ window.loadChangelog = async () => {
 function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
-                        {
+                                {
+            version: '1.0.7.0',
+            date: '2026-01-11',
+            message: 'feat: Optimierte Einstellungsseite',
+            details: 'feat: Optimierte Einstellungsseite
+
+- Entfernte Theme-Vorschaubilder (kompakte Button-Ansicht)
+- Schwebendes Such-Symbol (standardmäßig ausgeblendet)
+- Schließen-Button für Suchfeld
+- Benachrichtigungsgröße einstellbar (klein/mittel/groß)
+- Benachrichtigungstypen als Multiple Choice (Erfolg/Fehler/Warnung/Info)
+- Floating Search Toggle mit Animation
+- Kompakte Theme-Buttons mit Emojis',
+            files: [],
+            stats: { additions: 0, deletions: 0 }
+        },
+        {
             version: '1.0.6.1',
             date: '2026-01-11',
             message: 'fix: Optional chaining syntax error in settings.js',
