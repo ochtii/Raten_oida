@@ -8,6 +8,7 @@ export class DebugConsole {
         this.position = 'bottom';
         this.height = 300;
         this.isLocked = false;
+        this.isMinimized = false;
         this.logs = [];
         this.maxLogs = 100;
         this.container = null;
@@ -20,9 +21,17 @@ export class DebugConsole {
     }
 
     init() {
+        // Load saved state from localStorage
+        this.loadState();
+        
         this.createConsole();
         this.interceptConsoleLogs();
         this.setupEventListeners();
+        
+        // Apply saved visibility state
+        if (this.isVisible) {
+            this.show();
+        }
         
         // Keyboard shortcut: Ctrl + Shift + D
         document.addEventListener('keydown', (e) => {
@@ -35,13 +44,16 @@ export class DebugConsole {
 
     createConsole() {
         const html = `
-            <div id="debugConsole" class="debug-console ${this.position}">
+            <div id="debugConsole" class="debug-console ${this.position} ${this.isMinimized ? 'minimized' : ''}">
                 <div class="debug-header">
                     <div class="debug-header-left">
                         <span class="debug-title">🐛 Debug Console</span>
                         <button class="debug-btn" id="debugClear" title="Clear">🗑️</button>
                     </div>
                     <div class="debug-header-right">
+                        <button class="debug-btn" id="debugMinimize" title="Minimize Header">
+                            ${this.isMinimized ? '⬆️' : '⬇️'}
+                        </button>
                         <button class="debug-btn" id="debugPosition" title="Position">
                             ${this.position === 'bottom' ? '⬆️' : '⬇️'}
                         </button>
@@ -70,6 +82,7 @@ export class DebugConsole {
         document.getElementById('debugClear')?.addEventListener('click', () => this.clear());
         document.getElementById('debugPosition')?.addEventListener('click', () => this.togglePosition());
         document.getElementById('debugLock')?.addEventListener('click', () => this.toggleLock());
+        document.getElementById('debugMinimize')?.addEventListener('click', () => this.toggleMinimize());
 
         // Resize
         const resizeHandle = document.getElementById('debugResizeHandle');
@@ -93,6 +106,9 @@ export class DebugConsole {
         });
 
         document.addEventListener('mouseup', () => {
+            if (isResizing) {
+                this.saveState();
+            }
             isResizing = false;
         });
     }
@@ -181,11 +197,15 @@ export class DebugConsole {
     show() {
         this.isVisible = true;
         this.container?.classList.add('visible');
+        document.body.classList.add('debug-console-visible');
+        this.saveState();
     }
 
     hide() {
         this.isVisible = false;
         this.container?.classList.remove('visible');
+        document.body.classList.remove('debug-console-visible');
+        this.saveState();
     }
 
     clear() {
@@ -198,6 +218,7 @@ export class DebugConsole {
         this.container?.classList.remove('top', 'bottom');
         this.container?.classList.add(this.position);
         document.getElementById('debugPosition').textContent = this.position === 'bottom' ? '⬆️' : '⬇️';
+        this.saveState();
     }
 
     toggleLock() {
@@ -206,5 +227,42 @@ export class DebugConsole {
         const lockBtn = document.getElementById('debugLock');
         lockBtn.textContent = this.isLocked ? '🔒' : '🔓';
         lockBtn.classList.toggle('active', this.isLocked);
+        this.saveState();
+    }
+
+    toggleMinimize() {
+        this.isMinimized = !this.isMinimized;
+        this.container?.classList.toggle('minimized', this.isMinimized);
+        const minimizeBtn = document.getElementById('debugMinimize');
+        minimizeBtn.textContent = this.isMinimized ? '⬆️' : '⬇️';
+        this.saveState();
+    }
+
+    loadState() {
+        try {
+            const state = JSON.parse(localStorage.getItem('debugConsoleState') || '{}');
+            this.isVisible = state.isVisible || false;
+            this.position = state.position || 'bottom';
+            this.height = state.height || 300;
+            this.isLocked = state.isLocked || false;
+            this.isMinimized = state.isMinimized || false;
+        } catch (error) {
+            console.warn('Failed to load debug console state:', error);
+        }
+    }
+
+    saveState() {
+        try {
+            const state = {
+                isVisible: this.isVisible,
+                position: this.position,
+                height: this.height,
+                isLocked: this.isLocked,
+                isMinimized: this.isMinimized
+            };
+            localStorage.setItem('debugConsoleState', JSON.stringify(state));
+        } catch (error) {
+            console.warn('Failed to save debug console state:', error);
+        }
     }
 }

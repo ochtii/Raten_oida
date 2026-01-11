@@ -203,7 +203,104 @@ export const settingsView = (store) => {
 
                 <div class="card">
                     <div class="card-header">
-                        <h2 class="card-title">💰 Wallet</h2>
+                        <h2 class="card-title">� Benachrichtigungen</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Benachrichtigungen aktivieren</div>
+                                <div class="setting-desc">Zeige Toast-Benachrichtigungen an</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="notificationsEnabled" ${settings.notifications?.enabled !== false ? 'checked' : ''} 
+                                    onchange="window.settingsToggleNotifications()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Erfolgsmeldungen</div>
+                                <div class="setting-desc">Zeige Erfolgs-Benachrichtigungen</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="notificationsSuccess" ${settings.notifications?.types?.success !== false ? 'checked' : ''} 
+                                    onchange="window.settingsToggleNotificationType('success')">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Fehlermeldungen</div>
+                                <div class="setting-desc">Zeige Fehler-Benachrichtigungen</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="notificationsError" ${settings.notifications?.types?.error !== false ? 'checked' : ''} 
+                                    onchange="window.settingsToggleNotificationType('error')">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Warnungen</div>
+                                <div class="setting-desc">Zeige Warnungs-Benachrichtigungen</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="notificationsWarning" ${settings.notifications?.types?.warning !== false ? 'checked' : ''} 
+                                    onchange="window.settingsToggleNotificationType('warning')">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Info-Meldungen</div>
+                                <div class="setting-desc">Zeige Informations-Benachrichtigungen</div>
+                            </div>
+                            <label class="toggle">
+                                <input type="checkbox" id="notificationsInfo" ${settings.notifications?.types?.info !== false ? 'checked' : ''} 
+                                    onchange="window.settingsToggleNotificationType('info')">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Position</div>
+                                <div class="setting-desc">Wähle die Position der Benachrichtigungen</div>
+                            </div>
+                            <select class="select" id="notificationPosition" onchange="window.settingsChangeNotificationPosition(this.value)">
+                                <option value="top-right" ${settings.notifications?.position === 'top-right' ? 'selected' : ''}>Oben rechts</option>
+                                <option value="top-left" ${settings.notifications?.position === 'top-left' ? 'selected' : ''}>Oben links</option>
+                                <option value="bottom-right" ${settings.notifications?.position === 'bottom-right' || !settings.notifications?.position ? 'selected' : ''}>Unten rechts</option>
+                                <option value="bottom-left" ${settings.notifications?.position === 'bottom-left' ? 'selected' : ''}>Unten links</option>
+                                <option value="top-center" ${settings.notifications?.position === 'top-center' ? 'selected' : ''}>Oben zentriert</option>
+                                <option value="bottom-center" ${settings.notifications?.position === 'bottom-center' ? 'selected' : ''}>Unten zentriert</option>
+                            </select>
+                        </div>
+
+                        <div class="setting-item">
+                            <div class="setting-info">
+                                <div class="setting-label">Anzeigedauer</div>
+                                <div class="setting-desc">Dauer in Sekunden: <strong id="durationValue">${settings.notifications?.duration || 3}s</strong></div>
+                            </div>
+                            <input type="range" class="dev-slider" id="notificationDuration" min="1" max="10" value="${settings.notifications?.duration || 3}" 
+                                   oninput="window.settingsChangeNotificationDuration(this.value)">
+                        </div>
+
+                        <div style="margin-top: var(--spacing-md);">
+                            <button class="btn btn-primary btn-sm" onclick="window.settingsShowNotificationHistory()">
+                                📋 Benachrichtigungs-Historie
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">�💰 Wallet</h2>
                     </div>
                     <div class="card-body">
                         <div class="wallet-display">
@@ -435,4 +532,94 @@ window.settingsResetBottomNav = () => {
     window.applyBottomNavSettings();
     window.app.ui.showNotification('🔄 Navigation zurückgesetzt', 'success');
     window.app.router.render();
+};
+
+// === NOTIFICATION SETTINGS ===
+
+window.settingsToggleNotifications = () => {
+    const settings = window.app.store.getSettings();
+    const enabled = document.getElementById('notificationsEnabled').checked;
+    
+    if (!settings.notifications) settings.notifications = {};
+    settings.notifications.enabled = enabled;
+    
+    window.app.store.saveSettings(settings);
+    window.app.ui.showNotification(`${enabled ? '✅' : '❌'} Benachrichtigungen ${enabled ? 'aktiviert' : 'deaktiviert'}`, 'info');
+};
+
+window.settingsToggleNotificationType = (type) => {
+    const settings = window.app.store.getSettings();
+    const enabled = event.target.checked;
+    
+    if (!settings.notifications) settings.notifications = {};
+    if (!settings.notifications.types) settings.notifications.types = {};
+    settings.notifications.types[type] = enabled;
+    
+    window.app.store.saveSettings(settings);
+    window.app.ui.showNotification(`${enabled ? '✅' : '❌'} ${type.toUpperCase()}-Benachrichtigungen ${enabled ? 'aktiviert' : 'deaktiviert'}`, 'info');
+};
+
+window.settingsChangeNotificationPosition = (position) => {
+    const settings = window.app.store.getSettings();
+    
+    if (!settings.notifications) settings.notifications = {};
+    settings.notifications.position = position;
+    
+    window.app.store.saveSettings(settings);
+    window.app.ui.showNotification(`📍 Position: ${position.replace('-', ' ').toUpperCase()}`, 'info');
+};
+
+window.settingsChangeNotificationDuration = (duration) => {
+    const settings = window.app.store.getSettings();
+    
+    if (!settings.notifications) settings.notifications = {};
+    settings.notifications.duration = parseInt(duration);
+    
+    window.app.store.saveSettings(settings);
+    document.getElementById('durationValue').textContent = duration + 's';
+    window.app.ui.showNotification(`⏱️ Dauer: ${duration}s`, 'info');
+};
+
+window.settingsShowNotificationHistory = () => {
+    const history = JSON.parse(localStorage.getItem('notificationHistory') || '[]');
+    
+    const modalContent = `
+        <div class="notification-history-modal">
+            <div class="modal-header">
+                <h3>📋 Benachrichtigungs-Historie</h3>
+                <div class="modal-actions">
+                    <button class="btn btn-danger btn-sm" onclick="window.settingsClearNotificationHistory()">
+                        🗑️ Alle löschen
+                    </button>
+                    <button class="btn btn-secondary btn-sm" onclick="window.app.ui.closeModal()">
+                        ✕ Schließen
+                    </button>
+                </div>
+            </div>
+            <div class="modal-body">
+                ${history.length === 0 ? 
+                    '<div class="empty-state">📭 Keine Benachrichtigungen in der Historie</div>' :
+                    `<div class="notification-list">
+                        ${history.slice(-50).reverse().map((item, index) => `
+                            <div class="notification-item notification-${item.type}">
+                                <div class="notification-time">${new Date(item.timestamp).toLocaleString('de-DE')}</div>
+                                <div class="notification-message">${item.message}</div>
+                                <div class="notification-type">${item.type.toUpperCase()}</div>
+                            </div>
+                        `).join('')}
+                    </div>`
+                }
+            </div>
+        </div>
+    `;
+    
+    window.app.ui.showModal(modalContent, 'notification-history');
+};
+
+window.settingsClearNotificationHistory = () => {
+    if (confirm('Möchten Sie wirklich die gesamte Benachrichtigungs-Historie löschen?')) {
+        localStorage.removeItem('notificationHistory');
+        window.app.ui.showNotification('🗑️ Historie gelöscht', 'info');
+        window.settingsShowNotificationHistory(); // Refresh modal
+    }
 };

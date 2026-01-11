@@ -9,7 +9,7 @@ export const devView = (store) => {
     const footerInfoEnabled = localStorage.getItem('footerInfoEnabled') !== 'false';
     
     // Version Info
-    const version = '1.0.0.1';
+    const version = '1.0.1.0';
     const buildDate = '2026-01-10T12:17:00Z';
     
     return `
@@ -20,9 +20,9 @@ export const devView = (store) => {
             <div class="dev-card dev-hero-card">
                 <h3>🛠️ Debug & Utility</h3>
                 <div class="dev-hero-actions">
-                    <button class="dev-hero-btn dev-hero-btn-accent" onclick="window.toggleDebugConsole()">
+                    <button class="dev-hero-btn ${window.app && window.app.debugConsole && window.app.debugConsole.isVisible ? 'dev-hero-btn-accent' : 'dev-hero-btn-secondary'}" onclick="window.toggleDebugConsole()">
                         <span class="dev-hero-icon">🐛</span>
-                        <span class="dev-hero-label">Debug</span>
+                        <span class="dev-hero-label">Debug Konsole</span>
                     </button>
                     <button class="dev-hero-btn dev-hero-btn-secondary" onclick="window.devResetStats()">
                         <span class="dev-hero-icon">📊</span>
@@ -278,6 +278,10 @@ window.devShowFireworks = (text, color) => {
 window.toggleDebugConsole = () => {
     if (window.app && window.app.debugConsole) {
         window.app.debugConsole.toggle();
+        // View neu rendern, um Button-Status zu aktualisieren
+        if (window.app && window.app.router) {
+            window.app.router.render();
+        }
     }
 };
 
@@ -349,13 +353,31 @@ window.updateFooterInfo = () => {
                 document.body.appendChild(footer);
             }
         }
-        const version = '2.0.0';
-        const buildDate = new Date('2026-01-10T12:17:00Z').toLocaleString('de-DE');
-        footer.innerHTML = `
-            <span class="footer-version">v${version}</span>
-            <span class="footer-separator">|</span>
-            <span class="footer-date">Build: ${buildDate}</span>
-        `;
+        
+        // Version und Build-Datum aus version.json laden
+        fetch('./version.json')
+            .then(response => response.json())
+            .then(versionData => {
+                const version = versionData.version;
+                const buildDate = new Date(versionData.buildDate).toLocaleString('de-DE');
+                footer.innerHTML = `
+                    <span class="footer-version">v${version}</span>
+                    <span class="footer-separator">|</span>
+                    <span class="footer-date">Build: ${buildDate}</span>
+                `;
+            })
+            .catch(error => {
+                console.error('Fehler beim Laden der Version:', error);
+                // Fallback auf hartkodierte Werte
+                const version = '1.0.1.0';
+                const buildDate = new Date('2026-01-11T05:16:57.512Z').toLocaleString('de-DE');
+                footer.innerHTML = `
+                    <span class="footer-version">v${version}</span>
+                    <span class="footer-separator">|</span>
+                    <span class="footer-date">Build: ${buildDate}</span>
+                `;
+            });
+        
         footer.style.display = 'flex';
         // Bottom Navigation nach oben verschieben
         if (bottomNav) {

@@ -435,6 +435,12 @@ body::before {
     width: 100%;
     margin-left: auto;
     margin-right: auto;
+    transition: margin-bottom var(--transition-normal);
+}
+
+/* Debug Console sichtbar - Content begrenzen */
+body.debug-console-visible .main {
+    margin-bottom: calc(var(--bottom-nav-height) + 300px);
 }
 
 /* === BOTTOM NAVIGATION === */
@@ -458,13 +464,6 @@ body::before {
 
 .bottom-nav.with-footer {
     bottom: 32px; /* Höhe des Footers */
-}
-}
-    justify-content: space-evenly;
-    align-items: center;
-    z-index: 1000;
-    box-shadow: 0 -2px 16px rgba(0, 0, 0, 0.2);
-    padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
 }
 
 .nav-item {
@@ -2236,6 +2235,22 @@ body::before {
     display: flex;
 }
 
+.debug-console.minimized .debug-header {
+    padding: 0.25rem var(--spacing-sm);
+    min-height: 32px;
+}
+
+.debug-console.minimized .debug-title {
+    font-size: 0.9rem;
+}
+
+.debug-console.minimized .debug-btn {
+    padding: 0.25rem;
+    font-size: 0.8rem;
+    min-width: 24px;
+    height: 24px;
+}
+
 .debug-header {
     display: flex;
     align-items: center;
@@ -2600,4 +2615,149 @@ body::before {
         opacity: 1;
         transform: scale(1) translateY(0);
     }
+}
+
+/* === NOTIFICATION HISTORY === */
+.notification-history-modal {
+    max-width: 600px;
+    width: 100%;
+}
+
+.notification-history-modal .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+}
+
+.notification-history-modal .modal-header h3 {
+    margin: 0;
+    color: var(--primary);
+}
+
+.modal-actions {
+    display: flex;
+    gap: var(--spacing-sm);
+}
+
+.notification-history-modal .modal-body {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: var(--spacing-md);
+}
+
+.empty-state {
+    text-align: center;
+    color: var(--text-muted);
+    padding: var(--spacing-xl);
+    font-style: italic;
+}
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.notification-item {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(0, 255, 136, 0.1);
+    background: var(--bg-card);
+}
+
+.notification-item.notification-success {
+    border-color: var(--primary);
+    background: rgba(0, 255, 136, 0.05);
+}
+
+.notification-item.notification-error {
+    border-color: var(--accent);
+    background: rgba(255, 0, 110, 0.05);
+}
+
+.notification-item.notification-warning {
+    border-color: #ffa500;
+    background: rgba(255, 165, 0, 0.05);
+}
+
+.notification-item.notification-info {
+    border-color: var(--secondary);
+    background: rgba(128, 128, 153, 0.05);
+}
+
+.notification-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    min-width: 140px;
+}
+
+.notification-message {
+    flex: 1;
+    font-size: 0.9rem;
+}
+
+.notification-type {
+    font-size: 0.7rem;
+    font-weight: bold;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-xs);
+    text-transform: uppercase;
+    min-width: 60px;
+    text-align: center;
+}
+
+.notification-item.notification-success .notification-type {
+    background: var(--primary);
+    color: var(--bg-primary);
+}
+
+.notification-item.notification-error .notification-type {
+    background: var(--accent);
+    color: white;
+}
+
+.notification-item.notification-warning .notification-type {
+    background: #ffa500;
+    color: white;
+}
+
+.notification-item.notification-info .notification-type {
+    background: var(--secondary);
+    color: var(--bg-primary);
+}
+
+/* Notification animations */
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+@keyframes slideInLeft {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutLeft {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(-100%); opacity: 0; }
+}
+
+@keyframes slideInDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideOutUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-100%); opacity: 0; }
 }
