@@ -2162,13 +2162,14 @@ body::before {
     justify-content: center;
     align-items: center;
     gap: var(--spacing-sm);
-    padding: var(--spacing-xs) var(--spacing-md);
-    background: rgba(10, 14, 39, 0.95);
-    backdrop-filter: blur(8px);
-    border-top: 1px solid rgba(0, 255, 136, 0.1);
-    font-size: 0.75rem;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(10, 14, 39, 0.98);
+    backdrop-filter: blur(12px);
+    border-top: 2px solid rgba(0, 255, 136, 0.2);
+    font-size: 0.8rem;
     color: var(--text-muted);
     z-index: 999;
+    min-height: 32px;
 }
 
 .footer-version {
@@ -2439,7 +2440,7 @@ body::before {
 
 .toggle-info-btn {
     position: absolute;
-    right: 60px;
+    right: 55px;
     top: 50%;
     transform: translateY(-50%);
     background: transparent;

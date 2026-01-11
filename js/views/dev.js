@@ -81,8 +81,8 @@ export const devView = (store) => {
                 <h3>🎛️ Toggles</h3>
                 <div class="toggle-grid">
                     <div class="toggle-compact" id="toggleCacheBuster" onclick="window.devToggleCacheBuster()">
-                        <span class="toggle-compact-label">${cacheBusterEnabled ? '🔄' : '⏸️'} Chebuster</span>
-                        <button type="button" class="toggle-info-btn" onclick="event.stopPropagation(); window.devShowCacheBusterInfo()" title="Info">ℹ️</button>
+                        <span class="toggle-compact-label">${cacheBusterEnabled ? '🔄' : '⏸️'} Cachebuster</span>
+                        <button type="button" class="toggle-info-btn" onclick="event.stopPropagation(); window.devShowCacheBusterInfo()" title="Info">❓</button>
                         <div class="toggle-switch ${cacheBusterEnabled ? 'on' : 'off'}"></div>
                     </div>
                     
@@ -179,7 +179,7 @@ window.devChangeWallet = (amount, btn) => {
         window.app.store.saveState();
         // Feuerwerks-Animation anstatt Notification
         devShowFireworks(`💰 ${amount > 0 ? '+' : ''}${amount}`, amount > 0 ? '#00ff88' : '#ff0033');
-        window.app.router.render();
+        // Kein render() Aufruf um Scrolling zu vermeiden
         devAnimateBtn(btn);
     }
 };
@@ -191,7 +191,7 @@ window.devChangePoints = (amount, btn) => {
         window.app.store.saveState();
         // Feuerwerks-Animation anstatt Notification
         devShowFireworks(`⭐ ${amount > 0 ? '+' : ''}${amount}`, amount > 0 ? '#00f0ff' : '#ff6400');
-        window.app.router.render();
+        // Kein render() Aufruf um Scrolling zu vermeiden
         devAnimateBtn(btn);
     }
 };
@@ -661,8 +661,8 @@ window.devShowCacheBusterInfo = () => {
     if (window.app) {
         const content = `
             <div class="dev-info-content">
-                <h4>🔄 Chebuster - Cache-Busting System</h4>
-                <p>Der Chebuster verhindert Browser-Caching-Probleme während der Entwicklung:</p>
+                <h4>🔄 Cachebuster - Cache-Busting System</h4>
+                <p>Der Cachebuster verhindert Browser-Caching-Probleme während der Entwicklung:</p>
 
                 <div class="dev-info-section">
                     <h5>🚀 Funktionen:</h5>
@@ -691,7 +691,7 @@ window.devShowCacheBusterInfo = () => {
             </div>
         `;
 
-        window.app.ui.showModal('ℹ️ Chebuster Info', content, [
+        window.app.ui.showModal('❓ Cachebuster Info', content, [
             {
                 label: 'Verstanden',
                 type: 'primary',
