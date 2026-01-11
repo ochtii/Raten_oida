@@ -47,7 +47,43 @@ window.loadChangelog = async () => {
 function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
-                                                        {
+        {
+            version: '1.0.8.0',
+            date: '2026-01-11',
+            message: 'feat: Auto Reload Funktion für Dev Tools',
+            details: 'feat: Auto Reload Funktion für Dev Tools
+
+✨ Features:
+- Auto Reload Toggle in Dev Tools
+- Einstellbares Intervall (1-600 Sekunden)
+- Automatische Änderungserkennung (Version, CSS, JS)
+- Hash-basierte Datei-Vergleiche
+- Live Countdown-Timer im Header-Banner
+- Manueller Modus (aktiv bis deaktiviert)
+
+🎯 Funktionsweise:
+- Prüft version.json auf neue Versionsnummer
+- Hash-Vergleich für CSS und JS Dateien
+- Automatischer Reload bei Änderungen
+- Visual Feedback durch Banner mit Timer
+
+📱 UI/UX:
+- Toggle in Dev Tools Toggle-Panel
+- Range Slider für Intervall-Einstellung (1s - 600s)
+- Live Timer-Anzeige im Banner
+- Info-Button mit detaillierter Erklärung
+- Persistente Einstellungen (localStorage)
+
+⚙️ Technisch:
+- Simple Hash-Funktion für Datei-Vergleiche
+- Separate Countdown und Check-Timer
+- Meta-Tag für App-Version
+- Auto-Start beim Laden wenn aktiviert',
+            files: [],
+            stats: { additions: 0, deletions: 0 },
+            expanded: true
+        },
+        {
             version: '1.0.7.3',
             date: '2026-01-11',
             message: 'chore: Update version to 1.0.7.2 and sync changelog entries',
