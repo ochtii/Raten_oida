@@ -47,7 +47,15 @@ window.loadChangelog = async () => {
 function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
-                                {
+                                        {
+            version: '1.0.8.4',
+            date: '2026-01-11',
+            message: 'chore: Version sync v1.0.8.3',
+            details: 'chore: Version sync v1.0.8.3',
+            files: [],
+            stats: { additions: 0, deletions: 0 }
+        },
+        {
             version: '1.0.8.3',
             date: '2026-01-11',
             message: 'fix: Auto Reload standardmäßig deaktiviert + Cleanup bei Seitenladung',
