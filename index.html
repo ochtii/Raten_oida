@@ -237,6 +237,11 @@
             console.log('🧹 Alle Caches geleert');
             console.log('🔄 Cachebuster initialisiert:', window.cacheBuster.getStatus());
             
+            // Auto Reload standardmäßig deaktivieren (falls nicht explizit gesetzt)
+            if (localStorage.getItem('autoReloadEnabled') === null) {
+                localStorage.setItem('autoReloadEnabled', 'false');
+            }
+            
             // App laden mit Cachebuster
             const appUrl = window.cacheBuster.bustCache('./js/app.js', 'js');
             const script = document.createElement('script');
@@ -246,7 +251,22 @@
             
             // Auto Reload starten wenn aktiviert
             script.onload = () => {
-                if (localStorage.getItem('autoReloadEnabled') === 'true') {
+                // Sicherstellen, dass Auto Reload deaktiviert ist, wenn nicht explizit aktiviert
+                if (localStorage.getItem('autoReloadEnabled') !== 'true') {
+                    // Cleanup: Stoppe eventuell laufende Timer
+                    if (window.autoReloadTimer) {
+                        clearInterval(window.autoReloadTimer);
+                        window.autoReloadTimer = null;
+                    }
+                    if (window.autoReloadCountdown) {
+                        clearInterval(window.autoReloadCountdown);
+                        window.autoReloadCountdown = null;
+                    }
+                    // Banner entfernen falls vorhanden
+                    const banner = document.getElementById('auto-reload-banner');
+                    if (banner) banner.remove();
+                } else {
+                    // Nur starten wenn explizit aktiviert
                     setTimeout(() => {
                         if (window.startAutoReload) {
                             window.startAutoReload();
