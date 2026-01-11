@@ -14,6 +14,9 @@ class CacheBuster {
         if (this.enabled) {
             this.showBanner();
         }
+        
+        // Update footer button visibility on init
+        setTimeout(() => this.updateFooterButton(), 100);
     }
     
     generateBuildId() {
@@ -99,10 +102,16 @@ class CacheBuster {
         this.buildId = this.generateBuildId();
         this.timestamp = Date.now();
         
+        // Show notification
+        this.notify(`${type.toUpperCase()} Cachebuster ${newState ? 'aktiviert' : 'deaktiviert'}`, 'info');
+        
         // Refresh banner
         if (this.enabled) {
             this.showBanner();
         }
+        
+        // Update footer button visibility
+        this.updateFooterButton();
         
         return newState;
     }
@@ -116,11 +125,31 @@ class CacheBuster {
             this.buildId = this.generateBuildId();
             this.timestamp = Date.now();
             this.showBanner();
+            this.notify('Cachebuster aktiviert - Seite neu laden empfohlen', 'success');
         } else {
             this.hideBanner();
+            this.notify('Cachebuster deaktiviert', 'info');
         }
         
+        // Update footer button visibility
+        this.updateFooterButton();
+        
         return this.enabled;
+    }
+    
+    // Show notification
+    notify(message, type = 'info') {
+        if (window.app && window.app.ui) {
+            window.app.ui.showNotification(message, type);
+        }
+    }
+    
+    // Update footer button visibility
+    updateFooterButton() {
+        const btn = document.getElementById('cacheBusterFooterBtn');
+        if (btn) {
+            btn.style.display = this.enabled ? 'block' : 'none';
+        }
     }
     
     // Get current status

@@ -161,6 +161,14 @@
                     <span class="wallet-amount" id="walletDisplay">0</span>
                     <span class="wallet-label">Schülling</span>
                 </div>
+                
+                <!-- Cachebuster Hard Reload Button -->
+                <div id="cacheBusterFooterBtn" style="display: none;">
+                    <button class="hard-reload-btn" onclick="window.performHardReload()" title="100% Cache-Free Reload">
+                        <span class="btn-icon">🔄</span>
+                        <span class="btn-label">Hard Reload</span>
+                    </button>
+                </div>
             </div>
         </nav>
 
@@ -210,6 +218,9 @@
             // Import cachebuster module
             const { default: CacheBuster } = await import('./js/core/cachebuster.js');
             window.cacheBuster = new CacheBuster();
+            
+            // Import hard reload module
+            await import('./js/core/hard-reload.js');
             
             // Service Worker entfernen
             if ('serviceWorker' in navigator) {

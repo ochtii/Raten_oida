@@ -5677,3 +5677,151 @@ body:has(.auto-reload-banner) {
         padding-top: 50px;
     }
 }
+/* ==========================================
+   HARD RELOAD BUTTON
+   Footer button for 100% cache-free reload
+   ========================================== */
+
+#cacheBusterFooterBtn {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 998;
+    animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.hard-reload-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #00ff88 0%, #00cc6a 100%);
+    color: #000;
+    border: 2px solid #00ff88;
+    border-radius: 12px;
+    font-family: 'Orbitron', monospace;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    box-shadow: 
+        0 0 20px rgba(0, 255, 136, 0.5),
+        0 4px 8px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% {
+        box-shadow: 
+            0 0 20px rgba(0, 255, 136, 0.5),
+            0 4px 8px rgba(0, 0, 0, 0.3),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(0, 255, 136, 0.8),
+            0 6px 12px rgba(0, 0, 0, 0.4),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    }
+}
+
+.hard-reload-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s ease;
+}
+
+.hard-reload-btn:hover::before {
+    left: 100%;
+}
+
+.hard-reload-btn:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 
+        0 0 35px rgba(0, 255, 136, 0.9),
+        0 8px 16px rgba(0, 0, 0, 0.4),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    animation: none;
+}
+
+.hard-reload-btn:active {
+    transform: scale(0.98) translateY(0);
+    box-shadow: 
+        0 0 15px rgba(0, 255, 136, 0.6),
+        0 2px 4px rgba(0, 0, 0, 0.3),
+        inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.hard-reload-btn .btn-icon {
+    font-size: 1.2rem;
+    animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.hard-reload-btn .btn-label {
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    #cacheBusterFooterBtn {
+        bottom: 70px;
+        right: 10px;
+    }
+    
+    .hard-reload-btn {
+        padding: 10px 16px;
+        font-size: 0.8rem;
+        gap: 6px;
+    }
+    
+    .hard-reload-btn .btn-icon {
+        font-size: 1rem;
+    }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+    #cacheBusterFooterBtn {
+        bottom: 65px;
+        right: 5px;
+    }
+    
+    .hard-reload-btn {
+        padding: 8px 12px;
+        font-size: 0.75rem;
+        gap: 4px;
+    }
+    
+    .hard-reload-btn .btn-icon {
+        font-size: 0.9rem;
+    }
+}

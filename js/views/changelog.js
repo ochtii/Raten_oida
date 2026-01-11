@@ -47,11 +47,21 @@ window.loadChangelog = async () => {
 function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
+                {
+            version: '1.0.8.1',
+            date: '2026-01-11',
+            message: 'fix: Changelog Syntax-Fehler behoben',
+            details: `fix: Changelog Syntax-Fehler behoben
+
+Entfernte übermäßige Einrückung im staticChanges Array die vom Auto-Versioning Script eingefügt wurde.`,
+            files: [],
+            stats: { additions: 0, deletions: 0 }
+        },
         {
             version: '1.0.8.0',
             date: '2026-01-11',
             message: 'feat: Auto Reload Funktion für Dev Tools',
-            details: 'feat: Auto Reload Funktion für Dev Tools
+            details: `feat: Auto Reload Funktion für Dev Tools
 
 ✨ Features:
 - Auto Reload Toggle in Dev Tools
@@ -78,7 +88,7 @@ function loadStaticChangelog(container) {
 - Simple Hash-Funktion für Datei-Vergleiche
 - Separate Countdown und Check-Timer
 - Meta-Tag für App-Version
-- Auto-Start beim Laden wenn aktiviert',
+- Auto-Start beim Laden wenn aktiviert`,
             files: [],
             stats: { additions: 0, deletions: 0 },
             expanded: true
@@ -103,9 +113,9 @@ function loadStaticChangelog(container) {
             version: '1.0.7.1',
             date: '2026-01-11',
             message: 'fix: Entferne HTML-Kommentar aus Template Literal in dev.js',
-            details: 'fix: Entferne HTML-Kommentar aus Template Literal in dev.js
+            details: `fix: Entferne HTML-Kommentar aus Template Literal in dev.js
 
-HTML-Kommentare in Template Literals können zu \'Unexpected token <\' Fehlern führen.',
+HTML-Kommentare in Template Literals können zu 'Unexpected token <' Fehlern führen.`,
             files: [],
             stats: { additions: 0, deletions: 0 }
         },
@@ -113,7 +123,7 @@ HTML-Kommentare in Template Literals können zu \'Unexpected token <\' Fehlern f
             version: '1.0.7.0',
             date: '2026-01-11',
             message: 'feat: Optimierte Einstellungsseite',
-            details: 'feat: Optimierte Einstellungsseite
+            details: `feat: Optimierte Einstellungsseite
 
 - Entfernte Theme-Vorschaubilder (kompakte Button-Ansicht)
 - Schwebendes Such-Symbol (standardmäßig ausgeblendet)
@@ -121,7 +131,7 @@ HTML-Kommentare in Template Literals können zu \'Unexpected token <\' Fehlern f
 - Benachrichtigungsgröße einstellbar (klein/mittel/groß)
 - Benachrichtigungstypen als Multiple Choice (Erfolg/Fehler/Warnung/Info)
 - Floating Search Toggle mit Animation
-- Kompakte Theme-Buttons mit Emojis',
+- Kompakte Theme-Buttons mit Emojis`,
             files: [],
             stats: { additions: 0, deletions: 0 }
         },
@@ -129,9 +139,9 @@ HTML-Kommentare in Template Literals können zu \'Unexpected token <\' Fehlern f
             version: '1.0.6.1',
             date: '2026-01-11',
             message: 'fix: Optional chaining syntax error in settings.js',
-            details: 'fix: Optional chaining syntax error in settings.js
+            details: `fix: Optional chaining syntax error in settings.js
 
-Fixed \'Invalid left-hand side in assignment\' error by replacing optional chaining operator in assignment statements with proper null checks.',
+Fixed 'Invalid left-hand side in assignment' error by replacing optional chaining operator in assignment statements with proper null checks.`,
             files: [],
             stats: { additions: 0, deletions: 0 }
         },
@@ -139,7 +149,7 @@ Fixed \'Invalid left-hand side in assignment\' error by replacing optional chain
             version: '1.0.6.0',
             date: '2026-01-11',
             message: 'feat: Enhanced Cachebuster System with Auto-Changelog',
-            details: 'feat: Enhanced Cachebuster System with Auto-Changelog
+            details: `feat: Enhanced Cachebuster System with Auto-Changelog
 
 ✨ Features:
 - Auto-update changelog with versioning system
@@ -163,7 +173,7 @@ Fixed \'Invalid left-hand side in assignment\' error by replacing optional chain
 - Active types display (HTML • CSS • JS)
 - Build ID + timestamp
 - Auto-minimize after 10s
-- Mobile responsive',
+- Mobile responsive`,
             files: [],
             stats: { additions: 0, deletions: 0 }
         },

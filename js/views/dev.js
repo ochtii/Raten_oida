@@ -9,7 +9,7 @@ export const devView = (store) => {
     const footerInfoEnabled = localStorage.getItem('footerInfoEnabled') !== 'false';    const autoReloadEnabled = localStorage.getItem('autoReloadEnabled') === 'true';
     const autoReloadInterval = parseInt(localStorage.getItem('autoReloadInterval') || '5');    
     // Version Info
-    const version = '1.0.8.0';
+    const version = '1.0.8.1';
     const buildDate = '2026-01-10T12:17:00Z';
     
     return `
