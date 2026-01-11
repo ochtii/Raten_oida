@@ -646,7 +646,66 @@ body.debug-console-visible .main {
     color: var(--text-primary);
 }
 
-/* === GAMES VIEW === */
+.btn-xs {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    min-height: 24px;
+}
+
+.btn-info {
+    background: linear-gradient(135deg, var(--secondary), #6666ff);
+    color: var(--bg-primary);
+    box-shadow: 0 4px 16px rgba(102, 102, 255, 0.3);
+}
+
+.btn-warning {
+    background: linear-gradient(135deg, #ffa500, #ff8c00);
+    color: var(--text-primary);
+    box-shadow: 0 4px 16px rgba(255, 165, 0, 0.3);
+}
+
+/* === SETTINGS === */
+.setting-controls {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+}
+
+.setting-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+    transition: background-color var(--transition-fast);
+}
+
+.setting-item:hover {
+    background: rgba(0, 255, 136, 0.02);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.setting-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    display: block;
+}
+
+.setting-desc {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.4;
+}
 .games-view {
     padding: var(--spacing-md);
 }

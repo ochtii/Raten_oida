@@ -223,11 +223,16 @@ export const settingsView = (store) => {
                                 <div class="setting-label">Erfolgsmeldungen</div>
                                 <div class="setting-desc">Zeige Erfolgs-Benachrichtigungen</div>
                             </div>
-                            <label class="toggle">
-                                <input type="checkbox" id="notificationsSuccess" ${settings.notifications?.types?.success !== false ? 'checked' : ''} 
-                                    onchange="window.settingsToggleNotificationType('success')">
-                                <span class="toggle-slider"></span>
-                            </label>
+                            <div class="setting-controls">
+                                <label class="toggle">
+                                    <input type="checkbox" id="notificationsSuccess" ${settings.notifications?.types?.success !== false ? 'checked' : ''} 
+                                        onchange="window.settingsToggleNotificationType('success')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <button class="btn btn-success btn-xs" onclick="window.settingsTestNotification('success')">
+                                    Test
+                                </button>
+                            </div>
                         </div>
 
                         <div class="setting-item">
@@ -235,11 +240,16 @@ export const settingsView = (store) => {
                                 <div class="setting-label">Fehlermeldungen</div>
                                 <div class="setting-desc">Zeige Fehler-Benachrichtigungen</div>
                             </div>
-                            <label class="toggle">
-                                <input type="checkbox" id="notificationsError" ${settings.notifications?.types?.error !== false ? 'checked' : ''} 
-                                    onchange="window.settingsToggleNotificationType('error')">
-                                <span class="toggle-slider"></span>
-                            </label>
+                            <div class="setting-controls">
+                                <label class="toggle">
+                                    <input type="checkbox" id="notificationsError" ${settings.notifications?.types?.error !== false ? 'checked' : ''} 
+                                        onchange="window.settingsToggleNotificationType('error')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <button class="btn btn-danger btn-xs" onclick="window.settingsTestNotification('error')">
+                                    Test
+                                </button>
+                            </div>
                         </div>
 
                         <div class="setting-item">
@@ -247,11 +257,16 @@ export const settingsView = (store) => {
                                 <div class="setting-label">Warnungen</div>
                                 <div class="setting-desc">Zeige Warnungs-Benachrichtigungen</div>
                             </div>
-                            <label class="toggle">
-                                <input type="checkbox" id="notificationsWarning" ${settings.notifications?.types?.warning !== false ? 'checked' : ''} 
-                                    onchange="window.settingsToggleNotificationType('warning')">
-                                <span class="toggle-slider"></span>
-                            </label>
+                            <div class="setting-controls">
+                                <label class="toggle">
+                                    <input type="checkbox" id="notificationsWarning" ${settings.notifications?.types?.warning !== false ? 'checked' : ''} 
+                                        onchange="window.settingsToggleNotificationType('warning')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <button class="btn btn-warning btn-xs" onclick="window.settingsTestNotification('warning')">
+                                    Test
+                                </button>
+                            </div>
                         </div>
 
                         <div class="setting-item">
@@ -259,11 +274,16 @@ export const settingsView = (store) => {
                                 <div class="setting-label">Info-Meldungen</div>
                                 <div class="setting-desc">Zeige Informations-Benachrichtigungen</div>
                             </div>
-                            <label class="toggle">
-                                <input type="checkbox" id="notificationsInfo" ${settings.notifications?.types?.info !== false ? 'checked' : ''} 
-                                    onchange="window.settingsToggleNotificationType('info')">
-                                <span class="toggle-slider"></span>
-                            </label>
+                            <div class="setting-controls">
+                                <label class="toggle">
+                                    <input type="checkbox" id="notificationsInfo" ${settings.notifications?.types?.info !== false ? 'checked' : ''} 
+                                        onchange="window.settingsToggleNotificationType('info')">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                <button class="btn btn-info btn-xs" onclick="window.settingsTestNotification('info')">
+                                    Test
+                                </button>
+                            </div>
                         </div>
 
                         <div class="setting-item">
@@ -585,17 +605,6 @@ window.settingsShowNotificationHistory = () => {
     
     const modalContent = `
         <div class="notification-history-modal">
-            <div class="modal-header">
-                <h3>📋 Benachrichtigungs-Historie</h3>
-                <div class="modal-actions">
-                    <button class="btn btn-danger btn-sm" onclick="window.settingsClearNotificationHistory()">
-                        🗑️ Alle löschen
-                    </button>
-                    <button class="btn btn-secondary btn-sm" onclick="window.app.ui.closeModal()">
-                        ✕ Schließen
-                    </button>
-                </div>
-            </div>
             <div class="modal-body">
                 ${history.length === 0 ? 
                     '<div class="empty-state">📭 Keine Benachrichtigungen in der Historie</div>' :
@@ -613,13 +622,21 @@ window.settingsShowNotificationHistory = () => {
         </div>
     `;
     
-    window.app.ui.showModal(modalContent, 'notification-history');
-};
-
-window.settingsClearNotificationHistory = () => {
-    if (confirm('Möchten Sie wirklich die gesamte Benachrichtigungs-Historie löschen?')) {
-        localStorage.removeItem('notificationHistory');
-        window.app.ui.showNotification('🗑️ Historie gelöscht', 'info');
-        window.settingsShowNotificationHistory(); // Refresh modal
-    }
+    window.app.ui.showModal('📋 Benachrichtigungs-Historie', modalContent, [
+        { label: '🗑️ Alle löschen', type: 'danger', action: 'clear', callback: () => {
+            if (confirm('Möchten Sie wirklich die gesamte Benachrichtigungs-Historie löschen?')) {
+                localStorage.removeItem('notificationHistory');
+                window.app.ui.showNotification('🗑️ Historie gelöscht', 'info');
+            }
+        }},
+        { label: '✕ Schließen', type: 'secondary', action: 'close' }
+window.settingsTestNotification = (type) => {
+    const messages = {
+        success: '✅ Test-Erfolgsmeldung',
+        error: '❌ Test-Fehlermeldung', 
+        warning: '⚠️ Test-Warnung',
+        info: 'ℹ️ Test-Info-Meldung'
+    };
+    
+    window.app.ui.showNotification(messages[type], type);
 };
