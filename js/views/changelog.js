@@ -47,7 +47,17 @@ window.loadChangelog = async () => {
 function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
-                {
+                        {
+            version: '1.0.6.1',
+            date: '2026-01-11',
+            message: 'fix: Optional chaining syntax error in settings.js',
+            details: 'fix: Optional chaining syntax error in settings.js
+
+Fixed \'Invalid left-hand side in assignment\' error by replacing optional chaining operator in assignment statements with proper null checks.',
+            files: [],
+            stats: { additions: 0, deletions: 0 }
+        },
+        {
             version: '1.0.6.0',
             date: '2026-01-11',
             message: 'feat: Enhanced Cachebuster System with Auto-Changelog',

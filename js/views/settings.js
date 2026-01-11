@@ -2,6 +2,24 @@
    MODERN MOBILE SETTINGS VIEW
    ========================================== */
 
+// Toggle Search Field
+window.toggleSearchField = () => {
+    const container = document.getElementById('searchContainer');
+    const input = document.getElementById('searchInput');
+    const toggle = document.getElementById('searchToggle');
+    
+    if (container.style.display === 'none') {
+        container.style.display = 'flex';
+        toggle.style.display = 'none';
+        setTimeout(() => input.focus(), 100);
+    } else {
+        container.style.display = 'none';
+        toggle.style.display = 'flex';
+        input.value = '';
+        window.searchSettings(''); // Reset search
+    }
+};
+
 // Live-Suche für Einstellungen
 window.searchSettings = (query) => {
     const searchTerm = query.toLowerCase().trim();
@@ -282,6 +300,34 @@ window.settingsChangeNotificationDuration = (duration) => {
     window.app.ui.showNotification(`Dauer: ${duration}s`, 'info');
 };
 
+window.settingsChangeNotificationSize = (size) => {
+    const settings = window.app.store.getSettings();
+    
+    if (!settings.notifications) settings.notifications = {};
+    settings.notifications.size = size;
+    
+    window.app.store.saveSettings(settings);
+    
+    // Apply size to notification container
+    document.documentElement.style.setProperty('--notification-size-multiplier', 
+        size === 'small' ? '0.85' : size === 'large' ? '1.15' : '1');
+    
+    window.app.ui.showNotification(`Größe: ${size === 'small' ? 'Klein' : size === 'large' ? 'Groß' : 'Mittel'}`, 'info');
+};
+
+window.settingsToggleNotificationType = (type, enabled) => {
+    const settings = window.app.store.getSettings();
+    
+    if (!settings.notifications) settings.notifications = {};
+    if (!settings.notifications.types) settings.notifications.types = {};
+    settings.notifications.types[type] = enabled;
+    
+    window.app.store.saveSettings(settings);
+    
+    const labels = { success: 'Erfolg', error: 'Fehler', warning: 'Warnung', info: 'Info' };
+    window.app.ui.showNotification(`${labels[type]}: ${enabled ? 'aktiviert' : 'deaktiviert'}`, 'info');
+};
+
 window.settingsShowNotificationHistory = () => {
     const history = JSON.parse(localStorage.getItem('notificationHistory') || '[]');
     
@@ -388,15 +434,24 @@ export const settingsView = (store) => {
             <!-- Header mit Suche -->
             <div class="modern-settings-header">
                 <h1 class="modern-settings-title">⚙️ Einstellungen</h1>
-                <div class="modern-search-container">
+                
+                <!-- Schwebendes Such-Symbol -->
+                <button class="floating-search-toggle" id="searchToggle" onclick="window.toggleSearchField()" title="Suche ein/ausblenden">
+                    🔍
+                </button>
+                
+                <!-- Ausklappbares Suchfeld (standardmäßig ausgeblendet) -->
+                <div class="modern-search-container" id="searchContainer" style="display: none;">
                     <div class="search-icon">🔍</div>
                     <input 
                         type="search" 
                         class="modern-search-input" 
+                        id="searchInput"
                         placeholder="Suche Einstellungen (min. 2 Zeichen)..."
                         oninput="window.searchSettings(this.value)"
                         autocomplete="off"
                     >
+                    <button class="search-close" onclick="window.toggleSearchField()" title="Schließen">✕</button>
                     <div class="search-hint">Ab 2 Buchstaben wird gefiltert</div>
                 </div>
             </div>
@@ -442,49 +497,17 @@ export const settingsView = (store) => {
                             <div class="setting-label">App-Theme</div>
                             <div class="setting-desc">Wähle dein bevorzugtes Farbschema</div>
                         </div>
-                        <div class="theme-picker-modern">
-                            <div class="theme-option-modern" data-theme="auto" onclick="window.setTheme('auto')">
-                                <div class="theme-preview auto-preview">
-                                    <div class="auto-icon">🌓</div>
-                                </div>
-                                <span class="theme-name">Auto</span>
-                            </div>
-                            <div class="theme-option-modern" data-theme="light" onclick="window.setTheme('light')">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #fff 50%, #f5f5f5 50%);"></div>
-                                <span class="theme-name">Hell</span>
-                            </div>
-                            <div class="theme-option-modern" data-theme="dark" onclick="window.setTheme('dark')">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #0a0e27 50%, #00ff88 50%);"></div>
-                                <span class="theme-name">Dunkel</span>
-                            </div>
-                            <div class="theme-option-modern" data-theme="metal" onclick="window.setTheme('metal')">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #2a2a2a 0%, #c0c0c0 100%);"></div>
-                                <span class="theme-name">Metal</span>
-                            </div>
-                            <div class="theme-option-modern" data-theme="rapid" onclick="window.setTheme('rapid')">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #00a64f 50%, #fff 50%);"></div>
-                                <span class="theme-name">Rapid</span>
-                            </div>
-                            <div class="theme-option-modern" data-theme="gaylord" onclick="window.setTheme('gaylord')">
-                                <div class="theme-preview rainbow-preview"></div>
-                                <span class="theme-name">Rainbow</span>
-                            </div>
-                            <div class="theme-option-modern" data-theme="spritzkack" onclick="window.setTheme('spritzkack')">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #8b6f47 0%, #3d2817 100%);"></div>
-                                <span class="theme-name">Braun</span>
-                            </div>
-                            <div class="theme-option-modern" data-theme="spongebob" onclick="window.setTheme('spongebob')">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #ffcc00 50%, #00b8d4 50%);"></div>
-                                <span class="theme-name">Spongebob</span>
-                            </div>
-                            <div class="theme-option-modern" data-theme="420" onclick="window.setTheme('420')">
-                                <div class="theme-preview" style="background: linear-gradient(135deg, #32cd32 0%, #228b22 100%);"></div>
-                                <span class="theme-name">420</span>
-                            </div>
-                            <div class="theme-option-modern" data-theme="acid" onclick="window.setTheme('acid')">
-                                <div class="theme-preview acid-preview"></div>
-                                <span class="theme-name">Acid</span>
-                            </div>
+                        <div class="theme-picker-compact">
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'auto' ? 'active' : ''}" onclick="window.setTheme('auto')">🌓 Auto</button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'light' ? 'active' : ''}" onclick="window.setTheme('light')">☀️ Hell</button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'dark' ? 'active' : ''}" onclick="window.setTheme('dark')">🌙 Dunkel</button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'metal' ? 'active' : ''}" onclick="window.setTheme('metal')">⚙️ Metal</button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'rapid' ? 'active' : ''}" onclick="window.setTheme('rapid')">⚽ Rapid</button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'gaylord' ? 'active' : ''}" onclick="window.setTheme('gaylord')">🌈 Rainbow</button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'spritzkack' ? 'active' : ''}" onclick="window.setTheme('spritzkack')">🟤 Braun</button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'spongebob' ? 'active' : ''}" onclick="window.setTheme('spongebob')">🧽 Spongebob</button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === '420' ? 'active' : ''}" onclick="window.setTheme('420')">🌿 420</button>
+                            <button class="theme-btn ${localStorage.getItem('appTheme') === 'acid' ? 'active' : ''}" onclick="window.setTheme('acid')">💫 Acid</button>
                         </div>
                     </div>
                     
@@ -699,6 +722,45 @@ export const settingsView = (store) => {
                             <label class="toggle">
                                 <input type="checkbox" ${notificationSettings.enabled ? 'checked' : ''} onchange="window.settingsToggleNotifications(this)">
                                 <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <!-- Benachrichtigungs-Größe -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">📏 Größe</div>
+                            <div class="setting-desc">Wähle die Größe der Benachrichtigungen</div>
+                        </div>
+                        <select class="modern-select" onchange="window.settingsChangeNotificationSize(this.value)">
+                            <option value="small" ${(notificationSettings.size || 'medium') === 'small' ? 'selected' : ''}>Klein</option>
+                            <option value="medium" ${(notificationSettings.size || 'medium') === 'medium' ? 'selected' : ''}>Mittel</option>
+                            <option value="large" ${(notificationSettings.size || 'medium') === 'large' ? 'selected' : ''}>Groß</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Anzuzeigende Typen (Multiple Choice) -->
+                    <div class="setting-item-wrapper">
+                        <div class="setting-item-header">
+                            <div class="setting-label">🎨 Anzuzeigende Typen</div>
+                            <div class="setting-desc">Welche Benachrichtigungstypen sollen angezeigt werden?</div>
+                        </div>
+                        <div class="notification-types-grid">
+                            <label class="notification-type-checkbox">
+                                <input type="checkbox" ${(notificationSettings.types?.success !== false) ? 'checked' : ''} onchange="window.settingsToggleNotificationType('success', this.checked)">
+                                <span class="type-label">✅ Erfolg</span>
+                            </label>
+                            <label class="notification-type-checkbox">
+                                <input type="checkbox" ${(notificationSettings.types?.error !== false) ? 'checked' : ''} onchange="window.settingsToggleNotificationType('error', this.checked)">
+                                <span class="type-label">❌ Fehler</span>
+                            </label>
+                            <label class="notification-type-checkbox">
+                                <input type="checkbox" ${(notificationSettings.types?.warning !== false) ? 'checked' : ''} onchange="window.settingsToggleNotificationType('warning', this.checked)">
+                                <span class="type-label">⚠️ Warnung</span>
+                            </label>
+                            <label class="notification-type-checkbox">
+                                <input type="checkbox" ${(notificationSettings.types?.info !== false) ? 'checked' : ''} onchange="window.settingsToggleNotificationType('info', this.checked)">
+                                <span class="type-label">ℹ️ Info</span>
                             </label>
                         </div>
                     </div>
