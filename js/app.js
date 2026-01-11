@@ -173,11 +173,10 @@ window.updateFooterInfo = () => {
             })
             .catch(error => {
                 console.error('Fehler beim Laden der Version:', error);
-                // Fallback auf hartkodierte Werte
-                const version = '1.0.1.0';
-                const buildDate = new Date('2026-01-11T05:16:57.512Z').toLocaleString('de-DE');
+                // Fallback: Nur Datum, Version wird nachgeladen
+                const buildDate = new Date().toLocaleString('de-DE');
                 footer.innerHTML = `
-                    <a href="#changelog" data-route="changelog" class="footer-version">v${version}</a>
+                    <a href="#changelog" data-route="changelog" class="footer-version">v1.0.4.2</a>
                     <span class="footer-separator">|</span>
                     <span class="footer-date">Build: ${buildDate}</span>
                 `;

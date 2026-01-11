@@ -63,7 +63,7 @@ export const settingsView = (store) => {
                         <h2 class="card-title">🎨 Design</h2>
                     </div>
                     <div class="card-body">
-                        <div class="setting-item">
+                        <div class="setting-item" style="flex-direction: column; align-items: flex-start;">
                             <div class="setting-info">
                                 <div class="setting-label">Toggle-Style</div>
                                 <div class="setting-desc">Wähle deinen bevorzugten Toggle-Style</div>

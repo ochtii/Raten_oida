@@ -48,13 +48,29 @@ function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
         {
+            version: '1.0.4.2',
+            date: '2026-01-11',
+            message: 'UI: File-Balken am Badge-Rand + komplett unterschiedliche Toggle-Designs',
+            details: 'File-Balken jetzt am unteren Rand der File-Badges mit modernem Card-Design. 4 deutlich verschiedene Toggle-Styles: iOS 14+ (Apple authentisch), Material Design 3 (Google mit Ripple), Neon Cyberpunk (ON/OFF Text + extremer Glow), Minimal Fluent (Microsoft mit Glassmorphism).',
+            files: ['js/views/changelog.js', 'css/app.css', 'version.json', 'js/views/dev.js'],
+            stats: { additions: 155, deletions: 78 },
+            expanded: true
+        },
+        {
+            version: '1.0.4.1',
+            date: '2026-01-11',
+            message: 'Changelog: Aktueller Build expandiert mit modernen File-Balken',
+            details: 'Aktueller Build 1.0.4.0 ganz oben expandiert angezeigt, moderne rot/grün Streifen für File-Änderungen statt [+++----] Balken, Shimmer-Animation, aktueller Build mit Glow-Effekt hervorgehoben.',
+            files: ['js/views/changelog.js', 'css/app.css'],
+            stats: { additions: 107, deletions: 25 }
+        },
+        {
             version: '1.0.4.0',
             date: '2026-01-11',
             message: 'Feature: Moderne Toggle-Styles mit Picker',
             details: '5 verschiedene Toggle-Designs (Classic, iOS, Material, Neon, Minimal) implementiert. Toggle-Style-Picker zu Design-Einstellungen hinzugefügt mit Live-Vorschau für jeden Style und localStorage-Persistierung.',
             files: ['js/views/settings.js', 'css/app.css', 'version.json', 'js/views/dev.js'],
-            stats: { additions: 291, deletions: 3 },
-            expanded: true
+            stats: { additions: 291, deletions: 3 }
         },
         {
             version: '1.0.2.9',
