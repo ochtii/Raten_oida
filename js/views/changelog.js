@@ -47,7 +47,15 @@ window.loadChangelog = async () => {
 function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
-                                                        {
+                                                                {
+            version: '1.0.8.7',
+            date: '2026-01-11',
+            message: 'v1.0.8.6 final',
+            details: 'v1.0.8.6 final',
+            files: [],
+            stats: { additions: 0, deletions: 0 }
+        },
+        {
             version: '1.0.8.6',
             date: '2026-01-11',
             message: 'sync',
