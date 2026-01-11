@@ -49,6 +49,9 @@ class App {
             this.ui.init();
             this.router.init();
             
+            // Einstellungen synchronisieren
+            this.ui.syncSettings();
+            
             // Event Listeners
             this.setupEventListeners();
             

@@ -6,6 +6,9 @@ export class UI {
     constructor(store) {
         this.store = store;
         this.notificationQueue = [];
+        this.localStorageEventsEnabled = false;
+        this.originalLocalStorage = { ...localStorage };
+        this.initLocalStorageTracking();
     }
 
     init() {
@@ -178,5 +181,83 @@ export class UI {
                 modal.remove();
             });
         });
+    }
+
+    initLocalStorageTracking() {
+        // Überschreibe localStorage Methoden um Events zu tracken
+        const self = this;
+        
+        const originalSetItem = localStorage.setItem;
+        localStorage.setItem = function(key, value) {
+            try {
+                originalSetItem.call(this, key, value);
+                self.trackLocalStorageEvent('schreiben', key, true);
+            } catch (error) {
+                self.trackLocalStorageEvent('schreiben', key, false, error.message);
+                throw error;
+            }
+        };
+        
+        const originalGetItem = localStorage.getItem;
+        localStorage.getItem = function(key) {
+            try {
+                const result = originalGetItem.call(this, key);
+                self.trackLocalStorageEvent('lesen', key, true);
+                return result;
+            } catch (error) {
+                self.trackLocalStorageEvent('lesen', key, false, error.message);
+                throw error;
+            }
+        };
+        
+        const originalRemoveItem = localStorage.removeItem;
+        localStorage.removeItem = function(key) {
+            try {
+                originalRemoveItem.call(this, key);
+                self.trackLocalStorageEvent('löschen', key, true);
+            } catch (error) {
+                self.trackLocalStorageEvent('löschen', key, false, error.message);
+                throw error;
+            }
+        };
+        
+        const originalClear = localStorage.clear;
+        localStorage.clear = function() {
+            try {
+                originalClear.call(this);
+                self.trackLocalStorageEvent('leeren', 'all', true);
+            } catch (error) {
+                self.trackLocalStorageEvent('leeren', 'all', false, error.message);
+                throw error;
+            }
+        };
+    }
+
+    trackLocalStorageEvent(operation, key, success, errorMessage = null) {
+        if (!this.localStorageEventsEnabled) return;
+        
+        const message = `local storage event - Type: ${operation}${key !== 'all' ? ` - Key: ${key}` : ''}`;
+        const type = success ? 'localstorage' : 'error';
+        
+        if (!success && errorMessage) {
+            this.showNotification(`${message} - Fehler: ${errorMessage}`, type);
+        } else {
+            this.showNotification(message, type);
+        }
+    }
+
+    enableLocalStorageEvents(enabled) {
+        this.localStorageEventsEnabled = enabled;
+    }
+
+    syncSettings() {
+        // Synchronisiere Einstellungen beim Laden der Seite
+        const settings = this.store.getSettings();
+        this.enableLocalStorageEvents(settings.notifications?.types?.localstorage === true);
+        
+        // Zeige Synchronisations-Benachrichtigung
+        setTimeout(() => {
+            this.showNotification('Einstellungen erfolgreich synchronisiert', 'localstorage');
+        }, 100);
     }
 }

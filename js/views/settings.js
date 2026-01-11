@@ -271,16 +271,16 @@ export const settingsView = (store) => {
 
                         <div class="setting-item">
                             <div class="setting-info">
-                                <div class="setting-label">Info-Meldungen</div>
-                                <div class="setting-desc">Zeige Informations-Benachrichtigungen</div>
+                                <div class="setting-label">LocalStorage Events</div>
+                                <div class="setting-desc">Zeige Benachrichtigungen bei localStorage Operationen</div>
                             </div>
                             <div class="setting-controls">
                                 <label class="toggle">
-                                    <input type="checkbox" id="notificationsInfo" ${settings.notifications?.types?.info !== false ? 'checked' : ''} 
-                                        onchange="window.settingsToggleNotificationType('info')">
+                                    <input type="checkbox" id="notificationsLocalStorage" ${settings.notifications?.types?.localstorage !== false ? 'checked' : ''} 
+                                        onchange="window.settingsToggleNotificationType('localstorage')">
                                     <span class="toggle-slider"></span>
                                 </label>
-                                <button class="btn btn-info btn-xs" onclick="window.settingsTestNotification('info')">
+                                <button class="btn btn-secondary btn-xs" onclick="window.settingsTestNotification('localstorage')">
                                     Test
                                 </button>
                             </div>
@@ -576,6 +576,12 @@ window.settingsToggleNotificationType = (type) => {
     settings.notifications.types[type] = enabled;
     
     window.app.store.saveSettings(settings);
+    
+    // Spezielle Behandlung für localStorage Events
+    if (type === 'localstorage') {
+        window.app.ui.enableLocalStorageEvents(enabled);
+    }
+    
     window.app.ui.showNotification(`${enabled ? '✅' : '❌'} ${type.toUpperCase()}-Benachrichtigungen ${enabled ? 'aktiviert' : 'deaktiviert'}`, 'info');
 };
 
@@ -638,7 +644,8 @@ window.settingsTestNotification = (type) => {
         success: '✅ Test-Erfolgsmeldung',
         error: '❌ Test-Fehlermeldung', 
         warning: '⚠️ Test-Warnung',
-        info: 'ℹ️ Test-Info-Meldung'
+        info: 'ℹ️ Test-Info-Meldung',
+        localstorage: '💾 local storage event - Type: testen'
     };
     
     window.app.ui.showNotification(messages[type], type);

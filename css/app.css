@@ -2820,3 +2820,107 @@ body.debug-console-visible .main {
     from { transform: translateY(0); opacity: 1; }
     to { transform: translateY(-100%); opacity: 0; }
 }
+
+/* === NOTIFICATIONS === */
+.notification {
+    position: fixed;
+    background: var(--bg-card);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.5rem;
+    box-shadow: var(--shadow-lg);
+    z-index: 10000;
+    animation: slideInRight 0.3s ease-out;
+    max-width: 300px;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+    border: 2px solid;
+}
+
+.notification-success {
+    border-color: var(--primary);
+    background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 136, 0.05));
+}
+
+.notification-error {
+    border-color: var(--accent);
+    background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(255, 0, 110, 0.05));
+}
+
+.notification-warning {
+    border-color: var(--warning);
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 215, 0, 0.05));
+}
+
+.notification-info {
+    border-color: var(--secondary);
+    background: linear-gradient(135deg, rgba(0, 240, 255, 0.1), rgba(0, 240, 255, 0.05));
+}
+
+.notification-localstorage {
+    border-color: #9c27b0;
+    background: linear-gradient(135deg, rgba(156, 39, 176, 0.1), rgba(156, 39, 176, 0.05));
+}
+
+/* === NOTIFICATION HISTORY MODAL === */
+.notification-history-modal {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.notification-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.notification-item {
+    padding: var(--spacing-sm);
+    border-radius: var(--radius-sm);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.notification-item .notification-time {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+}
+
+.notification-item .notification-message {
+    font-weight: 500;
+    margin-bottom: 0.25rem;
+}
+
+.notification-item .notification-type {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    display: inline-block;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.notification-success .notification-type {
+    background: var(--primary);
+    color: #000;
+}
+
+.notification-error .notification-type {
+    background: var(--accent);
+    color: #fff;
+}
+
+.notification-warning .notification-type {
+    background: var(--warning);
+    color: #000;
+}
+
+.notification-info .notification-type {
+    background: var(--secondary);
+    color: #000;
+}
+
+.notification-localstorage .notification-type {
+    background: #9c27b0;
+    color: #fff;
+}

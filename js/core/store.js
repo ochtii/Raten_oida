@@ -30,7 +30,18 @@ export class Store {
             history: [],
             settings: {
                 sound: true,
-                notifications: true,
+                notifications: {
+                    enabled: true,
+                    types: {
+                        success: true,
+                        error: true,
+                        warning: true,
+                        info: true,
+                        localstorage: false
+                    },
+                    position: 'bottom-right',
+                    duration: 3
+                },
                 theme: 'dark'
             }
         };
@@ -134,6 +145,11 @@ export class Store {
 
     updateSettings(settings) {
         this.state.settings = { ...this.state.settings, ...settings };
+        this.saveState();
+    }
+
+    saveSettings(settings) {
+        this.state.settings = settings;
         this.saveState();
     }
 
