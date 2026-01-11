@@ -9,7 +9,7 @@ export const devView = (store) => {
     const footerInfoEnabled = localStorage.getItem('footerInfoEnabled') !== 'false';
     
     // Version Info
-    const version = '1.0.2.8';
+    const version = '1.0.2.9';
     const buildDate = '2026-01-10T12:17:00Z';
     
     return `
@@ -334,70 +334,6 @@ window.devToggleFooterInfo = () => {
         }
     }, 50);
 };
-
-window.updateFooterInfo = () => {
-    const enabled = localStorage.getItem('footerInfoEnabled') !== 'false';
-    let footer = document.getElementById('appFooterInfo');
-    const bottomNav = document.querySelector('.bottom-nav');
-    
-    if (enabled) {
-        if (!footer) {
-            footer = document.createElement('div');
-            footer.id = 'appFooterInfo';
-            footer.className = 'app-footer-info';
-            // Footer zu #app hinzufügen statt zu body
-            const app = document.getElementById('app');
-            if (app) {
-                app.appendChild(footer);
-            } else {
-                document.body.appendChild(footer);
-            }
-        }
-        
-        // Version und Build-Datum aus version.json laden
-        fetch('./version.json')
-            .then(response => response.json())
-            .then(versionData => {
-                const version = versionData.version;
-                const buildDate = new Date(versionData.buildDate).toLocaleString('de-DE');
-                footer.innerHTML = `
-                    <span class="footer-version">v${version}</span>
-                    <span class="footer-separator">|</span>
-                    <span class="footer-date">Build: ${buildDate}</span>
-                `;
-            })
-            .catch(error => {
-                console.error('Fehler beim Laden der Version:', error);
-                // Fallback auf hartkodierte Werte
-                const version = '1.0.1.0';
-                const buildDate = new Date('2026-01-11T05:16:57.512Z').toLocaleString('de-DE');
-                footer.innerHTML = `
-                    <span class="footer-version">v${version}</span>
-                    <span class="footer-separator">|</span>
-                    <span class="footer-date">Build: ${buildDate}</span>
-                `;
-            });
-        
-        footer.style.display = 'flex';
-        // Bottom Navigation nach oben verschieben
-        if (bottomNav) {
-            bottomNav.classList.add('with-footer');
-        }
-    } else {
-        if (footer) {
-            footer.style.display = 'none';
-        }
-        // Bottom Navigation zurück an ursprüngliche Position
-        if (bottomNav) {
-            bottomNav.classList.remove('with-footer');
-        }
-    }
-};
-
-// Footer beim App-Start initialisieren
-document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => window.updateFooterInfo(), 100);
-});
 
 window.devAddWallet = () => {
     if (window.app) {

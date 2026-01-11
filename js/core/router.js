@@ -24,7 +24,7 @@ export class Router {
     }
 
     async navigateTo(route) {
-        const validRoutes = ['home', 'games', 'points', 'stats', 'settings', 'dev'];
+        const validRoutes = ['home', 'games', 'points', 'stats', 'settings', 'changelog', 'dev'];
         
         if (!validRoutes.includes(route)) {
             console.warn(`Route "${route}" nicht gefunden`);

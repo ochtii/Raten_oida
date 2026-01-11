@@ -343,7 +343,7 @@ export const settingsView = (store) => {
                         <div class="info-list">
                             <div class="info-item">
                                 <span>Version:</span>
-                                <strong>${version}</strong>
+                                <strong><a href="#changelog" data-route="changelog" class="version-link">${version}</a></strong>
                             </div>
                             <div class="info-item">
                                 <span>Entwickler:</span>
@@ -353,6 +353,11 @@ export const settingsView = (store) => {
                                 <span>Letzte Aktualisierung:</span>
                                 <strong>${new Date().toLocaleDateString('de-DE')}</strong>
                             </div>
+                        </div>
+                        <div style="margin-top: var(--spacing-md);">
+                            <a href="#changelog" data-route="changelog" class="btn btn-secondary btn-sm">
+                                📜 Changelog anzeigen
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -647,12 +652,12 @@ window.settingsShowNotificationHistory = () => {
                                 <div class="history-content">
                                     <div class="history-header">
                                         <span class="history-type-badge badge-${item.type}">${label}</span>
-                                        <span class="history-datetime">
-                                            <span class="history-date">${dateStr}</span>
-                                            <span class="history-time">${timeStr}</span>
-                                        </span>
                                     </div>
                                     <div class="history-message">${item.message}</div>
+                                    <div class="history-footer">
+                                        <span class="history-date">${dateStr}</span>
+                                        <span class="history-time">${timeStr}</span>
+                                    </div>
                                 </div>
                             </div>
                         `;

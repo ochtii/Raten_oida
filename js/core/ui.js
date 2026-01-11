@@ -321,7 +321,7 @@ export class UI {
                 message += `</span>`;
             }
             
-            const type = success ? 'localstorage' : 'error';
+            const type = success ? 'info' : 'error';
             
             if (!success && errorMessage) {
                 this.showNotificationWithHTML(`${message}<br><span style="color: var(--accent);">Fehler: ${errorMessage}</span>`, type);
