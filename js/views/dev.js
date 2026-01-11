@@ -38,14 +38,10 @@ export const devView = (store) => {
             <!-- Cheat Actions -->
             <div class="dev-card dev-hero-card dev-cheat-card">
                 <h3>🎮 Cheats</h3>
-                <div class="dev-hero-actions">
-                    <div class="dev-cheat-group">
-                        <span class="dev-cheat-label">💰 Schülling:</span>
-                        <div class="dev-split-btn">
-                            <button class="dev-split-btn-minus" onclick="window.devChangeWallet(-window.devCheatStep, this)">-</button>
-                            <button class="dev-split-btn-plus" onclick="window.devChangeWallet(window.devCheatStep, this)">+</button>
-                        </div>
-                        <select class="dev-cheat-step" onchange="window.devSetCheatStep(this.value)">
+                <div class="dev-hero-actions dev-hero-actions-col">
+                    <div class="dev-cheat-step-row">
+                        <label for="devCheatStepSelect">Stufe:</label>
+                        <select id="devCheatStepSelect" class="dev-cheat-step">
                             <option value="1">1</option>
                             <option value="5">5</option>
                             <option value="10">10</option>
@@ -53,6 +49,13 @@ export const devView = (store) => {
                             <option value="100">100</option>
                             <option value="1000" selected>1000</option>
                         </select>
+                    </div>
+                    <div class="dev-cheat-group">
+                        <span class="dev-cheat-label">💰 Schülling:</span>
+                        <div class="dev-split-btn">
+                            <button class="dev-split-btn-minus" onclick="window.devChangeWallet(-window.devCheatStep, this)">-</button>
+                            <button class="dev-split-btn-plus" onclick="window.devChangeWallet(window.devCheatStep, this)">+</button>
+                        </div>
                     </div>
                     <div class="dev-cheat-group">
                         <span class="dev-cheat-label">⭐ Punkte:</span>
@@ -60,47 +63,7 @@ export const devView = (store) => {
                             <button class="dev-split-btn-minus" onclick="window.devChangePoints(-window.devCheatStep, this)">-</button>
                             <button class="dev-split-btn-plus" onclick="window.devChangePoints(window.devCheatStep, this)">+</button>
                         </div>
-                        <select class="dev-cheat-step" onchange="window.devSetCheatStep(this.value)">
-                            <option value="1">1</option>
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="50">50</option>
-                            <option value="100">100</option>
-                            <option value="1000" selected>1000</option>
-                        </select>
                     </div>
-                    // Cheat Step global
-                    window.devCheatStep = 1000;
-                    window.devSetCheatStep = (val) => {
-                        window.devCheatStep = parseInt(val, 10);
-                    };
-
-                    window.devChangeWallet = (amount, btn) => {
-                        if (window.app) {
-                            const state = window.app.store.state;
-                            state.wallet = Math.max(0, (state.wallet ?? 0) + amount);
-                            window.app.store.saveState();
-                            window.app.ui.showNotification(`💰 ${amount > 0 ? '+' : ''}${amount} Schülling`, amount > 0 ? 'success' : 'warning');
-                            window.app.router.render();
-                            devAnimateBtn(btn);
-                        }
-                    };
-
-                    window.devChangePoints = (amount, btn) => {
-                        if (window.app) {
-                            const state = window.app.store.state;
-                            state.points = Math.max(0, (state.points ?? 0) + amount);
-                            window.app.store.saveState();
-                            window.app.ui.showNotification(`⭐ ${amount > 0 ? '+' : ''}${amount} Punkte`, amount > 0 ? 'success' : 'warning');
-                            window.app.router.render();
-                            devAnimateBtn(btn);
-                        }
-                    };
-
-                    function devAnimateBtn(btn) {
-                        btn.classList.add('dev-split-btn-animate');
-                        setTimeout(() => btn.classList.remove('dev-split-btn-animate'), 180);
-                    }
                     <!-- Sonstige Cheats -->
                     <button class="dev-hero-btn dev-hero-btn-success" onclick="window.devMaxStreak()">
                         <span class="dev-hero-icon">🔥</span>
@@ -190,6 +153,50 @@ export const devView = (store) => {
         
     `;
 };
+
+// Cheat Functions
+window.devCheatStep = 1000;
+window.devSetCheatStep = (val) => {
+    window.devCheatStep = parseInt(val, 10);
+};
+
+// Initialize cheat step selector when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    const select = document.getElementById('devCheatStepSelect');
+    if (select) {
+        select.value = window.devCheatStep;
+        select.addEventListener('change', (e) => {
+            window.devCheatStep = parseInt(e.target.value, 10);
+        });
+    }
+});
+
+window.devChangeWallet = (amount, btn) => {
+    if (window.app) {
+        const state = window.app.store.state;
+        state.wallet = Math.max(0, (state.wallet ?? 0) + amount);
+        window.app.store.saveState();
+        window.app.ui.showNotification(`💰 ${amount > 0 ? '+' : ''}${amount} Schülling`, amount > 0 ? 'success' : 'warning');
+        window.app.router.render();
+        devAnimateBtn(btn);
+    }
+};
+
+window.devChangePoints = (amount, btn) => {
+    if (window.app) {
+        const state = window.app.store.state;
+        state.points = Math.max(0, (state.points ?? 0) + amount);
+        window.app.store.saveState();
+        window.app.ui.showNotification(`⭐ ${amount > 0 ? '+' : ''}${amount} Punkte`, amount > 0 ? 'success' : 'warning');
+        window.app.router.render();
+        devAnimateBtn(btn);
+    }
+};
+
+function devAnimateBtn(btn) {
+    btn.classList.add('dev-split-btn-animate');
+    setTimeout(() => btn.classList.remove('dev-split-btn-animate'), 180);
+}
 
 // Developer Functions
 window.toggleDebugConsole = () => {
