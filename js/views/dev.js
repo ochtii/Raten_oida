@@ -43,17 +43,33 @@ export const devView = (store) => {
                         <span class="dev-hero-icon">💰</span>
                         <span class="dev-hero-label">+1000</span>
                     </button>
+                    <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWallet()">
+                        <span class="dev-hero-icon">💰</span>
+                        <span class="dev-hero-label">-1000</span>
+                    </button>
                     <button class="dev-hero-btn dev-hero-btn-primary" onclick="window.devAddPoints()">
                         <span class="dev-hero-icon">⭐</span>
                         <span class="dev-hero-label">+100</span>
                     </button>
+                    <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePoints()">
+                        <span class="dev-hero-icon">⭐</span>
+                        <span class="dev-hero-label">-100</span>
+                    </button>
                     <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddWalletMax()">
-                        <span class="dev-hero-icon">💎</span>
+                        <span class="dev-hero-icon">💰</span>
                         <span class="dev-hero-label">+10k</span>
                     </button>
+                    <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemoveWalletMax()">
+                        <span class="dev-hero-icon">💰</span>
+                        <span class="dev-hero-label">-10k</span>
+                    </button>
                     <button class="dev-hero-btn dev-hero-btn-warning" onclick="window.devAddPointsMax()">
-                        <span class="dev-hero-icon">🌟</span>
+                        <span class="dev-hero-icon">⭐</span>
                         <span class="dev-hero-label">+1000</span>
+                    </button>
+                    <button class="dev-hero-btn dev-hero-btn-danger" onclick="window.devRemovePointsMax()">
+                        <span class="dev-hero-icon">⭐</span>
+                        <span class="dev-hero-label">-1000</span>
                     </button>
                     <button class="dev-hero-btn dev-hero-btn-success" onclick="window.devMaxStreak()">
                         <span class="dev-hero-icon">🔥</span>
@@ -320,7 +336,25 @@ window.devAddWalletMax = () => {
     if (window.app) {
         window.app.store.state.wallet += 10000;
         window.app.store.saveState();
-        window.app.ui.showNotification('💎 +10.000 Schülling (MEGA)', 'success');
+        window.app.ui.showNotification('� +10.000 Schülling (MEGA)', 'success');
+        window.app.router.render();
+    }
+};
+
+window.devRemoveWallet = () => {
+    if (window.app) {
+        window.app.store.state.wallet = Math.max(0, window.app.store.state.wallet - 1000);
+        window.app.store.saveState();
+        window.app.ui.showNotification('💰 -1000 Schülling', 'warning');
+        window.app.router.render();
+    }
+};
+
+window.devRemoveWalletMax = () => {
+    if (window.app) {
+        window.app.store.state.wallet = Math.max(0, window.app.store.state.wallet - 10000);
+        window.app.store.saveState();
+        window.app.ui.showNotification('💰 -10.000 Schülling (MEGA)', 'warning');
         window.app.router.render();
     }
 };
@@ -329,7 +363,25 @@ window.devAddPointsMax = () => {
     if (window.app) {
         window.app.store.state.points += 1000;
         window.app.store.saveState();
-        window.app.ui.showNotification('🌟 +1000 Punkte (MEGA)', 'success');
+        window.app.ui.showNotification('⭐ +1000 Punkte (MEGA)', 'success');
+        window.app.router.render();
+    }
+};
+
+window.devRemovePoints = () => {
+    if (window.app) {
+        window.app.store.state.points = Math.max(0, window.app.store.state.points - 100);
+        window.app.store.saveState();
+        window.app.ui.showNotification('⭐ -100 Punkte', 'warning');
+        window.app.router.render();
+    }
+};
+
+window.devRemovePointsMax = () => {
+    if (window.app) {
+        window.app.store.state.points = Math.max(0, window.app.store.state.points - 1000);
+        window.app.store.saveState();
+        window.app.ui.showNotification('⭐ -1000 Punkte (MEGA)', 'warning');
         window.app.router.render();
     }
 };
