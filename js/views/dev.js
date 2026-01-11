@@ -53,15 +53,15 @@ export const devView = (store) => {
                     <div class="dev-cheat-group">
                         <span class="dev-cheat-label">💰 Schülling:</span>
                         <div class="dev-split-btn">
-                            <button class="dev-split-btn-minus" onclick="event.preventDefault(); window.devChangeWallet(-window.devCheatStep, this)">-</button>
-                            <button class="dev-split-btn-plus" onclick="event.preventDefault(); window.devChangeWallet(window.devCheatStep, this)">+</button>
+                            <button type="button" class="dev-split-btn-minus" onclick="event.preventDefault(); event.stopPropagation(); window.devChangeWallet(-window.devCheatStep, this)">-</button>
+                            <button type="button" class="dev-split-btn-plus" onclick="event.preventDefault(); event.stopPropagation(); window.devChangeWallet(window.devCheatStep, this)">+</button>
                         </div>
                     </div>
                     <div class="dev-cheat-group">
                         <span class="dev-cheat-label">⭐ Punkte:</span>
                         <div class="dev-split-btn">
-                            <button class="dev-split-btn-minus" onclick="event.preventDefault(); window.devChangePoints(-window.devCheatStep, this)">-</button>
-                            <button class="dev-split-btn-plus" onclick="event.preventDefault(); window.devChangePoints(window.devCheatStep, this)">+</button>
+                            <button type="button" class="dev-split-btn-minus" onclick="event.preventDefault(); event.stopPropagation(); window.devChangePoints(-window.devCheatStep, this)">-</button>
+                            <button type="button" class="dev-split-btn-plus" onclick="event.preventDefault(); event.stopPropagation(); window.devChangePoints(window.devCheatStep, this)">+</button>
                         </div>
                     </div>
                     <!-- Sonstige Cheats -->
@@ -82,7 +82,7 @@ export const devView = (store) => {
                 <div class="toggle-grid">
                     <div class="toggle-compact" id="toggleCacheBuster" onclick="window.devToggleCacheBuster()">
                         <span class="toggle-compact-label">${cacheBusterEnabled ? '🔄' : '⏸️'} Chebuster</span>
-                        <button class="toggle-info-btn" onclick="event.stopPropagation(); window.devShowCacheBusterInfo()" title="Info">ℹ️</button>
+                        <button type="button" class="toggle-info-btn" onclick="event.stopPropagation(); window.devShowCacheBusterInfo()" title="Info">ℹ️</button>
                         <div class="toggle-switch ${cacheBusterEnabled ? 'on' : 'off'}"></div>
                     </div>
                     

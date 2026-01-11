@@ -16,6 +16,8 @@
     color: #fff;
     cursor: pointer;
     transition: background 0.18s, transform 0.18s;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 .dev-split-btn-minus {
     background: #ff0033;
@@ -2425,7 +2427,7 @@ body::before {
 
 .toggle-info-btn {
     position: absolute;
-    right: 50px;
+    right: 60px;
     top: 50%;
     transform: translateY(-50%);
     background: transparent;
@@ -2440,7 +2442,9 @@ body::before {
     align-items: center;
     justify-content: center;
     transition: all var(--transition-fast);
-    z-index: 2;
+    z-index: 10;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .toggle-info-btn:hover {
