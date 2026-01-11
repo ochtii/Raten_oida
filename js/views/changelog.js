@@ -47,7 +47,17 @@ window.loadChangelog = async () => {
 function loadStaticChangelog(container) {
     // Statische Changelog-Daten als Fallback
     const staticChanges = [
-                                {
+                                        {
+            version: '1.0.7.1',
+            date: '2026-01-11',
+            message: 'fix: Entferne HTML-Kommentar aus Template Literal in dev.js',
+            details: 'fix: Entferne HTML-Kommentar aus Template Literal in dev.js
+
+HTML-Kommentare in Template Literals können zu \'Unexpected token <\' Fehlern führen.',
+            files: [],
+            stats: { additions: 0, deletions: 0 }
+        },
+        {
             version: '1.0.7.0',
             date: '2026-01-11',
             message: 'feat: Optimierte Einstellungsseite',
